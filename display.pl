@@ -10,3 +10,4 @@ displayRow([El|Row]) :- print(El), print('|'), displayRow(Row).
 
 
 % Test call : display([[a,b,c],[c,d,e],[f,g,i]]).
+
