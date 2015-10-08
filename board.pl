@@ -1,4 +1,6 @@
 :- dynamic board/1.
+:- [display].
+
 plane(1,0, 0, 3, b).
 plane(2,15, 15, 3, h).
 %% le terrain de jeu 16 *16
@@ -36,12 +38,3 @@ displayBoard :-
 			plane(2, C2x, C2y,_,O2),
 			replaceBoard(C2x,C2y,O2,X,D),
 			display(D).
-
-
-
-display([]).
-display([Row|B]) :- displayRow(Row), display(B).
-
-displayRow([]) :- print('\n').
-displayRow([El|Row]) :- print(El), print('|'), displayRow(Row).
-
