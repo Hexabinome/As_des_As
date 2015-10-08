@@ -42,8 +42,8 @@ updateAvion2():-
 	assert(avion2(Y,Z,X1)).
 
 etape():-
-	update(),
-	%display()
+	updatePlanes(),
+	displayBoard()
 	game().
 
 game():- gameover(), !.
