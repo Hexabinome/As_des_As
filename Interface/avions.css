@@ -1,0 +1,54 @@
+/* Une case*/
+.carre
+{
+	width:50px;
+	height:50px;
+	border:1px solid #000;
+}
+
+.vert
+{
+	background-color: rgba(34,201,10,0.7);
+	
+}
+
+.vert:hover
+{
+	background-color: blue;
+}
+
+/* réduit la taille de l'avion */
+.avion
+{
+	width:35px; 
+	height:40px;
+	opacity: 1;
+}
+
+/* affiche l'image en arrière plan*/
+.imgMap img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0.4;
+}
+
+/* box pour les scores*/
+.score
+{
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7),
+            -1px 2px 20px rgba(255, 255, 255, 0.6) inset; 
+
+    position:relative;
+    top:50%;
+}
+
+
+.right-side
+{
+	height: 500px;
+}
