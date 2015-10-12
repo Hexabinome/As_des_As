@@ -9,7 +9,17 @@
 .vert
 {
 	background-color: rgba(34,201,10,0.7);
-	
+
+}
+
+.rouge
+{
+  background-color: rgba(201,10,34, 0.8);
+}
+
+.rouge:hover
+{
+  background-color: yellow;
 }
 
 .vert:hover
@@ -20,7 +30,7 @@
 /* réduit la taille de l'avion */
 .avion
 {
-	width:35px; 
+	width:35px;
 	height:40px;
 	opacity: 1;
 }
@@ -41,7 +51,7 @@
 	background-color: white;
 	border-radius: 10px;
 	box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7),
-            -1px 2px 20px rgba(255, 255, 255, 0.6) inset; 
+            -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
 
     position:relative;
     top:50%;

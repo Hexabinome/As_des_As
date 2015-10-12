@@ -1,4 +1,5 @@
-var avion;
+var avion1;
+var avion2;
 
 function init()
 {
@@ -7,8 +8,12 @@ function init()
 		if($(this).hasClass("vert"))
 		{
 			//TODO appeler le prolog
-			avion.deplacer($(this).data("x"), $(this).data("y"));
-
+			avion1.deplacer($(this).data("x"), $(this).data("y"));
+		}
+		if($(this).hasClass("rouge"))
+		{
+			//TODO appeler le prolog
+			avion2.deplacer($(this).data("x"), $(this).data("y"));
 		}
 	});
 }
@@ -34,8 +39,11 @@ function appelerProlog()
 
 $(function() {
 	init();
-    avion = new Avion('avions1', 5, 5);
-    avion.deplacer(5, 5);
+    avion1 = new Avion('avions1', 3, 3, 1);
+    avion1.deplacer(3, 3);
+
+    avion2 = new Avion('avions2', 5, 5, 2);
+    avion2.deplacer(5, 5);
 
     setInterval(appelerProlog, 2000);
     //appelerProlog();
