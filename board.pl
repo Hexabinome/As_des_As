@@ -29,10 +29,11 @@ replaceBoard(X, Y, Value, Board, Result):-
 			nth0(X, Board, E),
 			replace(E, X, Value, M),
 			replace(Board, Y, M, Result).
+			
 displayBoard :- 
-			defaultBoard(B),
-			plane(1, C1x, C1y,_,O1),
-			replaceBoard(C1x,C1y,O1,B,X),
-			plane(2, C2x, C2y,_,O2),
-			replaceBoard(C2x,C2y,O2,X,D),
+			defaultBoard(Board),
+			plane(1, C1x, C1y, _,Orientation1),
+			replaceBoard(C1x, C1y, Orientation1, Board, X),
+			plane(2, C2x, C2y, _, Orientation2),
+			replaceBoard(C2x, C2y, Orientation2, X, D),
 			display(D).

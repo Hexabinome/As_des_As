@@ -1,33 +1,34 @@
+% Load files
 :- [plane].
 :- [board].
 
-reset:-retract(avion1(_,_,0)).
-reset:-retract(avion2(_,_,0)).
+% reset:-retract(avion1(_,_,0)).
+% reset:-retract(avion2(_,_,0)).
 
-%TODO : change avec plane(1,...) etc
-gameover:-avion1(X, _, _), X <0, print('Joueur 2 a gagné').
-gameover:-avion1(X, _, _), X >16, print('Joueur 2 a gagné').
-gameover:-avion1(-, Y, _), Y <0, print('Joueur 2 a gagné').
-gameover:-avion1(-, Y, _), Y >16, print('Joueur 2 a gagné').
+% Draw possibilities
+gameover :- plane(1, _, _, Life1, _), plane(2, _, _, Life2, _), Life1 == 0, Life1 == Life2, drawDisplay, !.
+gameover :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, drawDisplay, !.
 
-gameover:-avion2(X, _, _), X <0, print('Joueur 1 a gagné').
-gameover:-avion2(X, _, _), X >16, print('Joueur 1 a gagné').
-gameover:-avion2(-, Y, _), Y <0, print('Joueur 1 a gagné').
-gameover:-avion2(-, Y, _), Y >16, print('Joueur 1 a gagné').
+% Gameover if one has no life left
+gameover :- plane(1, _, _, Life, _), Life =< 0, playerTwoWinsDisplay, !.
+gameover :- plane(2, _, _, Life, _), Life =< 0, playerOneWinsDisplay, !.
+% Gameover if one is out of the board
+gameover :- gameoverOutOfRange(1), playerTwoWinsDisplay, !.
+gameover :- gameoverOutOfRange(2), playerOneWinsDisplay, !.
+
+% TODO : gameover :- round > 200, drawDisplay.
 
 
-gameover:-avion1(X, Y, _), avion2(X, Y, _), print('égalité par colision').
-gameover:- avion1(_,_,0), avion2(_,_,0), print('égalité par mort des deux avions').
-gameover:- avion1(_,_,0), print('Joueur 2 a gagné').
-gameover:- avion2(_,_,0), print('Joueur 1 a gagné').
+gameoverOutOfRange(Idx) :- plane(Idx, X, _, _, _), X < 0, !.
+gameoverOutOfRange(Idx) :- plane(Idx, X, _, _, _), X > 15, !.
+gameoverOutOfRange(Idx) :- plane(Idx, _, Y, _, _), Y < 0, !.
+gameoverOutOfRange(Idx) :- plane(Idx, _, Y, _, _), Y > 15, !.
 
-etape:-
+
+step :-
 	updatePlanes(['FF', 'LT', 'UT'], ['LT', 'RT', 'F']), % test values, a supprimer
 	displayBoard.
 	%,game(). % a décommenter pour boucle de jeu
 
-game:- gameover, !.
-game:- etape.
-
-lancer:-reset; game.
-%['C:/Users/Djowood/Documents/INSA/Prolog/Projet/As_des_As/game'].
+game :- gameover, !.
+game :- step.
