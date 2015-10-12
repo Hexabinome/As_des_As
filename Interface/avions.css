@@ -27,6 +27,27 @@
 	background-color: blue;
 }
 
+.nord
+{
+  transform:rotate(0deg);
+}
+
+.est
+{
+  transform:rotate(90deg);
+}
+
+.sud
+{
+  transform:rotate(180deg);
+}
+
+.ouest
+{
+  transform:rotate(270deg);
+}
+
+
 /* réduit la taille de l'avion */
 .avion
 {

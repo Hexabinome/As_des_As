@@ -39,10 +39,10 @@ function appelerProlog()
 
 $(function() {
 	init();
-    avion1 = new Avion('avions1', 3, 3, 1);
+    avion1 = new Avion('avions1', 3, 3, 1, 'sud');
     avion1.deplacer(3, 3);
 
-    avion2 = new Avion('avions2', 5, 5, 2);
+    avion2 = new Avion('avions2', 5, 5, 2, 'est');
     avion2.deplacer(5, 5);
 
     setInterval(appelerProlog, 2000);
