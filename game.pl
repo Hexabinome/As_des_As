@@ -1,17 +1,19 @@
 :- dynamic actions/2.
+:- dynamic round/1.
 
 % Load files
 :- [plane].
 :- [board].
 :- [human_player].
 
+% Action structures that are used by human player and ai to store their moves
 actions(1, []).
 actions(2, []).
 
-% reset:-retract(avion1(_,_,0)).
-% reset:-retract(avion2(_,_,0)).
+% Round counter
+round(0).
 
-% DRAW POSSIBILITIES 
+% --- Draw possibilities
 % If boths have lifePoints equal to 0.
 gameover :- plane(1, _, _, Life1, _), plane(2, _, _, Life2, _), Life1 == 0, Life1 == Life2, drawDisplay, !.
 % If collision : both are at the same coordinates.
@@ -19,6 +21,7 @@ gameover :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, 
 % If they  both are out of boundaries at the end of the turn
 gameover :- gameoverOutOfBoundary(1), gameoverOutOfBoundary(2), drawDisplay, !.
 
+% --- One winning side gameover
 % Gameover if one has no life left
 gameover :- plane(1, _, _, Life, _), Life =< 0, playerTwoWinsDisplay, !.
 gameover :- plane(2, _, _, Life, _), Life =< 0, playerOneWinsDisplay, !.
@@ -26,7 +29,8 @@ gameover :- plane(2, _, _, Life, _), Life =< 0, playerOneWinsDisplay, !.
 gameover :- gameoverOutOfBoundary(1), playerTwoWinsDisplay, !.
 gameover :- gameoverOutOfBoundary(2), playerOneWinsDisplay, !.
 
-% TODO : gameover :- round > 200, drawDisplay.
+% Limit number of 200 rounds reached
+gameover :- round(200), drawDisplay, !.
 
 % Gameover tests if plane is out of boundaries
 gameoverOutOfBoundary(Idx) :- plane(Idx, X, _, _, _), X < 0, !.
@@ -46,4 +50,11 @@ step :-
 	game.
 
 game :- gameover, !.
-game :- step.
+game :- incrementRoundCounter, round(X), write(X), nl, step.
+
+% Increment the round counter
+incrementRoundCounter :-
+	round(X), 
+	retract(round(X)), 
+	Y is X+1, 
+	assert(round(Y)).
