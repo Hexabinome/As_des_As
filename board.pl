@@ -31,8 +31,8 @@ replaceBoard(X, Y, Value, Board, Result):-
 			
 displayBoard :- 
 			defaultBoard(Board),
-			plane(1, C1x, C1y, _,Orientation1),
-			replaceBoard(C1x, C1y, Orientation1, Board, X),
+			plane(1, C1x, C1y, _, Orientation1),
+			replaceBoard(C1x, C1y, Orientation1, Board, BoardSortie),
 			plane(2, C2x, C2y, _, Orientation2),
-			replaceBoard(C2x, C2y, Orientation2, X, D),
-			display(D).
+			replaceBoard(C2x, C2y, Orientation2, BoardSortie, BoardFinal),
+			display(BoardFinal).

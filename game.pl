@@ -23,8 +23,8 @@ gameover :- gameoverOutOfBoundary(1), gameoverOutOfBoundary(2), drawDisplay, !.
 
 % --- One winning side gameover
 % Gameover if one has no life left
-gameover :- plane(1, _, _, Life, _), Life =< 0, playerTwoWinsDisplay, !.
-gameover :- plane(2, _, _, Life, _), Life =< 0, playerOneWinsDisplay, !.
+gameover :- plane(1, _, _, Life, _), Life =< 0, playerTwoWinsDisplay.
+gameover :- plane(2, _, _, Life, _), Life =< 0, playerOneWinsDisplay.
 % Gameover if one is out of the board
 gameover :- gameoverOutOfBoundary(1), playerTwoWinsDisplay, !.
 gameover :- gameoverOutOfBoundary(2), playerOneWinsDisplay, !.
@@ -44,8 +44,10 @@ step :-
 	actions(1, ActionsP1),
 	% aiRandom(2),
 	% actions(2, ActionsP2),
-	% updatePlanes(ActionsP1, ActionsP2),
-	updatePlanes(ActionsP1, ['F', 'F', 'F']),
+	updatePlanes(ActionsP1, ['RT', 'F', 'F']),
+	%updatePlanes(['LT', 'F', 'F'], ['RT', 'F', 'F']),
+	fireAvion1,
+	fireAvion2,
 	displayBoard,
 	game.
 
@@ -58,3 +60,4 @@ incrementRoundCounter :-
 	retract(round(X)), 
 	Y is X+1, 
 	assert(round(Y)).
+
