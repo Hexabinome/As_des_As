@@ -8,12 +8,12 @@ function init()
 		if($(this).hasClass("vert"))
 		{
 			//TODO appeler le prolog
-			avion1.deplacer($(this).data("x"), $(this).data("y"));
+			avion1.deplacer($(this).data("x"), $(this).data("y"), 'nord');
 		}
 		if($(this).hasClass("rouge"))
 		{
 			//TODO appeler le prolog
-			avion2.deplacer($(this).data("x"), $(this).data("y"));
+			avion2.deplacer($(this).data("x"), $(this).data("y"), 'nord');
 		}
 	});
 }
@@ -40,10 +40,10 @@ function appelerProlog()
 $(function() {
 	init();
     avion1 = new Avion('avions1', 3, 3, 1, 'sud');
-    avion1.deplacer(3, 3);
+    avion1.deplacer(3, 3, 'sud');
 
     avion2 = new Avion('avions2', 5, 5, 2, 'est');
-    avion2.deplacer(5, 5);
+    avion2.deplacer(5, 5, 'est');
 
     setInterval(appelerProlog, 2000);
     //appelerProlog();
