@@ -9,9 +9,6 @@ displayRow([]) :- nl.
 displayRow([Element|Row]) :- write(Element), write('|'), displayRow(Row).
 
 
-% Test call : display([[a,b,c],[c,d,e],[f,g,i]]).
-
-
 % Gameover displays
 playerOneWinsDisplay :- write('Player 1 wins!').
 playerTwoWinsDisplay :- write('Player 2 wins!').

@@ -19,11 +19,6 @@ callPlaneAction(Idx, Action) :- Action == 'FF', actionFastForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'RT', actionRightTurn(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'LT', actionLeftTurn(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'UT', actionUTurn(Idx), !.
-% Error handling if unknown action. TODO : better error throwing than "1 == 2"...
+
+% Error handling if unknown action. TODO : better error than "1 == 2"...
 callPlaneAction(Idx, Action) :- print('Unknown action '), print(Action), print(' for index '), print(Idx), 1 == 2.
-
-
-%updatePlanes(['FF', 'LT', 'UT'], ['LT', 'RT', 'F']).
-%plane(Idx,X,Y,Life,Orientation).
-%callPlaneAction(1, 'R').
-%callPlaneAction(1, 'F').

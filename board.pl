@@ -1,4 +1,3 @@
-:- dynamic board/1.
 :- [display].
 
 %% le terrain de jeu 16 *16
