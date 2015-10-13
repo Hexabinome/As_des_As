@@ -1,25 +1,16 @@
-var Orientation = {
-  nord: 'nord',
-  est: 'est',
-  sud: 'sud',
-  ouest: 'ouest'
-}
-
-var Avion = function (nom, x, y, player, cardinalite) {
+var Avion = function (nom, x, y, player, orientation) {
 	this.nom = nom;
 	this.x = x;
 	this.y = y;
 	this.vie = 12;
-	this.player = player;
 	this.color = (player == 1) ? "vert" : "rouge";
-	this.orientation = Orientation[cardinalite];
+	this.orientation = orientation;
 };
 
-Avion.prototype.deplacer= function(x, y, cardinalite)
+Avion.prototype.deplacer= function(x, y)
 {
 	this.x = x;
 	this.y = y;
-	this.orientation = Orientation[cardinalite];
 
 	this.afficher();
 	this.supprimerCouleurCases();
@@ -28,12 +19,10 @@ Avion.prototype.deplacer= function(x, y, cardinalite)
 
 Avion.prototype.afficher = function() {
 	var position = $("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']");
-	var vie = $("#vie-player" + this.player);
 
+	//TODO remplacer par l'affichage de l'avions
 	$("#" + this.nom).remove();
 	position.append("<img id='" + this.nom + "' src='avion.png' class='avion " + this.orientation + "'/>");
-	vie.html("Vie : " + this.vie);
-
 };
 
 Avion.prototype.supprimerCouleurCases = function() {
