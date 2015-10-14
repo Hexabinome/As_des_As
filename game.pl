@@ -1,8 +1,6 @@
 ﻿:- dynamic actions/2.
 :- dynamic round/1.
 
-:- discontiguous gameover/0.
-
 % Load files
 :- [plane].
 :- [board].
@@ -15,34 +13,7 @@ actions(2, []).
 % Round counter
 round(0).
 
-% --- Draw possibilities
-% If boths have lifePoints equal to 0.
-gameover :- gameoverDeath.
-gameoverDeath :- plane(1, _, _, Life1, _), plane(2, _, _, Life2, _), Life1 =< 0, Life1 == Life2, drawDisplay, !.
-% If collision : both are at the same coordinates.
-gameover :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, drawDisplay, !.
-% If they  both are out of boundaries at the end of the turn
-gameover :- gameoverOutOfBoundary(1), gameoverOutOfBoundary(2), outOfBoundaryDisplay(1), outOfBoundaryDisplay(2), drawDisplay, !.
-
-% --- One winning side gameover
-% Gameover if one has no life left
-gameover :- gameoverDeath(1), playerTwoWinsDisplay, !.
-gameover :- gameoverDeath(2), playerOneWinsDisplay, !.
-gameoverDeath(Idx) :- plane(Idx, _, _, Life, _), Life =< 0.
-% Gameover if one is out of the board
-gameover :- gameoverOutOfBoundary(1), outOfBoundaryDisplay(1), playerTwoWinsDisplay, !.
-gameover :- gameoverOutOfBoundary(2), outOfBoundaryDisplay(2), playerOneWinsDisplay, !.
-
-% Limit number of 200 rounds reached
-gameover :- round(200), drawDisplay, !.
-
-% Gameover tests if plane is out of boundaries
-gameoverOutOfBoundary(Idx) :- plane(Idx, X, _, _, _), X < 0, !.
-gameoverOutOfBoundary(Idx) :- plane(Idx, X, _, _, _), X > 15, !.
-gameoverOutOfBoundary(Idx) :- plane(Idx, _, Y, _, _), Y < 0, !.
-gameoverOutOfBoundary(Idx) :- plane(Idx, _, Y, _, _), Y > 15, !.
-
-
+% Game loop
 step :-
 	humanPlayer(1),
 	actions(1, ActionsP1),
@@ -50,13 +21,13 @@ step :-
 	% actions(2, ActionsP2),
 	% updatePlanes(ActionsP1, ActionsP2),
 	updatePlanes(ActionsP1, ['F', 'F', 'F']),
-	not(gameover),
+	not(gameoverRound),
 	playerDisplay(1),
 	displayBoard,
 	playerDisplay(2),
 	game.
 
-game :- gameover, !.
+%game :- gameover, !.
 game :- incrementRoundCounter, roundDisplay, step.
 
 % Increment the round counter
@@ -65,3 +36,8 @@ incrementRoundCounter :-
 	retract(round(X)), 
 	Y is X+1, 
 	assert(round(Y)).
+
+% If InIdx == 1, OutIdx == 2, else if InIdx == 2, OutIdx == 1
+otherPlayer(InIdx, OutIdx) :- 	plane(InIdx, _, _, _, _),
+								plane(OutIdx, _, _, _, _),
+								InIdx \== OutIdx.
