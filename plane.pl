@@ -28,44 +28,40 @@ callPlaneAction(Idx, Action) :- Action == 'UT', actionUTurn(Idx), !.
 callPlaneAction(Idx, Action) :- print('Unknown action '), print(Action), print(' for index '), print(Idx), 1 == 2.
 
 % Fire methods
-fire(Idx) :- 	canFire(Idx),
-				otherPlayer(Idx, OutIdx),
+fire(Idx) :- 	otherPlayer(Idx, OutIdx),
+				canFire(Idx, OutIdx),
 				decrementLife(OutIdx),
 				shotDisplay(Idx, OutIdx).
 fire(_).
 				
-canFire(Idx) :- plane(Idx, X1, Y1, _, Orientation1),
-				plane(Idx2, X2, Y2, _, _),
-				Idx2 \== Idx,
-				Orientation1 == 'N', !,
-				X1 == X2,
-				Distance is Y1 - Y2,
-				Distance >= 0,
-				Distance =< 5.
-canFire(Idx) :- plane(Idx, X1, Y1, _, Orientation1),
-				plane(Idx2, X2, Y2, _, _),
-				Idx2 \== Idx,
-				Orientation1 == 'S', !,
-				X1 == X2,
-				Distance is Y2 - Y1,
-				Distance >= 0,
-				Distance =< 5.
-canFire(Idx) :- plane(Idx, X1, Y1, _, Orientation1),
-				plane(Idx2, X2, Y2, _, _),
-				Idx2 \== Idx,
-				Orientation1 == 'E', !,
-				Y1 == Y2,
-				Distance is X2 - X1,
-				Distance >= 0,
-				Distance =< 5.
-canFire(Idx) :- plane(Idx, X1, Y1, _, Orientation1),
-				plane(Idx2, X2, Y2, _, _),
-				Idx2 \== Idx,
-				Orientation1 == 'W', !,
-				Y1 == Y2,
-				Distance is X1 - X2,
-				Distance >= 0,
-				Distance =< 5.
+canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
+								plane(IdxTarget, X2, Y2, _, _),
+								Orientation1 == 'N', !,
+								X1 == X2,
+								Distance is Y1 - Y2,
+								Distance >= 0,
+								Distance =< 5.
+canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
+								plane(IdxTarget, X2, Y2, _, _),
+								Orientation1 == 'S', !,
+								X1 == X2,
+								Distance is Y2 - Y1,
+								Distance >= 0,
+								Distance =< 5.
+canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
+								plane(IdxTarget, X2, Y2, _, _),
+								Orientation1 == 'E', !,
+								Y1 == Y2,
+								Distance is X2 - X1,
+								Distance >= 0,
+								Distance =< 5.
+canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
+								plane(IdxTarget, X2, Y2, _, _),
+								Orientation1 == 'W', !,
+								Y1 == Y2,
+								Distance is X1 - X2,
+								Distance >= 0,
+								Distance =< 5.
 
 decrementLife(Idx) :- 	retract(plane(Idx, X, Y, Life, Orientation)),
 						NewLife is Life-1,
