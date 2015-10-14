@@ -15,7 +15,6 @@ updatePlanes([Action1|ActionList1], [Action2|ActionList2]) :- 	callPlaneAction(1
 																updatePlanes(ActionList1, ActionList2).
 
 % Big kind of switch, choosing between all implemented actions 
-callPlaneAction(Idx, Action) :- write(Action), nl, 1 == 2.
 callPlaneAction(Idx, Action) :- Action == 'F', actionForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'FF', actionFastForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'RT', actionRightTurn(Idx), !.
