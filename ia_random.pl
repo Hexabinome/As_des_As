@@ -2,29 +2,29 @@
 % move does not lead the plane out of bounds).
 % [Maxou]
 
-%[plane].
-
 %dummy plane test position an orientation for devs:
+% TODO: Remove. (actual plane positions shall be used instead).
 %(index, posX, posY, HP, orientation)
 plane(1, 0, 2, 3, 'S').
-plane(2, 4, 15, 3, 'E').
+plane(2, 15, 15, 3, 'E').
 
 % Possible movements as FACTS.
 moves(['F', 'FF', 'RT', 'LT', 'UT']).
 
-% USAGE: Get exactly one random action R of all filtered valid actions for the 
-% plane represented by index Idx.
-randomMove(Idx, R) :- filter(Idx, F), random_member(R, F).
+% USAGE: Returns R as a randomly chosen movement for a plane specified by index.
+randomMove(Idx, R) :- filter(Idx, F), random_member(R, F), print(R).
  
-% Returns list F of all valid turns, given the index Idx, following the 
-% criteria 'filterCondition'. Note: 1, 2  Need to hard coded here, due to the
-% usage of swipl's "include\3" API method.
-filter(1, F) :- moves(M), include(filterCondition1, M, F).
-filter(2, F) :- moves(M), include(filterCondition1, M, F).
+% Returns list F of all valid movements for a plane secified by index.
+% The criteria used to determine which option are valid and which are invalid is:
+% 'filterConditionX'. Note: 1, 2  Needs to be hard coded here, for the filter uses
+% swipl's 'include' API method which does not support passing the index as an 
+% additional argument.
+filter(1, F) :- moves(M), include(filterCondition1, M, F), print(F), print( -> ).
+filter(2, F) :- moves(M), include(filterCondition2, M, F), print(F), print( -> ).
 
 % Use 'plane remains within bounds' as filter condition. (Stays in list ic condition is met).
 filterCondition1(Option) :- newPos(NewX, NewY, 1, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
-filterCondition1(Option) :- newPos(NewX, NewY, 2, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
+filterCondition2(Option) :- newPos(NewX, NewY, 2, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
 
 % Calculates a planes new position (presuming a certain movement) without actually
 % changing the position stocked in the DB. 
