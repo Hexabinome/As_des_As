@@ -1,4 +1,4 @@
-% Stop condition for displaying the board
+﻿% Stop condition for displaying the board
 display([]).
 % Displays each row, and then displays the rest of the board by recursion.
 display([Row|B]) :- displayRow(Row), display(B).
@@ -7,8 +7,6 @@ display([Row|B]) :- displayRow(Row), display(B).
 displayRow([]) :- nl.
 % Displays one element of the row and calls recursively for the rest of the row.
 displayRow([Element|Row]) :- write(Element), write('|'), displayRow(Row).
-
-% Test call : display([[a,b,c],[c,d,e],[f,g,i]]).
 
 % Gameover displays
 playerOneWinsDisplay :- write('Player 1 wins!'), nl.

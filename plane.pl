@@ -1,4 +1,4 @@
-:- dynamic plane/5.
+﻿:- dynamic plane/5.
 :- [plane_actions].
 
 % Faits qui definissent les positions initiales des avions.
