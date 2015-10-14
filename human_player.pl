@@ -1,4 +1,4 @@
-humanPlayer(Idx) :-	displayListOfMoves,
+﻿humanPlayer(Idx) :-	displayListOfMoves,
 					retract(actions(Idx, _)),
 					
 					write('First move : '),

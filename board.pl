@@ -1,4 +1,4 @@
-:- [display].
+ï»¿:- [display].
 
 %% le terrain de jeu 16 *16
 defaultBoard([ [v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v],
@@ -20,7 +20,7 @@ defaultBoard([ [v,v,v,v,v,v,v,v,v,v,v,v,v,v,v,v],
         ).
 
 		
-%% remplace un element à un index I donné dans une liste
+%% remplace un element Ã  un index I donnÃ© dans une liste
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > 0, I1 is I-1, replace(T, I1, X, R).
 

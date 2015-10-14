@@ -1,4 +1,4 @@
-% FORWARD
+﻿% FORWARD
 actionForward(Idx) :- 	plane(Idx, X, Y, Life, Orientation),
 						Orientation == 'N',
 						!,

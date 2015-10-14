@@ -1,4 +1,4 @@
-% server(8000). pour lancer le server
+﻿% server(8000). pour lancer le server
 
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
