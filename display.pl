@@ -11,7 +11,11 @@ displayRow([Element|Row]) :- write(Element), write('|'), displayRow(Row).
 % Test call : display([[a,b,c],[c,d,e],[f,g,i]]).
 
 % Gameover displays
-playerOneWinsDisplay :- write('Player 1 wins!').
-playerTwoWinsDisplay :- write('Player 2 wins!').
-evenScoreDisplay :- write('Game finished!').
-drawDisplay :- write('Draw!').
+playerOneWinsDisplay :- write('Player 1 wins!'), nl.
+playerTwoWinsDisplay :- write('Player 2 wins!'), nl.
+drawDisplay :- write('Draw!'), nl.
+
+roundDisplay :- write('Round : '), round(NB), write(NB), nl.
+playerDisplay(Idx) :- 	plane(Idx, _, _, Life, _),
+						write('Player '), write(Idx), nl,
+						write('Remaining life : '), write(Life), nl.
