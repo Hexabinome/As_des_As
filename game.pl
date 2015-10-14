@@ -22,7 +22,7 @@ gameoverDeath :- plane(1, _, _, Life1, _), plane(2, _, _, Life2, _), Life1 =< 0,
 % If collision : both are at the same coordinates.
 gameover :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, drawDisplay, !.
 % If they  both are out of boundaries at the end of the turn
-gameover :- gameoverOutOfBoundary(1), gameoverOutOfBoundary(2), drawDisplay, !.
+gameover :- gameoverOutOfBoundary(1), gameoverOutOfBoundary(2), outOfBoundaryDisplay(1), outOfBoundaryDisplay(2), drawDisplay, !.
 
 % --- One winning side gameover
 % Gameover if one has no life left
@@ -30,8 +30,8 @@ gameover :- gameoverDeath(1), playerTwoWinsDisplay, !.
 gameover :- gameoverDeath(2), playerOneWinsDisplay, !.
 gameoverDeath(Idx) :- plane(Idx, _, _, Life, _), Life =< 0.
 % Gameover if one is out of the board
-gameover :- gameoverOutOfBoundary(1).
-gameover :- gameoverOutOfBoundary(2).
+gameover :- gameoverOutOfBoundary(1), outOfBoundaryDisplay(1), playerTwoWinsDisplay, !.
+gameover :- gameoverOutOfBoundary(2), outOfBoundaryDisplay(2), playerOneWinsDisplay, !.
 
 % Limit number of 200 rounds reached
 gameover :- round(200), drawDisplay, !.
@@ -50,6 +50,7 @@ step :-
 	% actions(2, ActionsP2),
 	% updatePlanes(ActionsP1, ActionsP2),
 	updatePlanes(ActionsP1, ['F', 'F', 'F']),
+	not(gameover),
 	playerDisplay(1),
 	displayBoard,
 	playerDisplay(2),
@@ -64,4 +65,3 @@ incrementRoundCounter :-
 	retract(round(X)), 
 	Y is X+1, 
 	assert(round(Y)).
-

@@ -17,3 +17,6 @@ roundDisplay :- write('Round : '), round(NB), write(NB), nl.
 playerDisplay(Idx) :- 	plane(Idx, _, _, Life, _),
 						write('Player '), write(Idx), nl,
 						write('Remaining life : '), write(Life), nl.
+
+outOfBoundaryDisplay(Idx) :- write('Player '), write(Idx), write(' out of board.'), nl.
+deathDisplay(Idx) :- write('Player '), write(Idx), write(' has been killed!'), nl.
