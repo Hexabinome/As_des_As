@@ -18,7 +18,7 @@ offensiveIA :- dist(1,2, Dinit),
 				update(2,4),
 				callPlaneAction(3,A1),
 				callPlaneAction(4,B1),
-				betterPosition(1,2,3,4),
+				betterPosition(1,3),
 				%valid changes
 				coupleaction(A2, B2),
 				%rollback
@@ -26,7 +26,7 @@ offensiveIA :- dist(1,2, Dinit),
 				update(4,6),
 				callPlaneAction(5,A2),
 				callPlaneAction(6,B2),
-				betterPosition(3,4,5,6),
+				betterPosition(3,5),
 				%valid changes
 				coupleaction(A3, B3),
 				%rollback
@@ -34,11 +34,11 @@ offensiveIA :- dist(1,2, Dinit),
 				update(6,8),
 				callPlaneAction(7,A3),
 				callPlaneAction(8,B3),
-				betterPosition(5,6,7,8),
+				betterPosition(5,7),
 				dist(7,8, D),
 				bestDist(BD),
 				D < BD,
-				write(D),nl,
+				%write(D),nl,
 				listing(plane),
 				retract(bestDist(BD)),
 				assert(bestDist(D)),
@@ -55,9 +55,11 @@ update(Idx1, Idx2) :- retract(plane(Idx2,_,_,_,_)),
 				plane(Idx1, X, Y, Pdv, Orientation),
 				assert(plane(Idx2, X, Y, Pdv, Orientation)).
 		
+betterPosition(I1, J1) :-I2 is I1+1, J2 is J1+1,
+				canFire(J1, J2).
 		
-				
-betterPosition(I1, I2, J1, J2) :- dist(I1, I2, D1),
+betterPosition(I1, J1) :-I2 is I1+1, J2 is J1+1,
+				dist(I1, I2, D1),
 				dist(J1, J2, D2),
 				D1 > D2.
 				
