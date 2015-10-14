@@ -5,6 +5,7 @@
 :- [plane].
 :- [board].
 :- [human_player].
+:- [ia_random].
 
 % Action structures that are used by human player and ai to store their moves
 actions(1, []).
@@ -15,14 +16,12 @@ round(0).
 
 % Game loop
 step :-
-	humanPlayer(1),
+	aiRandom(1),
 	actions(1, ActionsP1),
-	% aiRandom(2),
-	% actions(2, ActionsP2),
-	% updatePlanes(ActionsP1, ActionsP2),
-	% displayMoves(ActionsP1, ActionsP2),
-	updatePlanes(ActionsP1, ['F', 'F', 'F']),
-	displayMoves(ActionsP1, ['F', 'F', 'F']),
+	aiRandom(2),
+	actions(2, ActionsP2),
+	updatePlanes(ActionsP1, ActionsP2),
+	displayMoves(ActionsP1, ActionsP2),
 	not(gameoverRound),
 	playerDisplay(1),
 	displayBoard,

@@ -5,11 +5,17 @@
 %dummy plane test position an orientation for devs:
 % TODO: Remove. (actual plane positions shall be used instead).
 %(index, posX, posY, HP, orientation)
-plane(1, 0, 2, 3, 'S').
-plane(2, 15, 15, 3, 'E').
+%plane(1, 0, 2, 3, 'S').
+%plane(2, 15, 15, 3, 'E').
 
 % Possible movements as FACTS.
 moves(['F', 'FF', 'RT', 'LT', 'UT']).
+
+aiRandom(Idx) :- retract(actions(Idx, _)),
+					randomMove(Idx, Move1),
+					randomMove(Idx, Move2),
+					randomMove(Idx, Move3),
+				assert(actions(Idx, [Move1, Move2, Move3])).
 
 % USAGE: Returns R as a randomly chosen movement for a plane specified by index.
 randomMove(Idx, R) :- filter(Idx, F), random_member(R, F), print(R).
