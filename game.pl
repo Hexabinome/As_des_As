@@ -7,6 +7,7 @@
 :- [plane].
 :- [board].
 :- [human_player].
+:- [offensiveIA].
 
 % Action structures that are used by human player and ai to store their moves
 actions(1, []).

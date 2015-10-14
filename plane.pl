@@ -3,8 +3,14 @@
 
 % Faits qui definissent les positions initiales des avions.
 % Le premier argument correspond à l'indice de l'avion
-plane(1, 0, 0, 3, 'S').
-plane(2, 15, 15, 3, 'N').
+plane(1, 1, 1, 3, 'S').
+plane(2, 15, 4, 3, 'E').
+plane(3, 0, 0, 0, 0).
+plane(4, 0, 0, 0, 0).
+plane(5, 0, 0, 0, 0).
+plane(6, 0, 0, 0, 0).
+plane(7, 0, 0, 0, 0).
+plane(8, 0, 0, 0, 0).
 
 % Execute les coups de même indice en même temps
 updatePlanes([], []).
