@@ -18,7 +18,27 @@
     <div class="imgMap">
         <img src="map.png" />
     </div>
+	
+	
+	<div id="popup" class="popup_block">
+		<div class="row">
+			<h1 class="text-center">As des As</h1>
+		</div>
+		<div class="row">
+			<div class="row center-block">
+				<div class="center-block col-md-8" style="float:none;">
+					<button id="PvVIa" type="button" class="btn btn-primary col-md-4">Player VS. IA</button>
+					<button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-4">IA VS. IA</button>
+
+				</div>
+			</div>
+		</div>		
+	</div>
+
+	
     <div class="container my-container">
+		<a href="#?w=500" rel="popup_name" class="poplight"></a>
+
         <div class="row ">
             <div class="col-lg-6 col-xs-9">
                 <div class="row">
@@ -142,31 +162,72 @@
                     <div data-x="10" data-y="10" class="carre col-xs-1"></div>
                 </div>
             </div>
-            <div class="col-lg-6 col-xs-3 right-side">
-                <div class="score col-lg-offset-3 col-lg-6 col-md-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img src="avion.png" style="width:35px; height:40px;"/>
-                        </div>
-                        <div class="col-md-3">
-                            Vie :
-                        </div>
-                        <div class="col-md-3">
-                            <span id="vie_avion1" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                        <img src="avion.png" style="width:35px;height:40px;"/>
-                        </div>
-                        <div class="col-md-3">
-                            Vie :
-                        </div>
-                        <div class="col-md-3">
-                            <span id="vie_avion2" />
-                        </div>
-                    </div>
-                </div>
+            
+			<div class="col-lg-6 col-xs-3">
+				<div class="row fixed-heigh">
+					<div class="score col-lg-offset-3 col-lg-6 col-md-12 col-xs-12">
+						<div class="row">
+							<div class="col-xs-3">
+								<img src="avion.png" style="width:35px; height:40px;"/>
+							</div>
+							<div class="col-xs-4">
+								Vie :
+							</div>
+							<div class="col-xs-4">
+								<span id="vie_avion1" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-3">
+							<img src="avion.png" style="width:35px;height:40px;"/>
+							</div>
+							<div class="col-xs-4">
+								Vie :
+							</div>
+							<div class="col-xs-4">
+								<span id="vie_avion2" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row fixed-heigh">
+					<div class="row">
+						<div class="possibleAction">
+							<div class="row">
+								<span class="glyphicon glyphicon-arrow-up col-xs-offset-3 col-xs-2"></span>
+								<span class="glyphicon glyphicon-arrow-down col-xs-2"></span>
+								<span class="glyphicon glyphicon-arrow-right col-xs-2"></span>
+								<span class="glyphicon glyphicon-arrow-left col-xs-2"></span>
+							</div>
+							<div class="row">
+								<span class="col-xs-3">Possible action : </span>
+								<span class="col-xs-2">Forward</span>
+								<span class="col-xs-2">Around</span>
+								<span class="col-xs-2">Go right</span>
+								<span class="col-xs-2">Go left</span>
+							</div>
+						</div>
+						<div class="chosenAction">
+							<div class="row">
+								<span class="col-xs-3">Chosen action : </span>
+								<span id="action_0" class="col-xs-2"></span>
+								<span id="action_1" class="col-xs-2"></span>
+								<span id="action_2" class="col-xs-2"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+					<div class="row center-block">
+							<div class="col-md-4">
+								<button id="Jouer" type="button" class="btn btn-primary" disable="true">Play</button>
+							</div>
+							<div class="col-md-4">
+								<button id="Reset" type="button" class="btn btn-danger">Reset</button>
+							</div>
+					</div>
+				</div>
+				</div>
+				
             </div>
         </div>
     </div>
