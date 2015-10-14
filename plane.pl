@@ -1,10 +1,10 @@
-:- dynamic plane/5.
+﻿:- dynamic plane/5.
 :- [plane_actions].
 
 % Faits qui definissent les positions initiales des avions.
 % Le premier argument correspond à l'indice de l'avion
-plane(1, 5, 3, 3, 'S').
-plane(2, 5, 13, 3, 'O').
+plane(1, 0, 0, 3, 'S').
+plane(2, 15, 15, 3, 'N').
 
 % Execute les coups de même indice en même temps
 updatePlanes([], []).
@@ -15,6 +15,7 @@ updatePlanes([Action1|ActionList1], [Action2|ActionList2]) :- 	callPlaneAction(1
 																updatePlanes(ActionList1, ActionList2).
 
 % Big kind of switch, choosing between all implemented actions 
+callPlaneAction(Idx, Action) :- write(Action), nl, 1 == 2.
 callPlaneAction(Idx, Action) :- Action == 'F', actionForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'FF', actionFastForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'RT', actionRightTurn(Idx), !.

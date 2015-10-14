@@ -1,4 +1,4 @@
-:- dynamic actions/2.
+﻿:- dynamic actions/2.
 :- dynamic round/1.
 
 :- discontiguous gameover/0.
