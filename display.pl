@@ -24,7 +24,12 @@ shotDisplay(SrcIdx, DestIdx) :- write('Player '),
 								write(DestIdx),
 								write('!'),
 								nl.
-						
+displayMoves(ActionsP1, ActionsP2) :- displayPlayerMoves(1, ActionsP1), displayPlayerMoves(2, ActionsP2).
+displayPlayerMoves(Idx, Actions) :- write('Moves P'), write(Idx), write(' : ['), displayActions(Actions), write('].'), nl.
+displayActions([]).
+displayActions([FirstAction|Rest]) :- write(FirstAction), write(', '), displayActions(Rest).
+
+
 % Gameover reasons display
 outOfBoundaryDisplay(Idx) :- write('Player '), write(Idx), write(' out of board.'), nl.
 deathDisplay(Idx) :- write('Player '), write(Idx), write(' has been killed!'), nl.
