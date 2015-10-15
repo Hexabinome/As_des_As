@@ -1,11 +1,6 @@
 % Implementation of an A.I. doing random moves (under the premise that the selected
 % move does not lead the plane out of bounds).
 % [Maxou]
-% dummy plane test position an orientation for devs:
-% TODO: Remove. (actual plane positions shall be used instead).
-% (index, posX, posY, HP, orientation)
-% plane(1, 0, 2, 3, 'S').
-% plane(2, 15, 15, 3, 'E').
 
 % Possible movements as FACTS.
 moves(['F', 'FF', 'RT', 'LT', 'UT']).
