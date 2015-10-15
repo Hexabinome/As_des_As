@@ -1,53 +1,66 @@
-% Implementation of an A.I. doing random moves (under the prmise that the selected
+% Implementation of an A.I. doing random moves (under the premise that the selected
 % move does not lead the plane out of bounds).
 % [Maxou]
-
-%dummy plane test position an orientation for devs:
+% dummy plane test position an orientation for devs:
 % TODO: Remove. (actual plane positions shall be used instead).
-%(index, posX, posY, HP, orientation)
-%plane(1, 0, 2, 3, 'S').
-%plane(2, 15, 15, 3, 'E').
+% (index, posX, posY, HP, orientation)
+% plane(1, 0, 2, 3, 'S').
+% plane(2, 15, 15, 3, 'E').
 
 % Possible movements as FACTS.
 moves(['F', 'FF', 'RT', 'LT', 'UT']).
 
+% The three cannot be computed all at once, for each move influences the
+% following possibilities. Therefore the temporary position must be updated 
+% between the indivual move-choices. (This is covered by the randomMove 
+% predicates)
 aiRandom(Idx) :- retract(actions(Idx, _)),
-					randomMove(Idx, Move1),
-					randomMove(Idx, Move2),
-					randomMove(Idx, Move3),
-				assert(actions(Idx, [Move1, Move2, Move3])).
+		initTempPos(Idx),
+		print(Idx), print(':'),
+		randomMove(Move1),
+		randomMove(Move2),
+		randomMove(Move3),
+		nl,
+		retract(tempPos(_,_,_)),
+		assert(actions(Idx, [Move1, Move2, Move3])).
+			
+% Initially update the temporary position and orientation to the planes' values.
+initTempPos(Idx) :- plane(Idx, X, Y, _, O), assert(tempPos(X, Y, O)).
+
+% Updates the planes temporary position given a certain action.
+updateTempPos(Act) :- tempPos(OldX, OldY, OldO), newPos(NewX, NewY, NewO, Act), retract(tempPos(OldX, OldY, OldO)), assert(tempPos(NewX, NewY, NewO)).
 
 % USAGE: Returns R as a randomly chosen movement for a plane specified by index.
-randomMove(Idx, R) :- filter(Idx, F), random_member(R, F), print(R).
+randomMove(R) :- filter(F), random_member(R, F), updateTempPos(R), print(R), print('.').
  
 % Returns list F of all valid movements for a plane secified by index.
 % The criteria used to determine which option are valid and which are invalid is:
-% 'filterConditionX'. Note: 1, 2  Needs to be hard coded here, for the filter uses
-% swipl's 'include' API method which does not support passing the index as an 
-% additional argument.
-filter(1, F) :- moves(M), include(filterCondition1, M, F), print(F), print( -> ).
-filter(2, F) :- moves(M), include(filterCondition2, M, F), print(F), print( -> ).
+% 'filterConditionX'.
+filter(F) :- moves(M), include(filterCondition, M, F).%, print(F), print( -> ).
 
 % Use 'plane remains within bounds' as filter condition. (Stays in list ic condition is met).
-filterCondition1(Option) :- newPos(NewX, NewY, 1, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
-filterCondition2(Option) :- newPos(NewX, NewY, 2, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
+filterCondition(Option) :- newPos(NewX, NewY, _, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
 
 % Calculates a planes new position (presuming a certain movement) without actually
 % changing the position stocked in the DB. 
-newPos(NewX, NewY, Idx, 'F')  :- plane(Idx, X, Y, _, 'N'), NewX is X, NewY is Y-1.
-newPos(NewX, NewY, Idx, 'F')  :- plane(Idx, X, Y, _, 'E'), NewX is X+1, NewY is Y.
-newPos(NewX, NewY, Idx, 'F')  :- plane(Idx, X, Y, _, 'S'), NewX is X, NewY is Y+1.
-newPos(NewX, NewY, Idx, 'F')  :- plane(Idx, X, Y, _, 'W'), NewX is X-1, NewY is Y.
-newPos(NewX, NewY, Idx, 'FF') :- plane(Idx, X, Y, _, 'N'), NewX is X, NewY is Y-2.
-newPos(NewX, NewY, Idx, 'FF') :- plane(Idx, X, Y, _, 'E'), NewX is X+2, NewY is Y.
-newPos(NewX, NewY, Idx, 'FF') :- plane(Idx, X, Y, _, 'S'), NewX is X, NewY is Y+2.
-newPos(NewX, NewY, Idx, 'FF') :- plane(Idx, X, Y, _, 'W'), NewX is X-2, NewY is Y.
-newPos(NewX, NewY, Idx, 'RT') :- plane(Idx, X, Y, _, 'N'), NewX is X+1, NewY is Y-1.
-newPos(NewX, NewY, Idx, 'RT') :- plane(Idx, X, Y, _, 'E'), NewX is X+1, NewY is Y+1.
-newPos(NewX, NewY, Idx, 'RT') :- plane(Idx, X, Y, _, 'S'), NewX is X-1, NewY is Y+1.
-newPos(NewX, NewY, Idx, 'RT') :- plane(Idx, X, Y, _, 'W'), NewX is X-1, NewY is Y-1.
-newPos(NewX, NewY, Idx, 'LT') :- plane(Idx, X, Y, _, 'N'), NewX is X-1, NewY is Y-1.
-newPos(NewX, NewY, Idx, 'LT') :- plane(Idx, X, Y, _, 'E'), NewX is X+1, NewY is Y-1.
-newPos(NewX, NewY, Idx, 'LT') :- plane(Idx, X, Y, _, 'S'), NewX is X+1, NewY is Y+1.
-newPos(NewX, NewY, Idx, 'LT') :- plane(Idx, X, Y, _, 'W'), NewX is X-1, NewY is Y+1.
-newPos(NewX, NewY, Idx, 'UT') :- plane(Idx, X, Y, _, _),   NewX is X, NewY is Y.
+newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY-1, NewO = 'N'.
+newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY, NewO = 'E'.
+newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY+1, NewO = 'S'.
+newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY, NewO = 'W'.
+newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY-2, NewO = 'N'.
+newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'E'), NewX is OldX+2, NewY is OldY, NewO = 'E'.
+newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY+2, NewO = 'S'.
+newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'W'), NewX is OldX-2, NewY is OldY, NewO = 'W'.
+newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'N'), NewX is OldX+1, NewY is OldY-1, NewO = 'E'.
+newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY+1, NewO = 'S'.
+newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'S'), NewX is OldX-1, NewY is OldY+1, NewO = 'W'.
+newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY-1, NewO = 'N'.
+newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'N'), NewX is OldX-1, NewY is OldY-1, NewO = 'W'.
+newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY-1, NewO = 'N'.
+newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'S'), NewX is OldX+1, NewY is OldY+1, NewO = 'E'.
+newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY+1, NewO = 'S'.
+newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY, NewO = 'S'.
+newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'E'), NewX is OldX, NewY is OldY, NewO = 'W'.
+newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY, NewO = 'N'.
+newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'W'), NewX is OldX, NewY is OldY, NewO = 'E'.
+
