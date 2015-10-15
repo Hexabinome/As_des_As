@@ -15,7 +15,7 @@ gameoverBoardLimitTest(Idx) :- plane(Idx, _, Y, _, _), Y > 15, !.
 gameoverCollision :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, collisionDisplay, drawDisplay, !.
 
 % --- Limit number of 200 rounds reached
-gameoverRoundLimit :- round(200), roundLimitDisplay, drawDisplay, !.
+gameoverRoundLimit :- round(2000), roundLimitDisplay, drawDisplay, !.
 
 
 

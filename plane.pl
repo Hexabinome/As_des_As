@@ -5,7 +5,7 @@
 % Faits qui definissent les positions initiales des avions.
 % Le premier argument correspond à l'indice de l'avion
 plane(1, 0, 0, 3, 'S').
-plane(2, 15, 15, 3, 'N').
+plane(2, 0, 15, 3, 'W').
 plane(3, 0, 0, 0, 0).
 plane(4, 0, 0, 0, 0).
 plane(5, 0, 0, 0, 0).

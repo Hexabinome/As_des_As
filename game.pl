@@ -7,6 +7,7 @@
 :- [human_player].
 :- [ai_random].
 :- [ai_offensive].
+:- [ai_defensive].
 
 % Action structures that are used by human player and ai to store their moves
 actions(1, []).
@@ -18,17 +19,17 @@ round(0).
 % Game loop
 step :-
 	% ((round(X), X == 3, trace) ; true),
-	aiOffensive(1),
+	aiDefensive(1),
 	actions(1, ActionsP1),
 	aiOffensive(2),
 	actions(2, ActionsP2),
-	displayMoves(ActionsP1, ActionsP2),
+	%displayMoves(ActionsP1, ActionsP2),
 	updatePlanes(ActionsP1, ActionsP2),
 	not(gameoverRound),
-	playerDisplay(1),
-	displayBoard,
-	playerDisplay(2),
-	pressToContinue,
+	%playerDisplay(1),
+	%displayBoard,
+	%playerDisplay(2),
+	%pressToContinue,
 	game.
 
 %game :- gameover, !.

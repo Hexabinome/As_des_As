@@ -1,4 +1,10 @@
-﻿% FORWARD
+﻿action('FF').
+action('F').
+action('RT').
+action('LT').
+action('UT').
+
+% FORWARD
 actionForward(Idx) :- 	plane(Idx, X, Y, Life, Orientation),
 						Orientation == 'N',
 						!,
