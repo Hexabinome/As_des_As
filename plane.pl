@@ -4,8 +4,8 @@
 
 % Faits qui definissent les positions initiales des avions.
 % Le premier argument correspond à l'indice de l'avion
-plane(1, 1, 1, 3, 'E').
-plane(2, 1, 4, 3, 'E').
+plane(1, 0, 0, 3, 'S').
+plane(2, 15, 15, 3, 'N').
 plane(3, 0, 0, 0, 0).
 plane(4, 0, 0, 0, 0).
 plane(5, 0, 0, 0, 0).
@@ -30,7 +30,7 @@ callPlaneAction(Idx, Action) :- Action == 'LT', actionLeftTurn(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'UT', actionUTurn(Idx), !.
 
 % Error handling if unknown action. TODO : better error than "1 == 2"...
-callPlaneAction(Idx, Action) :- print('Unknown action '), print(Action), print(' for index '), print(Idx), 1 == 2.
+callPlaneAction(Idx, Action) :- write('Unknown action '), write(Action), write(' for index '), write(Idx), 1 == 2.
 
 % Fire methods
 fire(Idx) :- 	otherPlayer(Idx, OutIdx),
