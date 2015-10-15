@@ -121,6 +121,10 @@
 	height: 250px;
 }
 
+.icon-flipped {
+	transform: rotate(90deg);
+}
+
 /* pop - up : http://sohtanaka.developpez.com/tutoriels/javascript/creez-fenetre-modale-avec-css-et-jquery/*/
 
 #fade { /*--Masque opaque noir de fond--*/

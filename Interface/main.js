@@ -2,7 +2,16 @@ var avion1;
 var avion2;
 var boolPlayer = false;
 var counter;
+var tabActionUser = [];
 
+$(function() {
+	init();
+	bindClickCaseAction();
+	bindKeyAction();
+    
+});
+
+//Initialisation de divers paramètres.
 function init()
 {
 	openPopUp();
@@ -14,6 +23,7 @@ function init()
 	avion2 = new Avion('avion2', 5, 5, 2, 'est');
 }
 
+//Ouvre la popup
 function openPopUp()
 {
 	var popID = "popup";
@@ -40,7 +50,15 @@ function openPopUp()
 	});
 }
 
-function bindClickAction()
+function closePopUp()
+{
+	$('#fade , .popup_block').fadeOut(function() {
+		$('#fade, a.close').remove();  
+	});
+}
+
+//TODO a supprimer si plus utile
+function bindClickCaseAction()
 {
 	$(".carre").bind("click", function(e)
 	{
@@ -55,76 +73,7 @@ function bindClickAction()
 			avion2.deplacer($(this).data("x"), $(this).data("y"));
 		}
 	});
-}
-function bindKeyAction()
-{
-	counter = 2;
-	$(document).keypress(function( event ) {
-		if(boolPlayer)
-		{
-			//up
-			if ( event.keyCode == 38 ) {
-				event.preventDefault();
-				counter++;
-				$("#action_" + counter%3).html('<span class="glyphicon glyphicon-arrow-up"></span>');
-			}
-			//down
-			else if ( event.keyCode == 40 ) {
-				event.preventDefault();
-				counter++;
-				$("#action_" + counter%3).html('<span class="glyphicon glyphicon-arrow-down"></span>');
-			}
-			//right
-			else if ( event.keyCode == 39 ) {
-				event.preventDefault();
-				counter++;
-				$("#action_" + counter%3).html('<span class="glyphicon glyphicon-arrow-right"></span>');
-			}
-			//left
-			else if ( event.keyCode == 37 ) {
-				event.preventDefault();
-				counter++;
-				$("#action_" + counter%3).html('<span class="glyphicon glyphicon-arrow-left"></span>');
-			}
-			//space
-			else if ( event.charCode == 32 ) {
-				event.preventDefault();
-			}
-		}
-	});
-}
 
-function planeState(param)
-{
-	avion1.deplacer(param.avion1.x, param.avion1.y, param.avion1.d);
-	avion1.modifierVie(param.avion1.v);
-	
-	avion2.deplacer(param.avion2.x, param.avion2.y, param.avion2.d);
-	avion2.modifierVie(param.avion2.v);	
-}
-
-function appelerProlog()
-{
-	$.ajax({
-		url: "http://localhost:8000/test",
-		type: "GET",
-		dataType: "jsonp",
-		success: function (data) {
-			data;
-		}
-	});
-}
-
-function closePopUp()
-{
-	$('#fade , .popup_block').fadeOut(function() {
-		$('#fade, a.close').remove();  
-	});
-}
-
-$(function() {
-	/* Initialisation des handler*/
-	
 	$("#PvVIa").bind('click', function() {
 		closePopUp();
 		$('#Jouer').prop('disabled', false);
@@ -141,23 +90,130 @@ $(function() {
 		
 		avion1.deplacer(3, 3);
 		avion2.deplacer(5, 5);
-		
-		//setInterval(appelerProlog, 2000);
-		appelerProlog();
 	});
 	
-	$("#Play").bind('click', function() {
-		
-		//setInterval(appelerProlog, 2000);
+	$("#Play").bind('click', function(e) 
+	{
+		e.stopPropagation();
+		console.debug(tabActionUser.length);
+		if(tabActionUser.length >=3)
+		{
+			$("#Play").popover('disable');
+			//récupère les trois dernières action faites
+			var action = tabActionUser.slice(tabActionUser.length - 3, tabActionUser.length);
+			tabActionUser = [];
+			viderActionFaites();
+			
+			appelerPrologWithParam(action);
+
+		}
+		else
+		{
+
+			$("#Play").popover('enable');
+			$("#Play").popover('show');
+		}
 		appelerProlog();
 	});
 	
 	$("#Reset").bind('click', function() {
 		init();
 	});
+}
+
+function viderActionFaites()
+{
+	for(var i = 0; i <3; i++)
+	{
+		$("#action_" + i).html('');
+	}	
+}
+
+//Bind les divers actions à réaliser sur l'évenement clique
+function bindKeyAction()
+{
+	//initialiser à 2 car ++ puis % 3 pour la première action
+	counter = 2;
+	$(document).keypress(function( event ) {
+		if(boolPlayer)
+		{
+			//up
+			if ( event.keyCode == 38 ) {
+				event.preventDefault();
+				counter++;
+				$("#action_" + counter%3).html('<i class="glyphicon glyphicon-arrow-up"></i>');
+
+				tabActionUser.push("F");
+			}
+			//down
+			else if ( event.keyCode == 40 ) {
+				event.preventDefault();
+				counter++;
+				$("#action_" + counter%3).html('<i class="glyphicon glyphicon-arrow-down"></i>');
+
+				tabActionUser.push("UT");
+			}
+			//right
+			else if ( event.keyCode == 39 ) {
+				event.preventDefault();
+				counter++;
+				$("#action_" + counter%3).html('<i class="glyphicon glyphicon-arrow-right"></i>');
+
+				tabActionUser.push("RT");
+			}
+			//left
+			else if ( event.keyCode == 37 ) {
+				event.preventDefault();
+				counter++;
+				$("#action_" + counter%3).html('<i class="glyphicon glyphicon-arrow-left"></i>');
+
+				tabActionUser.push("LT");
+			}
+			//space
+			else if ( event.charCode == 32 ) {
+				event.preventDefault();
+				counter++;
+				$("#action_" + counter%3).html('<i class="glyphicon glyphicon-backward icon-flipped"></i>');
+
+				tabActionUser.push("FF");
+			}
+		}
+	});
+}
+
+//Appeller par prolog
+function planeState(param)
+{
+	avion1.deplacer(param.avion1.x, param.avion1.y, param.avion1.d);
+	avion1.modifierVie(param.avion1.v);
 	
-	init();
-	bindClickAction();
-	bindKeyAction();
-    
+	avion2.deplacer(param.avion2.x, param.avion2.y, param.avion2.d);
+	avion2.modifierVie(param.avion2.v);	
+}
+
+//Function appellant le prolog. Le callback est sur planeState
+function appelerProlog()
+{
+	$.ajax({
+		url: "http://localhost:8000/test",
+		type: "GET",
+		dataType: "jsonp",
+		success: function (data) {
+			data;
+		}
+	});
+}
+
+//Fonction appellant le prolog. Le callback est sur planeState
+function appelerPrologWithParam(param)
+{
+	//TODO
+}
+
+//Gestion de la toltips sur le bouton play lorsque le joueur n'a pas fait aux moins trois action
+$(function() {
+	$('#Play').popover({
+	    html: true,
+	    content: 'Select at least 3 actions to realize',
+	});
 });
