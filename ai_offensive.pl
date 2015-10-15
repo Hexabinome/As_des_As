@@ -8,7 +8,20 @@ actFire(0).
 
 coupleAction(X, Y) :- action(X), action(Y).
 
-aiOffensive(Idx) :- otherPlayer(Idx, OtherIdx),
+aiOffensive(Idx):- 
+				
+				playOffensive(Idx, Sol),
+				not(playOffensive(Idx, _)),
+				
+				retract(actions(Idx, _)),
+				assert(actions(Idx, Sol)).
+
+randomOfDeath :- % If random > 7 alors true
+					random(0, 12, X),
+					X > 7.
+
+
+playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				dist(Idx, OtherIdx, Dinit),
 				% Initial distance between planes
 				retractall(bestDistO(_)),
@@ -54,17 +67,9 @@ aiOffensive(Idx) :- otherPlayer(Idx, OtherIdx),
 				D < BD,
 				retract(bestDistO(BD)),
 				assert(bestDistO(D)),
-				%write(A1),nl,
-				%write(A2),nl,
-				%write(A3),nl,
-				%write(B1),nl,
-				%write(B2),nl,
-				%write(B3),nl,
-				%write(D), nl,
-				retract(actions(Idx, _)),
-				assert(actions(Idx, [A1, A2, A3])),
-				% The first solution. TODO : choose beetween all best solutions (randomly)
-				!.
+				
+				append([A1, A2, A3], [], Sol).
+				
 				
 				
 % Update plane Idx2 with values of plane Idx1
