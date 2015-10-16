@@ -1,22 +1,21 @@
 # As_des_As
 ###### Rules:
-As des As is a logic Prolog program of a plane fight with multiple IA.
-Each turn the two players will choose 3 actions to execute, at the same time. 
-During each move, if a plane is able to shoot the other one, it does and take off one life point of its opponent.
-A player win, when the other player's life has reached 0.
+As des As (or Ace of Aces originally) is a plane fight board game published in 1980. This program is a playable version with multiple AIs, made with the logical programming langage Prolog.
+Each turn the two players will choose three actions that will be executed at the same time. 
+During each move, a plane shoots its enemy if he is in range, which makes the latter lose one life point.
+A player wins when the other player's life has reached 0.
 
-Beware! if a player is out of the board at the end of the 3 moves, he looses the game.
+Beware! If a player is out of the board at the end of the three moves, he loses the game.
 
 ### IA:
 We provide many IA with different behaviour such as:
 - Random.
 - Offensive.
 - Defensive.
-- Hybrid
+- Hybrid.
 
 ### Human Player:
-In order to make this program, as ludic as possible, we provide the possibility to switch between an IA and a Human player, to challenge each IA.
+In order to make this program, as ludic as possible, we provide the possibility to switch between an AI and a human player, to challenge each IA.
 
 ### IHM:
-We have developed a light web interface to show the fight result between 2 IA or to take part of the battle!
-
+We have developed a light web interface to show the fight result between 2 AIs or to take part of the battle!
