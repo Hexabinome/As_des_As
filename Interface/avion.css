@@ -1,8 +1,8 @@
 /* Une case*/
 .carre
 {
-	width:50px;
-	height:50px;
+	width:40px;
+	height:40px;
 	border:1px solid #000;
 }
 
@@ -65,7 +65,7 @@
 	width:35px;
 	height:40px;
 	opacity: 1;
-	
+
 }
 
 /* affiche l'image en arrière plan*/
@@ -97,10 +97,10 @@
             -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
     position:relative;
     top:50%;
-	
+
 	margin-bottom: 20px;
 	padding: 10px 5px 10px 10px;
-	
+
 }
 
 .chosenAction
@@ -111,7 +111,7 @@
             -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
     position:relative;
     top:50%;
-	
+
 	margin-bottom: 20px;
 	padding: 10px 5px 10px 10px;
 }
