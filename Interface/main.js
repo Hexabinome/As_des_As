@@ -6,7 +6,7 @@ var tabActionUser = [];
 
 $(function() {
 	init();
-	bindClickCaseAction();
+	bindClick();
 	bindKeyAction();
     
 });
@@ -57,69 +57,13 @@ function closePopUp()
 	});
 }
 
-//TODO a supprimer si plus utile
-function bindClickCaseAction()
-{
-	$(".carre").bind("click", function(e)
-	{
-		if($(this).hasClass("vert"))
-		{
-			//TODO appeler le prolog
-			avion1.deplacer($(this).data("x"), $(this).data("y"));
-		}
-		if($(this).hasClass("rouge"))
-		{
-			//TODO appeler le prolog
-			avion2.deplacer($(this).data("x"), $(this).data("y"));
-		}
+//Gestion de la toltips sur le bouton play lorsque le joueur n'a pas fait aux moins trois action
+$(function() {
+	$('#Play').popover({
+	    html: true,
+	    content: 'Select at least 3 actions to realize',
 	});
-
-	$("#PvVIa").bind('click', function() {
-		closePopUp();
-		$('#Jouer').prop('disabled', false);
-		
-		boolPlayer = true;
-		
-		avion1.deplacer(3, 3);
-		avion2.deplacer(5, 5);
-		
-	});
-	
-	$("#IaVsIa").bind('click', function() {
-		closePopUp();
-		
-		avion1.deplacer(3, 3);
-		avion2.deplacer(5, 5);
-	});
-	
-	$("#Play").bind('click', function(e) 
-	{
-		e.stopPropagation();
-		console.debug(tabActionUser.length);
-		if(tabActionUser.length >=3)
-		{
-			$("#Play").popover('disable');
-			//récupère les trois dernières action faites
-			var action = tabActionUser.slice(tabActionUser.length - 3, tabActionUser.length);
-			tabActionUser = [];
-			viderActionFaites();
-			
-			appelerPrologWithParam(action);
-
-		}
-		else
-		{
-
-			$("#Play").popover('enable');
-			$("#Play").popover('show');
-		}
-		appelerProlog();
-	});
-	
-	$("#Reset").bind('click', function() {
-		init();
-	});
-}
+});
 
 function viderActionFaites()
 {
@@ -129,6 +73,7 @@ function viderActionFaites()
 	}	
 }
 
+//---------------------------------- Bind js 
 //Bind les divers actions à réaliser sur l'évenement clique
 function bindKeyAction()
 {
@@ -181,21 +126,98 @@ function bindKeyAction()
 	});
 }
 
-//Appeller par prolog
-function planeState(param)
+//TODO a supprimer si plus utile
+function bindClick()
 {
-	avion1.deplacer(param.avion1.x, param.avion1.y, param.avion1.d);
+	$(".carre").bind("click", function(e)
+	{
+		if($(this).hasClass("vert"))
+		{
+			//TODO appeler le prolog
+			avion1.deplacer($(this).data("x"), $(this).data("y"));
+		}
+		if($(this).hasClass("rouge"))
+		{
+			//TODO appeler le prolog
+			avion2.deplacer($(this).data("x"), $(this).data("y"));
+		}
+	});
+
+	$("#PvVIa").bind('click', function() {
+		closePopUp();
+		$('#Jouer').prop('disabled', false);
+		
+		boolPlayer = true;
+		
+		initPlaneProlog();
+	});
+	
+	$("#IaVsIa").bind('click', function() {
+		closePopUp();
+		
+		initPlaneProlog();
+		
+		setInterval(nextProlog, 1000 * 1 );
+	});
+	
+	$("#Play").bind('click', function(e) 
+	{
+		e.stopPropagation();
+		console.debug(tabActionUser.length);
+		if(tabActionUser.length >=3)
+		{
+			$("#Play").popover('disable');
+			//récupère les trois dernières action faites
+			var action = tabActionUser.slice(tabActionUser.length - 3, tabActionUser.length);
+			tabActionUser = [];
+			viderActionFaites();
+			
+			appelerPrologWithParam(action);
+		}
+		else
+		{
+			$("#Play").popover('enable');
+			$("#Play").popover('show');
+		}
+		appelerProlog();
+	});
+	
+	$("#Reset").bind('click', function() {
+		init();
+	});
+}
+
+// ----------------------------------------  Appelle prolog et callback
+//Appeller par prolog
+function initPlane(param)
+{
+	console.debug(param);
+	avion1.deplacer((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
 	avion1.modifierVie(param.avion1.v);
 	
-	avion2.deplacer(param.avion2.x, param.avion2.y, param.avion2.d);
+	avion2.deplacer((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
 	avion2.modifierVie(param.avion2.v);	
 }
 
+
 //Function appellant le prolog. Le callback est sur planeState
-function appelerProlog()
+function initPlaneProlog()
 {
 	$.ajax({
-		url: "http://localhost:8000/test",
+		url: "http://localhost:8000/initPlane",
+		type: "GET",
+		dataType: "jsonp",
+		success: function (data) {
+			data;
+		}
+	});
+}
+
+function nextProlog()
+{
+	console.debug('ho');
+	$.ajax({
+		url: "http://localhost:8000/next",
 		type: "GET",
 		dataType: "jsonp",
 		success: function (data) {
@@ -210,10 +232,3 @@ function appelerPrologWithParam(param)
 	//TODO
 }
 
-//Gestion de la toltips sur le bouton play lorsque le joueur n'a pas fait aux moins trois action
-$(function() {
-	$('#Play').popover({
-	    html: true,
-	    content: 'Select at least 3 actions to realize',
-	});
-});

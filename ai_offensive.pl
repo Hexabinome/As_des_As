@@ -67,7 +67,7 @@ aiOffensive(Idx) :- otherPlayer(Idx, OtherIdx),
 				!.
 				
 				
-% Update plane Idx2 with values of plane Idx1
+% Create a new plane Idx2 with the values of the Idx1
 update(Idx1, Idx2) :- 	retract(plane(Idx2, _, _, _, _)),
 						plane(Idx1, X, Y, Life, Orientation),
 						assert(plane(Idx2, X, Y, Life, Orientation)).
@@ -85,9 +85,9 @@ betterPositionO(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 									dist(J1, J2, D2),
 									D1 >= D2.
 				
-
-dist(I, J, Dist) :- plane(I, Ix, Iy, _, _),
-			plane(J, Jx, Jy, _, _),
+%The Dist variable take the sum of the difference between the Idx plain absciss and OtherIdx plane absciss and same for ordinate.
+dist(Idx, OtherIdx, Dist) :- plane(Idx, Ix, Iy, _, _),
+			plane(OtherIdx, Jx, Jy, _, _),
 			X is abs(Ix - Jx),
 			Y is abs(Iy - Jy),
 			Dist is X + Y.

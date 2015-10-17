@@ -43,8 +43,20 @@ incrementRoundCounter :-
 	assert(round(Y)).
 
 % If InIdx == 1, OutIdx == 2, else if InIdx == 2, OutIdx == 1
+%Depending on the index of the first player, this function return the index of the other one : OutIdx
 otherPlayer(InIdx, OutIdx) :- InIdx == 1, OutIdx is 2, !.
 otherPlayer(InIdx, OutIdx) :- InIdx == 2, OutIdx is 1, !.
 								
 pressToContinue :- 	write('** Write any character + "." to go to the next step. **'), nl,
 					read(_).
+
+% ----------------------------- Server exchange section 
+% Game loop
+stepHttp :-
+	incrementRoundCounter,
+	aiDefensive(1),
+	actions(1, ActionsP1),
+	aiOffensive(2),
+	actions(2, ActionsP2),
+	updatePlanes(ActionsP1, ActionsP2),
+	not(gameoverRound).
