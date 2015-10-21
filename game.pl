@@ -18,8 +18,7 @@ round(0).
 
 % Game loop
 step :-
-	% ((round(X), X == 3, trace) ; true),
-	aiDefensive(1),
+	aiOffensive(1),
 	actions(1, ActionsP1),
 	aiOffensive(2),
 	actions(2, ActionsP2),

@@ -9,12 +9,13 @@ actFire(0).
 coupleAction(X, Y) :- action(X), action(Y).
 
 aiOffensive(Idx):- 
+				findall(OneSol, playOffensive(Idx, OneSol), AllSolutions),
 				
-				playOffensive(Idx, Sol),
-				not(playOffensive(Idx, _)),
-				
+				write(Idx), nl, write(AllSolutions), nl,
+				% Choose one solution of all of them
+				random_member(FinalSol, AllSolutions),
 				retract(actions(Idx, _)),
-				assert(actions(Idx, Sol)).
+				assert(actions(Idx, FinalSol)).
 
 randomOfDeath :- % If random > 7 alors true
 					random(0, 12, X),
