@@ -1,18 +1,23 @@
 trois IA : 
+IA : 
 
-testPosition : sert à vérifier : pas sortir de la base : 
-
-IA offensive : On essait de tirer le plus possible sinon on ce rapproche. 
+IA offensive : On essait de tirer le plus possible sinon on ce rapproche. 	--> JOLAN
 IA deffensive: se recule sans ce faire tirer dessus. 
 
 Amélioration des IA : l'orientation des avions à la fin des tours
 
-IA hybride : essait de maximiser (tir + / tir -)
+IA hybride : essait de maximiser (tir + / tir -)							--> MOMO
 IA qui apprend contre qui l'IA joue : deffensive ou offensive. 
 
-IA kamikaz
+IA kamikaz 																	--> PAPIN
+
+amélioration du random														-->Alexis et David
+
 
 explication du code : 
+
+testPosition : sert à vérifier : pas sortir de la base : 
+
 plane : 
 	--> updatePlanes  : execute la liste des actions etc. 
 game : 
