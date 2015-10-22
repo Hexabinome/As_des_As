@@ -1,0 +1,96 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				FAITS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				PREDICATS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Genere la prochaine liste de coup a jouer pour l'avion d'indice Idx
+monIA(Idx):-
+				% Crée une liste à partir de toutes les solutions renvoyées par mon IA
+				findall(OneSol, playMonIA(Idx, OneSol), AllSolutions),
+				
+				% Choisi une solution parmis les solutions selectionnées
+				random_member(FinalSol, AllSolutions),
+				
+				% Crée le prochain coup à jouer
+				retract(actions(Idx, _)),
+				assert(actions(Idx, FinalSol)).
+
+
+##############################################
+METTRE UNE EXPLICATION DU COMPORTEMENT DE MON IA ICI
+##############################################
+playMonIA(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+				
+				% Genere tous les couples d'actions possibles pour le premier coup
+				coupleAction(A1, B1),
+				update(Idx, 3),
+				update(OtherIdx, 4),
+				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 1 et 2
+				callPlaneAction(3, A1),
+				callPlaneAction(4, B1),
+				##############################################
+				METTRE ICI L'HEURISTIQUE DE FIN DU COUP 1
+				##############################################
+				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
+				betterPosition(Idx, OtherIdx, 3, 4),
+				
+				
+				% Genere tous les couples d'actions possibles pour le second coup
+				coupleAction(A2, B2),
+				update(3, 5),
+				update(4, 6),
+				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 3 et 4
+				callPlaneAction(5, A2),
+				callPlaneAction(6, B2),
+				##############################################
+				METTRE ICI L'HEURISTIQUE DE FIN DU COUP 2
+				##############################################
+				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
+				betterPosition(3, 4, 5, 6),
+				
+				
+				% Genere tous les couples d'actions possibles pour le troisieme coup
+				coupleAction(A3, B3),
+				update(5, 7),
+				update(6, 8),
+				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 5 et 6
+				callPlaneAction(7, A3),
+				callPlaneAction(8, B3),
+				
+				
+				##############################################
+				METTRE ICI L'HEURISTIQUE DE FIN DU COUP 3
+				##############################################
+				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
+				betterPosition(5, 6, 7, 8),
+				
+				
+				% Verifie que la position finale des deux avions n'est pas hors de l'air de jeu [0,15]
+				testPosition(7), testPosition(8),
+				
+				
+				##############################################
+				METTRE ICI L'HEURISTIQUE SUR LE TOUR
+				##############################################
+				
+				
+				% On met nos actions dans une liste afin de les retourner
+				append([A1, A2, A3], [], Sol).
+				
+				
+				
+
+##############################################
+PLACER ICI LES PREDICATS SERVANT A L'HEURISTIQUE
+##############################################
+par exemple la fonction qui permet de dire, pour une IA,
+ce qui est une meilleure position après un coup							
+
+betterPosition(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
+									dist(J1, J2, D2),
+									D1 >= D2.

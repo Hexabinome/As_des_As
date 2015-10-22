@@ -2,16 +2,35 @@
 :- [plane_actions].
 :- [gameover].
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				FAITS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Faits qui definissent les positions initiales des avions.
-% Le premier argument correspond à l'indice de l'avion
+% args:	1: Indice de l'avion
+%		2: Position en x
+%		3: Position en y
+% 		4: Points de vie
+%		5: Orientation
+
+% Les avions 1 et 2 sont les avions des joueurs
 plane(1, 0, 0, 3, 'S').
-plane(2, 0, 15, 3, 'W').
+plane(2, 15, 15, 3, 'W').
+
+% Les avions 3 à 8 sont des avions 'tmp' pour les IA
 plane(3, 0, 0, 0, 0).
 plane(4, 0, 0, 0, 0).
 plane(5, 0, 0, 0, 0).
 plane(6, 0, 0, 0, 0).
 plane(7, 0, 0, 0, 0).
 plane(8, 0, 0, 0, 0).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				PREDICATS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Execute les coups de même indice en même temps
 updatePlanes([], []).
@@ -38,7 +57,9 @@ fire(Idx) :- 	otherPlayer(Idx, OutIdx),
 				decrementLife(OutIdx),
 				shotDisplay(Idx, OutIdx).
 fire(_).
-				
+
+% Prédicats qui renvoient True si l'avion d'indice IdxSrc peut
+% tirer sur l'avion d'indice IdxTarget	
 canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
 								plane(IdxTarget, X2, Y2, _, _),
 								Orientation1 == 'N', !,

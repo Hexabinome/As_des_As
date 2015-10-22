@@ -1,4 +1,8 @@
-﻿% --- Death tests. gameoverDeath/0 = draw testing. gameoverDeath/1 = one player testing
+﻿%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				PREDICATS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% --- Death tests. gameoverDeath/0 = draw testing. gameoverDeath/1 = one player testing
 gameoverDeath :- gameoverDeathTest(1), gameoverDeathTest(2), deathDisplay(1), deathDisplay(2), drawDisplay, !.
 gameoverDeath(Idx) :- gameoverDeathTest(Idx), deathDisplay(Idx), otherPlayer(Idx, OutIdx), playerWinDisplay(OutIdx).
 gameoverDeathTest(Idx) :- plane(Idx, _, _, Life, _), Life =< 0.
@@ -14,7 +18,7 @@ gameoverBoardLimitTest(Idx) :- plane(Idx, _, Y, _, _), Y > 15, !.
 % --- Collision at the end of the round
 gameoverCollision :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, collisionDisplay, drawDisplay, !.
 
-% --- Limit number of 200 rounds reached
+% --- Limit number of 2000 rounds reached
 gameoverRoundLimit :- round(2000), roundLimitDisplay, drawDisplay, !.
 
 

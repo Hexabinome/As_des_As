@@ -1,8 +1,25 @@
-﻿action('FF').
+﻿% Ce fichier defini toutes les actions possibles
+% ainsi que les effets qu'elles ont sur les avions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				FAITS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+action('FF').
 action('F').
 action('RT').
 action('LT').
 action('UT').
+
+% Action structures that are used by human player and ai to store their moves
+actions(1, []).
+actions(2, []).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				PREDICATS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chaque prédicat prend l'index de l'avion qui effectue l'action
+% en entrée
 
 % FORWARD
 actionForward(Idx) :- 	plane(Idx, X, Y, Life, Orientation),
