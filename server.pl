@@ -36,8 +36,6 @@ next(Request) :-
     format('initPlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
 						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', [X1, Y1, V1, D1, X2, Y2, V2, D2] ).
 
-
-
 		%http_parameters(Request,
 		%	[ title(Title, [ optional(true) ]),
 		%	  name(Name,   [ length >= 2 ]),

@@ -59,3 +59,12 @@ stepHttp :-
 	actions(2, ActionsP2),
 	updatePlanes(ActionsP1, ActionsP2),
 	not(gameoverRound).
+	
+stepHttpPlayer(list):-
+	incrementRoundCounter,
+	aiOffensive(2),
+	actions(2, ActionsP2),
+	retract(actions(1, _)),
+	assert(actions(1, list)),
+	updatePlanes(list, ActionsP2),
+	not(gameoverRound).
