@@ -1,0 +1,82 @@
+:- dynamic gameWinner/1.
+:- dynamic playerWinsCounter/2.
+:- dynamic simulatedGames/1.
+
+:- [simulation_gameover_plane].
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				FAITS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plays a lots of game between two AIs without output and counts who wins and looses
+simulatedGames(1).
+maxGames(10).
+
+
+playerWinsCounter(1, 0). % Player 1
+playerWinsCounter(2, 0). % Player 2
+playerWinsCounter(3, 0). % Collision draws
+playerWinsCounter(4, 0). % Killed at the same time draws
+playerWinsCounter(5, 0). % Out of board draws
+
+gameWinner(-1).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%				PREDICATS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+simulate :- simulatedGames(NbGames), maxGames(MaxGames), write('Round: '), write(NbGames), write('/'), write(MaxGames), nl, NbGames > MaxGames, displayStatistics, !.
+simulate :- reset, playOneGame, !, incrementWinnerCounter, simulate.
+
+incrementWinnerCounter :-	
+								gameWinner(Idx),
+								retract(playerWinsCounter(Idx, Wins)),
+								IncrementedWins is Wins+1,
+								assert(playerWinsCounter(Idx, IncrementedWins)),
+								retract(simulatedGames(NbGames)),
+								IncrementedNbGames is NbGames+1,
+								assert(simulatedGames(IncrementedNbGames)).
+
+% Fills the the winning index in gameWinner fact (assert made by gameover predicates in 'simulation_gameover_plane' file
+playOneGame :- gameoverRoundSimulation, !.
+playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \== -1).
+
+simulationStep :- 
+	aiOffensive(1),	% joueur 1
+	actions(1, ActionsP1),
+	aiOffensive(2), % joueur 2
+	actions(2, ActionsP2),
+	updatePlanesSimulation(ActionsP1, ActionsP2), % Execution des coups de chaque avion
+	playOneGame.
+
+	
+displayStatistics :- 	playerWinsCounter(1, P1),
+						playerWinsCounter(2, P2),
+						playerWinsCounter(3, CollisionDraws),
+						playerWinsCounter(4, DeathDraws),
+						playerWinsCounter(5, BoardDraws),
+						maxGames(MaxGames),
+						write('Player 1: '),
+						write(P1),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Player 2: '),
+						write(P2),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Draws due to a collision: '),
+						write(CollisionDraws),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Draws due to simultaneous deaths: '),
+						write(DeathDraws),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Draws due to an out of board (should not happen to an AI): '),
+						write(BoardDraws),
+						write('/'),
+						write(MaxGames),
+						nl.

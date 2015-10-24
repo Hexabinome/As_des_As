@@ -9,6 +9,7 @@
 :- ['AI/ai_random'].
 :- ['AI/ai_offensive'].
 :- ['AI/ai_defensive'].
+:- ['Simulation/simulation'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
@@ -26,10 +27,10 @@ step :-
 	aiOffensive(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiDefensive(2),
+	aiOffensive(2),
 	actions(2, ActionsP2),
-	%displayMoves(ActionsP1, ActionsP2),
-	updatePlanes(ActionsP1, ActionsP2),
+	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
+	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
 	not(gameoverRound),
 	%playerDisplay(1),
 	%displayBoard,
@@ -42,7 +43,6 @@ game :- incrementRoundCounter, roundDisplay, step.
 
 % Increment the round counter
 incrementRoundCounter :-
-	round(X), 
 	retract(round(X)), 
 	Y is X+1, 
 	assert(round(Y)).
