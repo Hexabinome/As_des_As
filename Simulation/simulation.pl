@@ -24,8 +24,20 @@ gameWinner(-1).
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-simulate :- simulatedGames(NbGames), maxGames(MaxGames), write('Round: '), write(NbGames), write('/'), write(MaxGames), nl, NbGames > MaxGames, displayStatistics, !.
-simulate :- reset, playOneGame, !, incrementWinnerCounter, simulate.
+simulate :-
+		simulatedGames(NbGames),
+		maxGames(MaxGames),
+		% Display current round
+		write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
+		% If its finished
+		NbGames > MaxGames,
+		displayStatistics, !.
+simulate :-
+	reset,
+	playOneGame,
+	!,
+	incrementWinnerCounter,
+	simulate.
 
 incrementWinnerCounter :-	
 								gameWinner(Idx),
@@ -40,6 +52,7 @@ incrementWinnerCounter :-
 playOneGame :- gameoverRoundSimulation, !.
 playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \== -1).
 
+% Is false if one plane died during actions
 simulationStep :- 
 	aiOffensive(1),	% joueur 1
 	actions(1, ActionsP1),
@@ -49,18 +62,19 @@ simulationStep :-
 	playOneGame.
 
 	
-displayStatistics :- 	playerWinsCounter(1, P1),
+displayStatistics :- 
+						playerWinsCounter(1, P1),
 						playerWinsCounter(2, P2),
 						playerWinsCounter(3, CollisionDraws),
 						playerWinsCounter(4, DeathDraws),
 						playerWinsCounter(5, BoardDraws),
 						maxGames(MaxGames),
-						write('Player 1: '),
+						write('Player 1 wins: '),
 						write(P1),
 						write('/'),
 						write(MaxGames),
 						nl,
-						write('Player 2: '),
+						write('Player 2 wins: '),
 						write(P2),
 						write('/'),
 						write(MaxGames),

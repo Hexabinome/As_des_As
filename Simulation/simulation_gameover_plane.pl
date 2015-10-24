@@ -2,6 +2,8 @@
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Contains the gameover predicates for 'simulate'. Instead of displaying the winner, it 
+
 % --- Death tests. gameoverDeath/0 = draw testing. gameoverDeath/1 = one player testing
 gameoverDeathSimulation :- gameoverDeathTest(1), gameoverDeathTest(2), simulateWinnerIs(4), !.
 gameoverDeathSimulation(Idx) :- gameoverDeathTest(Idx), otherPlayer(Idx, OutIdx), simulateWinnerIs(OutIdx).
@@ -14,7 +16,7 @@ gameoverBoardLimitSimulation(Idx) :- gameoverBoardLimitTest(Idx), otherPlayer(Id
 gameoverCollisionSimulation :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, simulateWinnerIs(3), !.
 
 % --- Limit number of 200 rounds reached for a simulation game
-gameoverRoundLimitSimulation :- round(2000), simulateWinnerIs(0), !.
+gameoverRoundLimitSimulation :- round(200), simulateWinnerIs(0), !.
 
 
 % End of round gameover
