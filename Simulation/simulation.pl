@@ -27,12 +27,14 @@ gameWinner(-1).
 simulate :-
 		simulatedGames(NbGames),
 		maxGames(MaxGames),
-		% Display current round
-		write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
 		% If its finished
 		NbGames > MaxGames,
 		displayStatistics, !.
 simulate :-
+	simulatedGames(NbGames),
+	maxGames(MaxGames),
+	% Display current round
+	write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
 	reset,
 	playOneGame,
 	!,
@@ -54,7 +56,7 @@ playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \==
 
 % Is false if one plane died during actions
 simulationStep :- 
-	aiOffensive(1),	% joueur 1
+	aiDefensive(1),	% joueur 1
 	actions(1, ActionsP1),
 	aiOffensive(2), % joueur 2
 	actions(2, ActionsP2),
