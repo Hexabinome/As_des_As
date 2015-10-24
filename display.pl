@@ -10,9 +10,7 @@ displayRow([Element|Row]) :- write(Element), write('|'), displayRow(Row).
 
 % Gameover displays
 playerWinDisplay(Idx) :- write('Player '), write(Idx), write(' wins!'), nl.
-drawDisplay :- write('Draw!'), nl,
-				plane(1,_,_,V1,_), plane(2,_,_,V2,_),
-				write(V1), write(V2).
+drawDisplay :- write('Draw!'), nl.
 
 % Game status display
 roundDisplay :- write('Round : '), round(NB), write(NB), nl.

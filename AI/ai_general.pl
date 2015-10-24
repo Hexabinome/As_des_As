@@ -1,4 +1,4 @@
-% Ressources utiles pour tous type d'IA
+% Ressources utiles pour tous types d'IA
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

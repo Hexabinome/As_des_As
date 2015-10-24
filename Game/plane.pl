@@ -18,7 +18,7 @@
 plane(1, 0, 0, 3, 'S').
 plane(2, 15, 15, 3, 'W').
 
-% Les avions 3 à 8 sont des avions 'tmp' pour les IA
+% Les avions 3 à 8 sont des avions temporaires pour les IA
 plane(3, 0, 0, 0, 0).
 plane(4, 0, 0, 0, 0).
 plane(5, 0, 0, 0, 0).
@@ -39,7 +39,6 @@ updatePlanes([Action1|ActionList1], [Action2|ActionList2]) :- 	callPlaneAction(1
 																fire(1), fire(2), !,
 																not(gameoverStep),
 																updatePlanes(ActionList1, ActionList2).
-dis(I) :- write(I), nl.
 
 % Big kind of switch, choosing between all implemented actions 
 callPlaneAction(Idx, Action) :- Action == 'F', actionForward(Idx), !.
