@@ -9,9 +9,9 @@
 
 
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
-aiOffensive(Idx):-
-				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive
-				findall(OneSol, playOffensive(Idx, OneSol), AllSolutions),
+aidraw(Idx):-
+				% Crée une liste à partir de toutes les solutions renvoyées par playDraw
+				findall(OneSol, playDraw(Idx, OneSol), AllSolutions),
 				
 				%write(Idx), nl, write(AllSolutions), nl,
 				% Choisi une solution parmis les solutions selectionnées
@@ -22,10 +22,10 @@ aiOffensive(Idx):-
 				assert(actions(Idx, FinalSol)).
 
 
-% Genere des listes de 3 coups qui suivent une heuristique offensive (algo min-max like)
-% La logique de cette IA est de se rapprocher le plus possible de sa cible tout en prenant les coups
-% qui lui permettent de tirer sur celle ci, elle ne prend pas en compte les degats qui lui sont fait
-playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+% Genere des listes de 3 coups qui suivent une heuristique d'égalité (algo min-max like)
+% La logique de cette IA est de rentrer en collision avec l'ennemi tout en prenant les coups
+% qui lui permettent de tirer et d'être tirer dessus simultanément (recherche d'égalité de points de vie)
+playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				% Distance initiale entre les deux avions
 				dist(Idx, OtherIdx, Dinit),
 				retractall(bestDistO(_)),
@@ -69,14 +69,17 @@ playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				% Verifie que la position finale des deux avions n'est pas hors de l'air de jeu [0,15]
 				testPosition(7), testPosition(8),
 				
-				% On verifie combien de fois l'avion d'indice Idx a pu tirer sur l'autre avion
+				% On verifie combien de fois les 2 avions ont pu se tirer dessus simultanément
 				retractall(actFire(_)),
 				assert(actFire(0)),
 				testFireO(3,4),
+				testFireO(4,3),
 				testFireO(5,6),
+				testFireO(6,5),
 				testFireO(7,8),
+				testFireO(8,7),
 				actFire(F),
-				% On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
+				% On verifie que notre liste d'actions a pu tirer à égalité au moins autant de fois que la meilleure trouvée jusqu'ici
 				bestFire(BF),
 				BF =< F,
 				retract(bestFire(BF)),
@@ -112,4 +115,4 @@ testFireO(I1, I2) :- not(canFire(I1, I2)).
 % Is also better if the new position is closer than the old one.
 betterPositionO(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 									dist(J1, J2, D2),
-									D1 >= D2.
+									D1 > D2.
