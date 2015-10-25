@@ -10,8 +10,8 @@
 
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
 aiOffensive(Idx):-
-				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive
-				findall(OneSol, playOffensive(Idx, OneSol), AllSolutions),
+				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive (sans doublon)
+				setof(OneSol, playOffensive(Idx, OneSol), AllSolutions),
 				
 				%write(Idx), nl, write(AllSolutions), nl,
 				% Choisi une solution parmis les solutions selectionnées
