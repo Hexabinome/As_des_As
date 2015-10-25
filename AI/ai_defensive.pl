@@ -7,7 +7,7 @@
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Genere la prochaine liste de coup a jouer pour l'avion d'indice Idx
+% Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
 aiDefensive(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playDefensive (sans doublon)
 				setof(OneSol, playDefensive(Idx, OneSol), AllSolutions),
