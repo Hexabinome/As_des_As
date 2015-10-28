@@ -1,4 +1,4 @@
-﻿:- dynamic actions/2.
+:- dynamic actions/2.
 :- dynamic round/1.
 
 % Load files
@@ -9,6 +9,7 @@
 :- ['AI/ai_random'].
 :- ['AI/ai_offensive'].
 :- ['AI/ai_defensive'].
+:- ['AI/ai_probabilistic'].
 :- ['Simulation/simulation'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,10 +25,10 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiOffensive(1),
+	aiProbab(1, 0.2), %rather defensive
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiOffensive(2),
+	aiProbab(2, 0.9), %pretty aggressive
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
