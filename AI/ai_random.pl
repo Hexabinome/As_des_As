@@ -1,5 +1,6 @@
 % Implementation of an A.I. doing random moves (under the premise that the selected
 % move does not lead the plane out of bounds).
+% This AI uses a virtual plane (idx = 42) to memorize temporaty positions/orintations
 % [Maxou]
 
 % Possible movements as FACTS.
@@ -16,46 +17,29 @@ aiRandom(Idx) :- retract(actions(Idx, _)),
 		randomMove(Move2),
 		randomMove(Move3),
 		nl,
-		retract(tempPos(_,_,_)),
+		retract(plane(42,_,_,_,_)),
 		assert(actions(Idx, [Move1, Move2, Move3])).
 			
 % Initially update the temporary position and orientation to the planes' values.
-initTempPos(Idx) :- plane(Idx, X, Y, _, O), assert(tempPos(X, Y, O)).
+initTempPos(Idx) :- plane(Idx, X, Y, _, O), assert(plane(42, X, Y, 1, O)).
 
 % Updates the planes temporary position given a certain action.
-updateTempPos(Act) :- tempPos(OldX, OldY, OldO), newPos(NewX, NewY, NewO, Act), retract(tempPos(OldX, OldY, OldO)), assert(tempPos(NewX, NewY, NewO)).
+updateTempPos(Act) :- plane(42, OldX, OldY, _, OldO), newPos(NewX, NewY, NewO, Act), retract(plane(42, OldX, OldY, _, OldO)), assert(plane(42, NewX, NewY, 1, NewO)).
 
-% USAGE: Returns R as a randomly chosen movement for a plane specified by index.
+% USAGE: Returns R as a randomly chosen movement.
 randomMove(R) :- filter(F), random_member(R, F), updateTempPos(R), print(R), print('.').
  
-% Returns list F of all valid movements for a plane secified by index.
+% Returns list F of all valid movements.
 % The criteria used to determine which option are valid and which are invalid is:
-% 'filterConditionX'.
+% 'filterCondition'.
 filter(F) :- moves(M), include(filterCondition, M, F).%, print(F), print( -> ).
 
-% Use 'plane remains within bounds' as filter condition. (Stays in list ic condition is met).
+% Use 'plane remains within bounds' as filter condition. (Stays in list if condition is met).
 filterCondition(Option) :- newPos(NewX, NewY, _, Option), NewX > -1, NewX < 16, NewY > -1, NewY < 16.
 
-% Calculates a planes new position (presuming a certain movement) without actually
-% changing the position stocked in the DB. 
-newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY-1, NewO = 'N'.
-newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY, NewO = 'E'.
-newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY+1, NewO = 'S'.
-newPos(NewX, NewY, NewO, 'F')  :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY, NewO = 'W'.
-newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY-2, NewO = 'N'.
-newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'E'), NewX is OldX+2, NewY is OldY, NewO = 'E'.
-newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY+2, NewO = 'S'.
-newPos(NewX, NewY, NewO, 'FF') :- tempPos(OldX, OldY, 'W'), NewX is OldX-2, NewY is OldY, NewO = 'W'.
-newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'N'), NewX is OldX+1, NewY is OldY-1, NewO = 'E'.
-newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY+1, NewO = 'S'.
-newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'S'), NewX is OldX-1, NewY is OldY+1, NewO = 'W'.
-newPos(NewX, NewY, NewO, 'RT') :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY-1, NewO = 'N'.
-newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'N'), NewX is OldX-1, NewY is OldY-1, NewO = 'W'.
-newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'E'), NewX is OldX+1, NewY is OldY-1, NewO = 'N'.
-newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'S'), NewX is OldX+1, NewY is OldY+1, NewO = 'E'.
-newPos(NewX, NewY, NewO, 'LT') :- tempPos(OldX, OldY, 'W'), NewX is OldX-1, NewY is OldY+1, NewO = 'S'.
-newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'N'), NewX is OldX, NewY is OldY, NewO = 'S'.
-newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'E'), NewX is OldX, NewY is OldY, NewO = 'W'.
-newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'S'), NewX is OldX, NewY is OldY, NewO = 'N'.
-newPos(NewX, NewY, NewO, 'UT') :- tempPos(OldX, OldY, 'W'), NewX is OldX, NewY is OldY, NewO = 'E'.
-
+% Returns the (virtual) plane's new position given a certain actino without actualy modifying the stocked predicates.
+newPos(NewX, NewY, NewO, 'F') :-   plane(42, OldX, OldY, _, OldO), actionForward(42), plane(42, NewX, NewY, _, NewO), retract(plane(42, NewX, NewY, _, NewO)), assert(plane(42, OldX, OldY, 1, OldO)).
+newPos(NewX, NewY, NewO, 'FF') :-  plane(42, OldX, OldY, _, OldO), actionFastForward(42), plane(42, NewX, NewY, _, NewO), retract(plane(42, NewX, NewY, _, NewO)), assert(plane(42, OldX, OldY, 1, OldO)).
+newPos(NewX, NewY, NewO, 'RT') :-  plane(42, OldX, OldY, _, OldO), actionRightTurn(42), plane(42, NewX, NewY, _, NewO), retract(plane(42, NewX, NewY, _, NewO)), assert(plane(42, OldX, OldY, 1, OldO)).
+newPos(NewX, NewY, NewO, 'LT') :-  plane(42, OldX, OldY, _, OldO), actionLeftTurn(42), plane(42, NewX, NewY, _, NewO), retract(plane(42, NewX, NewY, _, NewO)), assert(plane(42, OldX, OldY, 1, OldO)).
+newPos(NewX, NewY, NewO, 'UT') :-  plane(42, OldX, OldY, _, OldO), actionUTurn(42), plane(42, NewX, NewY, _, NewO), retract(plane(42, NewX, NewY, _, NewO)), assert(plane(42, OldX, OldY, 1, OldO)).
