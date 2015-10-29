@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href="avion.css"/>
     <script src="avion.js"></script>
     <script src="main.js"></script>
+    <script src="UI.js"></script>
+    <script src="prolog.js"></script>
 
 </head>
 <body>
@@ -20,20 +22,39 @@
     </div>
 
 
-	<div id="popup" class="popup_block">
-		<div class="row">
-			<h1 class="text-center">As des As</h1>
-		</div>
-		<div class="row">
-			<div class="row center-block">
-				<div class="center-block col-md-8" style="float:none;">
-					<button id="PvVIa" type="button" class="btn btn-primary col-md-4">Player VS. IA</button>
-					<button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-4">IA VS. IA</button>
+    <div id="popup" class="popup_block">
+        <div class="row">
+            <h1 class="text-center">As des As</h1>
+        </div>
+        <div class="row">
+            <div class="row center-block">
+                <div class="center-block col-md-12" style="float:none;">
+                    <button id="PvVIa" type="button" class="btn btn-primary col-md-5">Player VS. IA</button>
+                    <button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-5">IA VS. IA</button>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popupScore" class="popup_block">
+        <div class="row">
+            <h1 class="text-center">Score</h1>
+        </div>
+        <div>
+            <div class="row ">
+                <span class="col-md-offset-4 col-md-4">Player 1</span>
+                <span id="score1" class="col-md-2"></span>
+            </div>
+            <div class="row">
+                <span class="col-md-offset-4 col-md-4">Player 2</span>
+                <span id="score2" class="col-md-2"></span>
+            </div>
+            <div class="row center-block" style="float:none;">
+                <button id="PlayAgain" type="button" class="btn btn-primary" disable="true">Play Again !</button>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container my-container">

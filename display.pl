@@ -18,6 +18,7 @@ playerDisplay(Idx) :- 	plane(Idx, X, Y, Life, Orientation),
 						write('--- Player '), write(Idx), write(' ---'), nl,
 						write('Remaining life : '), write(Life), nl,
 						write('Position : X:'), write(X), write(' Y:'), write(Y), write('. Orientation:'), write(Orientation), nl.
+
 shotDisplay(SrcIdx, DestIdx) :- write('Player '),
 								write(SrcIdx),
 								write(' shot at player '),

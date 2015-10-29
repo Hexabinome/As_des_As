@@ -55,8 +55,7 @@ otherPlayer(InIdx, OutIdx) :- InIdx == 2, OutIdx is 1, !.
 								
 pressToContinue :- 	write('** Write any character + "." to go to the next step. **'), nl,
 					read(_).
-
-					
+		
 % Game reset
 
 reset :-
@@ -69,14 +68,20 @@ reset :-
 	
 % ----------------------------- Server exchange section 
 % Game loop
+
 stepHttp :-
 	incrementRoundCounter,
-	aiDefensive(1),
+	aiOffensive(1),
 	actions(1, ActionsP1),
 	aiOffensive(2),
 	actions(2, ActionsP2),
-	updatePlanes(ActionsP1, ActionsP2),
-	not(gameoverRound).
+	
+	retractall(actionHttp(_, _)),
+	
+	assert(actionHttp(1, ActionsP1)),
+	assert(actionHttp(2, ActionsP2)),
+	
+	updatePlanesHttp(ActionsP1, ActionsP2).
 	
 stepHttpPlayer(list):-
 	incrementRoundCounter,
@@ -84,5 +89,5 @@ stepHttpPlayer(list):-
 	actions(2, ActionsP2),
 	retract(actions(1, _)),
 	assert(actions(1, list)),
-	updatePlanes(list, ActionsP2),
+	updatePlanesHttp(list, ActionsP2),
 	not(gameoverRound).

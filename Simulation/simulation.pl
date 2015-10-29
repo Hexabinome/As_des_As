@@ -2,7 +2,7 @@
 :- dynamic playerWinsCounter/2.
 :- dynamic simulatedGames/1.
 
-:- [simulation_gameover_plane].
+:- ['simulation_gameover_plane'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
