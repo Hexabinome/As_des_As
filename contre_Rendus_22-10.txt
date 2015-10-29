@@ -30,10 +30,10 @@ ai_offensive :
 						Modifie le tableau 'actions'
 						appele playOffensive
 						
-	--> playOffensive : principe : on va générer un trois actions 
+	--> playOffensive : principe : on va générer trois actions 
 						On créer deux autres actions, on appele planeActions (on créer des nouveaux avions fantomes à chaque couts)
 						--> betterPosition : si la distance entres les deux avions est plus petite qu'avant
-						A chaque nouvelle postition générer, on met à jours une variables global qui donne le score de la position (actFire : nb de fois où on peut tirer actuellement et bestFire la variable global. De même pour la distance global). 
+						A chaque nouvelle postition générer, on met à jours une variable global qui donne le score de la position (actFire : nb de fois où on peut tirer actuellement et bestFire la variable global. De même pour la distance global). 
 						On ne pernd ensuite que les prochaines solutions qui sont meilleurs que ce variable. 
 						
 						Test position à la fin.

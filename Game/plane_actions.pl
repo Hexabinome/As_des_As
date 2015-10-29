@@ -1,10 +1,10 @@
-﻿% Ce fichier defini toutes les actions possibles
+﻿:- dynamic actions/2.
+% Ce fichier defini toutes les actions possibles
 % ainsi que les effets qu'elles ont sur les avions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 action('FF').
 action('F').
 action('RT').

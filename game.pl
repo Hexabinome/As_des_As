@@ -1,6 +1,4 @@
-:- dynamic actions/2.
 :- dynamic round/1.
-
 % Load files
 :- ['Game/plane'].
 :- ['Game/board'].
