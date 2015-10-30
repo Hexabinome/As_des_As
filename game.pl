@@ -23,10 +23,10 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiProbab(1, 0.2), %rather defensive
+	aiRandom(1), %rather defensive
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiProbab(2, 0.9), %pretty aggressive
+	aiDefensiveBest(2), %pretty aggressive
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
@@ -69,9 +69,9 @@ reset :-
 
 stepHttp :-
 	incrementRoundCounter,
-	aiOffensive(1),
+	aiDefensiveBest(1),
 	actions(1, ActionsP1),
-	aiOffensive(2),
+	aiRandom(2),
 	actions(2, ActionsP2),
 	
 	retractall(actionHttp(_, _)),

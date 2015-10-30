@@ -9,7 +9,7 @@
 
 
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
-aidraw(Idx):-
+aiDraw(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playDraw (sans doublon)
 				setof(OneSol, playDraw(Idx, OneSol), AllSolutions),
 				

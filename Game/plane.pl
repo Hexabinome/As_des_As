@@ -16,7 +16,7 @@
 
 % Les avions 1 et 2 sont les avions des joueurs
 plane(1, 0, 0, 3, 'S').
-plane(2, 15, 15, 3, 'W').
+plane(2, 15, 15, 3, 'N').
 
 % Les avions 3 à 8 sont des avions temporaires pour les IA
 plane(3, 0, 0, 0, 0).

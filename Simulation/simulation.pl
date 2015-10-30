@@ -56,9 +56,9 @@ playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \==
 
 % Is false if one plane died during actions
 simulationStep :- 
-	aiDefensive(1),	% joueur 1
+	aiRandom(1),	% joueur 1
 	actions(1, ActionsP1),
-	aiOffensive(2), % joueur 2
+	aiDefensive(2), % joueur 2
 	actions(2, ActionsP2),
 	updatePlanesSimulation(ActionsP1, ActionsP2), % Execution des coups de chaque avion
 	playOneGame.

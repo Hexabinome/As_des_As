@@ -9,31 +9,41 @@
 
 
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
+% Utilise un meilleur coup local aléatoire generé
 aiOffensive(Idx):-
+				
 				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive (sans doublon)
 				setof(OneSol, playOffensive(Idx, OneSol), AllSolutions),
-				
-				%write(Idx), nl, write(AllSolutions), nl,
 				% Choisi une solution parmis les solutions selectionnées
 				random_member(FinalSol, AllSolutions),
-				
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
 
+% Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
+% Utilise le meilleur coup generé
+aiOffensiveBest(Idx):-
+				
+				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive (sans doublon)
+				setof(OneSol, playOffensive(Idx, OneSol), AllSolutions),
+				% Choisi la meilleure solution trouvée
+				last(AllSolutions, Sol),
+				% Crée le prochain coup à jouer
+				retract(actions(Idx, _)),
+				assert(actions(Idx, Sol)).
 
 % Genere des listes de 3 coups qui suivent une heuristique offensive (algo min-max like)
 % La logique de cette IA est de se rapprocher le plus possible de sa cible tout en prenant les coups
 % qui lui permettent de tirer sur celle ci, elle ne prend pas en compte les degats qui lui sont fait
-playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
 				% Distance initiale entre les deux avions
 				dist(Idx, OtherIdx, Dinit),
 				retractall(bestDistO(_)),
 				assert(bestDistO(Dinit)),
 				
 				% Nombre de tirs initial du meilleur
-				retractall(bestFire(_)),
-				assert(bestFire(0)),
+				retractall(bestFireO(_)),
+				assert(bestFireO(0)),
 				
 				% Genere tous les couples d'actions possibles pour le premier coup
 				coupleAction(A1, B1),
@@ -70,17 +80,17 @@ playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				testPosition(7), testPosition(8),
 				
 				% On verifie combien de fois l'avion d'indice Idx a pu tirer sur l'autre avion
-				retractall(actFire(_)),
-				assert(actFire(0)),
+				retractall(actFireO(_)),
+				assert(actFireO(0)),
 				testFireO(3,4),
 				testFireO(5,6),
 				testFireO(7,8),
-				actFire(F),
+				actFireO(F),
 				% On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
-				bestFire(BF),
+				bestFireO(BF),
 				BF =< F,
-				retract(bestFire(BF)),
-				assert(bestFire(F)),
+				retract(bestFireO(BF)),
+				assert(bestFireO(F)),
 				
 				% On verifie que la distance finale entre les deux avions est au plus aussi grande que la meilleur trouvée jusqu'ici
 				dist(7, 8, D),
@@ -103,8 +113,8 @@ playOffensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 
 % Is better if on the new position you can shoot on the other player.
 testFireO(I1, I2) :- canFire(I1, I2),
-					retract(actFire(X)),
-					assert(actFire(X+1)).
+					retract(actFireO(X)),
+					assert(actFireO(X+1)).
 
 testFireO(I1, I2) :- not(canFire(I1, I2)).
 								

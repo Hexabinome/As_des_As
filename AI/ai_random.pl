@@ -12,11 +12,11 @@ moves(['F', 'FF', 'RT', 'LT', 'UT']).
 % predicates)
 aiRandom(Idx) :- retract(actions(Idx, _)),
 		initTempPos(Idx),
-		print(Idx), print(':'),
+		%print(Idx), print(':'),
 		randomMove(Move1),
 		randomMove(Move2),
 		randomMove(Move3),
-		nl,
+		%nl,
 		retract(plane(42,_,_,_,_)),
 		assert(actions(Idx, [Move1, Move2, Move3])).
 			
@@ -27,7 +27,7 @@ initTempPos(Idx) :- plane(Idx, X, Y, _, O), assert(plane(42, X, Y, 1, O)).
 updateTempPos(Act) :- plane(42, OldX, OldY, _, OldO), newPos(NewX, NewY, NewO, Act), retract(plane(42, OldX, OldY, _, OldO)), assert(plane(42, NewX, NewY, 1, NewO)).
 
 % USAGE: Returns R as a randomly chosen movement.
-randomMove(R) :- filter(F), random_member(R, F), updateTempPos(R), print(R), print('.').
+randomMove(R) :- filter(F), random_member(R, F), updateTempPos(R).% print(R), print('.').
  
 % Returns list F of all valid movements.
 % The criteria used to determine which option are valid and which are invalid is:
