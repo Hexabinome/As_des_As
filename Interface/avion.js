@@ -18,62 +18,91 @@ Avion.prototype.positionner= function(x, y, orientation)
 };
 
 Avion.prototype.deplacer= function(move)
-{
+{	
+  	var def = $.Deferred();
+	var $this = this;
+
 	switch(move)
 	{
 		case "FF":
-			switch(this.orientation)
+			switch($this.orientation)
 			{
 				case 'N':
-					this.moveTop();
-					this.moveTop();
+					$this.moveTop();
+					$this.moveTop();
+					def.resolve();
 					break;
 				case 'W':
-					this.moveLeft();
-					this.moveLeft();
+					$this.moveLeft();
+					$this.moveLeft();
+					def.resolve();
+
 					break;
 				case 'E':
-					this.moveRight();
-					this.moveRight();
+					$this.moveRight();
+					$this.moveRight();
+					def.resolve();
+
 					break;
 				case 'S':
-					this.moveBottom();
-					this.moveBottom();
+					$this.moveBottom();
+					$this.moveBottom();
+					def.resolve();
+
 					break;
 			}
 			break;
 		case "F":
-			switch(this.orientation)
+			switch($this.orientation)
 			{
 				case 'N':
-					this.moveTop();
+					$this.moveTop();
+					def.resolve();
 					break;
 				case 'W':
-					this.moveLeft();
+					$this.moveLeft();
+					def.resolve();
 					break;
 				case 'E':
-					this.moveRight();
+					$this.moveRight();
+					def.resolve();
 					break;
 				case 'S':
-					this.moveBottom();
+					$this.moveBottom();
+					def.resolve();
 					break;
 			}
 			break;
 		case "RT":
-			this.deplacer('F');
-			this.rotate(1);
-			this.deplacer('F');
+			$this.deplacer('F').then(function() {
+				$this.rotate(1)
+					.then(function() {
+						$this.deplacer('F');
+						def.resolve();
+					});
+			});
 			break;
 		case "LT":
-			this.deplacer('F');
-			this.rotate(-1);
-			this.deplacer('F');
+			$this.deplacer('F').then(function() {
+				$this.rotate(-1)
+					.then(function() {
+						$this.deplacer('F');
+						def.resolve();
+					});
+			});
 			break;
 		case "UT":
-			this.rotate(2);
+			$this.rotate(2).then(function()
+			{
+				def.resolve();
+			});
 			break;
 	}
+
+	return def.promise();
 };
+
+
 
 Avion.prototype.modifierVie= function(vie)
 {
@@ -89,8 +118,7 @@ Avion.prototype.afficher = function() {
 };
 
 Avion.prototype.moveRight = function() {
-	$("#" + this.nom).animate({ "right": "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );
-};
+	$("#" + this.nom).animate({ "right": "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );};
 
 Avion.prototype.moveLeft = function() {
 	$("#" + this.nom).animate({ "right": "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );
@@ -104,10 +132,12 @@ Avion.prototype.moveBottom = function() {
 	$("#" + this.nom).animate({ "top": "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );
 };
 
-Avion.prototype.rotate = function(direction) {  
+Avion.prototype.rotate = function(direction) {
+  	var def = $.Deferred();
 	var degree;
 	var toDegree;
 	var nom = this.nom;
+
 	if(direction === 2)
 	{
 		switch(this.orientation)
@@ -163,9 +193,8 @@ Avion.prototype.rotate = function(direction) {
 				this.orientation = (direction === 1)?'S':'N';
 				break;
 		}
-
 	}
-	
+
     var timer = setInterval(function() {
         degree += direction; 
 
@@ -173,6 +202,11 @@ Avion.prototype.rotate = function(direction) {
 	    $("#" + nom).css({ '-moz-transform': 'rotate(' + degree + 'deg)'});
 	    
 	    if(degree === toDegree)
-	    	clearInterval(timer);
+	    {
+    		clearInterval(timer);
+    		def.resolve();
+	    }
     },1);
+
+  	return def.promise();
 }

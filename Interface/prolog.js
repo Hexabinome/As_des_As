@@ -12,7 +12,6 @@ function updatePlane(param)
 	console.debug((param.avion1.x+1) + ' ' + (param.avion1.y+1) + ' ' + param.avion1.d);
 	console.debug((param.avion2.x+1) + ' ' + (param.avion2.y+1) + ' ' +param.avion2.d);
 
-
 	if(param.move1 === undefined)
 	{
 		avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
@@ -20,13 +19,20 @@ function updatePlane(param)
 	}
 	else
 	{
-		avion1.deplacer(param.move1.substring(1, 3));
-		avion2.deplacer(param.move2.substring(1, 3));
+		var move1 = param.move1.substring(1, (param.move1.length -1)).split(',');
+		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
+
+		avion1.deplacer(move1[0]).then(function(){
+			avion1.deplacer(move1[1]).then(function(){
+				avion1.deplacer(move1[2]);
+			});
+		}); 
 		
-		avion1.deplacer(param.move1.substring(4, 6));
-		avion2.deplacer(param.move2.substring(4, 6));
-		avion1.deplacer(param.move1.substring(7, 9));
-		avion2.deplacer(param.move2.substring(7, 9));
+		avion2.deplacer(move2[0]).then(function(){
+			avion2.deplacer(move2[1]).then(function(){
+				avion2.deplacer(move2[2]);
+			});
+		}); 
 		
 		//TODO à effacer quand tous fonctionnera
 		timeout = setTimeout(function()
