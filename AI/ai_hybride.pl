@@ -14,18 +14,17 @@
 % => Algo min/max
 % Idx : numéro de l'avion
 % Actions : liste des 3 actions de l'IA
-aiHybride(Idx,Actions).
+
 %aiHybride(Idx,Actions) :- otherPlayer(Idx, OtherIdx),
-					      
+aiHybride(Idx,T) :- generateAll(Idx, T).					      
 
 
 %playHybride(Idx,Sol) :- 
-% Met tous les triplets dans une liste
-generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,Action1,Action2,Action3	),Liste).
+% Met tous les triplets dans une liste (j'en aurai peut etre pas besoin)
+generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,Action2,Action3]	),Liste).
 
-% Genere tous les triplets d'actions possibles pour un avion à partir de sa position sans sortir du tableau à la fin des 3 coups.
-generate(Idx,Action1,Action2,Action3) :- action(Action1),action(Action2),action(Action3),
-					   plane(Idx,_,_,_,_),
+% Genere tous les triplets d'actions possibles pour un avion à partir de sa position sans sortir du tableau à la fin des 3 actions.
+generate(Idx,[Action1,Action2,Action3]) :- action(Action1),action(Action2),action(Action3), % Génération des triplets d'actions
 					   update(Idx,3),
 					   callPlaneAction(3,Action1),
 					   callPlaneAction(3,Action2),
