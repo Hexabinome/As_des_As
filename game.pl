@@ -8,7 +8,9 @@
 :- ['AI/ai_offensive'].
 :- ['AI/ai_defensive'].
 :- ['AI/ai_probabilistic'].
+:- ['AI/ai_hybride'].
 :- ['Simulation/simulation'].
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
@@ -61,7 +63,7 @@ reset :-
 	retract(plane(2, _, _, _, _)),
 	retractall(round(_)),
 	assert(plane(1, 0, 0, 3, 'S')),
-	assert(plane(2, 15, 15, 3, 'W')),
+	assert(plane(2, 15, 15, 3, 'N')),
 	assert(round(0)).
 	
 % ----------------------------- Server exchange section 

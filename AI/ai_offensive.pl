@@ -49,7 +49,7 @@ playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
 				coupleAction(A1, B1),
 				update(Idx, 3),
 				update(OtherIdx, 4),
-				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 1 et 2
+				% On effectue les actions choisies sur deux avions 'temporaires' qui ont initialement les même coordonnées que les avions 1 et 2
 				callPlaneAction(3, A1),
 				callPlaneAction(4, B1),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
@@ -59,7 +59,7 @@ playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
 				coupleAction(A2, B2),
 				update(3, 5),
 				update(4, 6),
-				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 3 et 4
+				% On effectue les actions choisies sur deux avions 'temporaires' qui ont initialement les même coordonnées que les avions 3 et 4
 				callPlaneAction(5, A2),
 				callPlaneAction(6, B2),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
@@ -70,7 +70,7 @@ playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
 				coupleAction(A3, B3),
 				update(5, 7),
 				update(6, 8),
-				% On effectue les actions choisies sur deux avions 'tmp' ont initialement les même coordonnées que les avions 5 et 6
+				% On effectue les actions choisies sur deux avions 'temporaires' qui ont initialement les même coordonnées que les avions 5 et 6
 				callPlaneAction(7, A3),
 				callPlaneAction(8, B3),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
