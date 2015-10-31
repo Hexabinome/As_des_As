@@ -2,6 +2,7 @@
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_files)).
+:- use_module(library(http/http_parameters)).
 
 :- [game].
 
@@ -43,17 +44,21 @@ next(Request) :-
 
 %TODO player humain
 nextPlayer(Request) :-
-	http_parameters(Request,
-		[ action1(action1),
-		  action2(action2),
-		  action3(action3)
+	http_parameters(Request, 
+		[ act1(Act1, []),
+		  act2(Act2, []),
+		  act3(Act3, [])
 		]),
-	stepHttp,
+	stepHttpPlayer([Act1, Act2, Act3]),
 	plane(1, X1, Y1, V1, D1),
 	plane(2, X2, Y2, V2, D2),
+	actionHttp(1, Action1),
+	actionHttp(2, Action2),
     format('Content-type: text/jsonp~n~n'),
     format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
-						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', 
-						[X1, Y1, V1, D1, X2, Y2, V2, D2] ).
+						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"},
+						move1 : "~w",
+						move2 : "~w"} ~n)', 
+						[X1, Y1, V1, D1, X2, Y2, V2, D2, Action1, Action2] ).
 
 		

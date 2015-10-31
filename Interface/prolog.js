@@ -91,7 +91,21 @@ function nextProlog()
 }
 
 //Fonction appellant le prolog. Le callback est sur planeState
-function appelerPrologWithParam(param)
+function appelerPrologWithParam(tab)
 {
-	//TODO
+	$.ajax({
+		url: "http://localhost:8000/nextPlayer",
+		type: "POST",
+		dataType: "jsonp",
+		data : {act1 : tab[0], act2 : tab[1], act3 : tab[2]},
+		success: function (data) {
+			data;
+		}, 
+		error: function(e)
+		{
+			//On passe bisarement dans erreur même quand on a un http 200
+			if(e.status != 200)
+				clearInterval(interval);
+		}
+	});
 }

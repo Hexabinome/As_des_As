@@ -83,11 +83,17 @@ stepHttp :-
 	
 	updatePlanesHttp(ActionsP1, ActionsP2).
 	
-stepHttpPlayer(list):-
+list(['F', 'F', 'F']).
+
+stepHttpPlayer(ListP):-
 	incrementRoundCounter,
+	assert(actions(1, ListP)),
 	aiOffensive(2),
 	actions(2, ActionsP2),
-	retract(actions(1, _)),
-	assert(actions(1, list)),
-	updatePlanesHttp(list, ActionsP2),
-	not(gameoverRound).
+	
+	retractall(actionHttp(_, _)),
+	
+	assert(actionHttp(1, ListP)),
+	assert(actionHttp(2, ActionsP2)),
+
+	updatePlanesHttp(ListP, ActionsP2).

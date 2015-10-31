@@ -91,7 +91,7 @@ function bindKeyAction()
 
 function bindClick()
 {
-	$("#PlVIa").bind('click', function() {
+	$("#PlVsIa").bind('click', function() {
 		closePopUp();
 		enablePlayButton();
 		
@@ -124,7 +124,6 @@ function bindClick()
 		{
 			$("#Play").popover('enable').popover('show');
 		}
-		appelerProlog();
 	});
 	
 	$("#Reset").bind('click', function() {
@@ -133,7 +132,7 @@ function bindClick()
 	
 	$("#PlayAgain").bind('click', function() {
 		closePopUp();
-		init();		
+		init();
 	});
 }
 
