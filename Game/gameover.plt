@@ -1,7 +1,8 @@
-:- ['../game'].
+:- use_module(gameover).
+:- use_module(plane).
+:- use_module('../game').
 
-:- begin_tests(lists).
-:- use_module(library(lists)).
+:- begin_tests(testsGameover).
 
 % Test all gameover death predicates
 test(gameoverDeath) :-
@@ -128,7 +129,7 @@ test(gameoverRoundLimit) :-
 	gameoverRoundLimit
 	.
 	
-:- end_tests(lists).
+:- end_tests(testsGameover).
 
 % Helper predicates
 setPlaneLifeTo(Idx, Life) :-
