@@ -1,4 +1,19 @@
-﻿% Stop condition for displaying the board
+﻿:- module(display, [display/1,
+							playerWinDisplay/1,
+							drawDisplay/0,
+							roundDisplay/0,
+							playerDisplay/1,
+							shotDisplay/2,
+							displayMoves/2,
+							displayActions/1,
+							outOfBoundaryDisplay/1,
+							deathDisplay/1,
+							collisionDisplay/0,
+							roundLimitDisplay/0]).
+
+:- use_module('Game/plane').
+
+% Stop condition for displaying the board
 display([]).
 % Displays each row, and then displays the rest of the board by recursion.
 display([Row|B]) :- displayRow(Row), display(B).

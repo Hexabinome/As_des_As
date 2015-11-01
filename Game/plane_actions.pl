@@ -6,6 +6,8 @@
 									actionLeftTurn/1,
 									actionUTurn/1]).
 
+:- use_module('plane').
+									
 :- dynamic actions/2.
 
 % Ce fichier defini toutes les actions possibles

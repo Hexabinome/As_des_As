@@ -9,8 +9,10 @@
 
 :- dynamic plane/5.
 
-:- use_module(plane_actions).
-:- use_module(gameover).
+:- use_module('plane_actions').
+:- use_module('gameover').
+:- use_module('../game').
+:- use_module('../display').
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

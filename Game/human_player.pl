@@ -1,4 +1,9 @@
-﻿humanPlayer(Idx) :-	displayListOfMoves,
+﻿:- module(human_player, [humanPlayer/1,
+									displayListOfMoves/0]).
+
+:- use_module('plane_actions').
+
+humanPlayer(Idx) :-	displayListOfMoves,
 					retract(actions(Idx, _)),
 					
 					write('First move : '),

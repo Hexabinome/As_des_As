@@ -1,4 +1,18 @@
-﻿%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+﻿:- module(simulation_gameover_plane, [gameoverDeathSimulation/0,
+															gameoverDeathSimulation/1,
+															gameoverBoardLimitSimulation/0,
+															gameoverBoardLimitSimulation/1,
+															gameoverCollisionSimulation/0,
+															gameoverRoundLimitSimulation/0,
+															gameoverRoundSimulation/0,
+															gameoverStepSimulation/0,
+															updatePlanesSimulation/2]).
+
+:- use_module('../Game/plane').
+:- use_module('../game').
+:- use_module('../Game/gameover').
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

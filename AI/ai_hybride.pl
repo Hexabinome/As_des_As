@@ -1,3 +1,9 @@
+:- module(ai_hybride, [playHybride/2]).
+
+:- use_module('ai_general').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 :- dynamic gain/0.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS

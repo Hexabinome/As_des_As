@@ -1,3 +1,9 @@
+:- module(ai_random, [aiRandom/1]).
+
+:- use_module('ai_general').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 % Implementation of an A.I. doing random moves (under the premise that the selected
 % move does not lead the plane out of bounds).
 % This AI uses a virtual plane (idx = 42) to memorize temporaty positions/orintations

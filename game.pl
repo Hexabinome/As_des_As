@@ -1,19 +1,30 @@
+:- module(game, [round/1,
+							game/0,
+							otherPlayer/2,
+							reset/0,
+							simulate/0,
+							incrementRoundCounter/0]).
+
 :- dynamic round/1.
 
 :- use_module(library(plunit)).
 :- use_module('Game/plane').
+:- use_module('Game/plane_actions').
 :- use_module('Game/gameover').
+:- use_module('Simulation/simulation').
 
-% Load files
-:- ['Game/board'].
-:- ['Game/human_player'].
-:- ['AI/ai_general'].
-:- ['AI/ai_random'].
-:- ['AI/ai_offensive'].
-:- ['AI/ai_defensive'].
-:- ['AI/ai_probabilistic'].
-:- ['AI/ai_hybride'].
-:- ['Simulation/simulation'].
+:- use_module('Game/board').
+:- use_module('Game/human_player').
+
+:- use_module('display').
+
+:- use_module('AI/ai_general').
+:- use_module('AI/ai_random').
+:- use_module('AI/ai_offensive').
+:- use_module('AI/ai_defensive').
+:- use_module('AI/ai_probabilistic').
+:- use_module('AI/ai_hybride').
+:- use_module('AI/ai_draw').
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -61,7 +72,6 @@ pressToContinue :- 	write('** Write any character + "." to go to the next step. 
 					read(_).
 		
 % Game reset
-
 reset :-
 	retract(plane(1, _, _, _, _)),
 	retract(plane(2, _, _, _, _)),

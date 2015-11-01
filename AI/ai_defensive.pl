@@ -1,3 +1,9 @@
+:- module(ai_defensive, [aiDefensive/1, aiDefensiveBest/1]).
+
+:- use_module('ai_general').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,4 +1,11 @@
-﻿:-['../display'].
+﻿:- module(board, [defaultBoard/1,
+							replace/4,
+							replaceBoard/5,
+							displayBoard/0]).
+
+:- use_module('../display').
+:- use_module('plane').
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

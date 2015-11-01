@@ -1,3 +1,9 @@
+:- module(ai_draw, [aiDraw/1]).
+
+:- use_module('ai_general').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

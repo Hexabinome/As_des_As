@@ -1,3 +1,11 @@
+:- module(ai_probabilistic, [aiProbab/2]).
+
+:- use_module('ai_general').
+:- use_module('ai_offensive').
+:- use_module('ai_defensive').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 % Implementation of an A.I. internally relying on other A.I., given
 % a previously defined propability.
 %. E.g. for each action-triple choosing an aggresive choice at 42

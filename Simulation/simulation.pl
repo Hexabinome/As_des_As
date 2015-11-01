@@ -1,8 +1,22 @@
+:- module(simulation, [simulate/0]).
+
+:- use_module('simulation_gameover_plane').
+
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
+:- use_module('../AI/ai_general').
+:- use_module('../AI/ai_random').
+:- use_module('../AI/ai_offensive').
+:- use_module('../AI/ai_defensive').
+:- use_module('../AI/ai_probabilistic').
+:- use_module('../AI/ai_hybride').
+:- use_module('../AI/ai_draw').
+
 :- dynamic gameWinner/1.
 :- dynamic playerWinsCounter/2.
 :- dynamic simulatedGames/1.
 
-:- ['simulation_gameover_plane'].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
