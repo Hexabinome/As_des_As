@@ -12,14 +12,13 @@ Avion.prototype.positionner= function(x, y, orientation)
 {
 	this.x = x;
 	this.y = y;
-	this.orientation = orientation; 
-	
+	this.orientation = orientation;
 	this.afficher();
 };
 
 Avion.prototype.deplacer= function(move)
-{	
-  	var def = $.Deferred();
+{
+  var def = $.Deferred();
 	var $this = this;
 
 	switch(move)
@@ -102,7 +101,74 @@ Avion.prototype.deplacer= function(move)
 	return def.promise();
 };
 
+Avion.prototype.tirer= function(distance)
+{
+	//Because this will change in then(function)
+	var $this = this;
 
+	var def = $.Deferred();
+	$this.afficherTir().then(function() {
+		$this.deplacerTir(distance)
+			.then(function() {
+				 $this.supprimerTir();
+				def.resolve();
+		});
+	});
+	return def.promise();
+};
+
+Avion.prototype.afficherTir = function() {
+	var def = $.Deferred();
+	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='bullet.png' class='avion " + this.orientation + "'/>");
+	def.resolve();
+	return def.promise();
+};
+
+Avion.prototype.deplacerTir = function(distance) {
+	var def = $.Deferred();
+
+	var direction = '';
+	var operation = '';
+
+	switch(this.orientation){
+		case 'N':
+			toTest = "top";
+			signe = "-";
+			$("#bullet").animate({ "top" : "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
+			break;
+		case 'W':
+			toTest = "right";
+			signe = "";
+			$("#bullet").animate({ "right" : "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
+			break;
+		case 'E':
+			toTest = "right";
+			signe = "-";
+			$("#bullet").animate({ "right" : + "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
+			break;
+		case 'S':
+			toTest = "top";
+			signe = "";
+			$("#bullet").animate({ "top" : "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
+			break;
+	}
+
+
+
+  var timer = setInterval(function() {
+		if ( $('#bullet').css(toTest) === signe + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance + "px") {
+			clearInterval(timer);
+			def.resolve();
+		}
+  },1);
+
+	return def.promise();
+};
+
+Avion.prototype.supprimerTir= function()
+{
+	$("#bullet").remove();
+};
 
 Avion.prototype.modifierVie= function(vie)
 {
@@ -118,7 +184,8 @@ Avion.prototype.afficher = function() {
 };
 
 Avion.prototype.moveRight = function() {
-	$("#" + this.nom).animate({ "right": "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );};
+	$("#" + this.nom).animate({ "right": "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );
+};
 
 Avion.prototype.moveLeft = function() {
 	$("#" + this.nom).animate({ "right": "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) }, "fast" );
@@ -133,7 +200,7 @@ Avion.prototype.moveBottom = function() {
 };
 
 Avion.prototype.rotate = function(direction) {
-  	var def = $.Deferred();
+  var def = $.Deferred();
 	var degree;
 	var toDegree;
 	var nom = this.nom;
@@ -196,11 +263,11 @@ Avion.prototype.rotate = function(direction) {
 	}
 
     var timer = setInterval(function() {
-        degree += direction; 
+        degree += direction;
 
-	    $("#" + nom).css({ WebkitTransform: 'rotate(' + degree + 'deg)'});  
+	    $("#" + nom).css({ WebkitTransform: 'rotate(' + degree + 'deg)'});
 	    $("#" + nom).css({ '-moz-transform': 'rotate(' + degree + 'deg)'});
-	    
+
 	    if(degree === toDegree)
 	    {
     		clearInterval(timer);
@@ -209,4 +276,4 @@ Avion.prototype.rotate = function(direction) {
     },1);
 
   	return def.promise();
-}
+};
