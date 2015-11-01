@@ -1,4 +1,5 @@
-:- module(ai_offensive, [aiOffensive/1]).
+:- module(ai_offensive, [aiOffensive/1,
+									aiOffensiveBest/1]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
