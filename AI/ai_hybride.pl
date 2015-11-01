@@ -1,4 +1,4 @@
-:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1]).
+:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -42,6 +42,17 @@ aiHybride(Idx) :-
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)),
+				retract(meilleurGain(_)),
+				assert(meilleurGain(0)).
+
+aiHybrideBest(Idx) :-
+				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
+				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
+				% Choisi une solution parmis les solutions selectionnées
+				last(AllSolutions, Sol),
+				% Crée le prochain coup à jouer
+				retract(actions(Idx, _)),
+				assert(actions(Idx, Sol)),
 				retract(meilleurGain(_)),
 				assert(meilleurGain(0)).
 
