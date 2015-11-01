@@ -1,6 +1,16 @@
-﻿:- dynamic plane/5.
-:- [plane_actions].
-:- [gameover].
+﻿:- module(plane, [plane/5, 
+							updatePlanes/2,
+							callPlaneAction/2,
+							fire/1,
+							canFire/2,
+							decrementLife/1,
+							updatePlanesHttp/2,
+							fireHttp/1]).
+
+:- dynamic plane/5.
+
+:- use_module(plane_actions).
+:- use_module(gameover).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,4 +1,15 @@
-﻿%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+﻿:- module(gameover, [gameoverStep/0,
+								gameoverRound/0,
+								gameoverDeath/0,
+								gameoverDeath/1,
+								gameoverDeathTest/1,
+								gameoverBoardLimit/0,
+								gameoverBoardLimit/1,
+								gameoverBoardLimitTest/1,
+								gameoverCollision/0,
+								gameoverRoundLimit/0]).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

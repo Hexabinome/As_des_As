@@ -1,6 +1,10 @@
 :- dynamic round/1.
+
+:- use_module(library(plunit)).
+:- use_module('Game/plane').
+:- use_module('Game/gameover').
+
 % Load files
-:- ['Game/plane'].
 :- ['Game/board'].
 :- ['Game/human_player'].
 :- ['AI/ai_general'].
