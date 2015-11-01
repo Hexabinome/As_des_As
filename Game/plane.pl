@@ -64,7 +64,7 @@ callPlaneAction(Idx, Action) :- write('Unknown action '), write(Action), write('
 
 % Fire methods
 fire(Idx) :- 	otherPlayer(Idx, OutIdx),
-				canFire(Idx, OutIdx),
+				canFire(Idx, OutIdx), !,
 				decrementLife(OutIdx),
 				shotDisplay(Idx, OutIdx).
 fire(_).
