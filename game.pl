@@ -25,7 +25,7 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiRandom(1), %rather defensive
+	aiOffensive(1), %rather defensive
 	actions(1, ActionsP1),
 	% joueur 2:
 	aiDefensiveBest(2), %pretty aggressive
