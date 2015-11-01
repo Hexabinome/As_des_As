@@ -1,15 +1,17 @@
-:- module(ai_hybride, [playHybride/2]).
+:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1]).
 
+:- use_module('../game').
 :- use_module('ai_general').
 :- use_module('../Game/plane').
 :- use_module('../Game/plane_actions').
 
-:- dynamic gain/0.
+:- dynamic meilleurGain/1.
+:- dynamic meilleurCoup/1.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-gain(0).
-		
+meilleurGain(0).
+meilleurCoup([]).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,11 +26,36 @@ gain(0).
 % L'arbre de recherche n'a pas une grande profondeur mais un nombre très important de noeuds dû aux coups possibles à chaque "step".
 % TODO : élagage alpha beta  
 
+% P : Profondeur dans l'arbre
+%minimax(1,_,_).
+%minimax(P,Idx,OtherIdx) :- NewProfondeur is P -1,
+%						   minimax(NewProfondeur,Idx,OtherIdx),
+%						   generate(Idx, CoupIA).
+						   %generate(OtherIdx,CoupOther).
+
+
+aiHybride(Idx) :-
+				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
+				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
+				% Choisi une solution parmis les solutions selectionnées
+				random_member(FinalSol, AllSolutions),
+				% Crée le prochain coup à jouer
+				retract(actions(Idx, _)),
+				assert(actions(Idx, FinalSol)),
+				retract(meilleurGain(_)),
+				assert(meilleurGain(0)).
+
 % Pas encore fini
-playHybride(Idx,Sol) :-	otherPlayer(Idx, OtherIdx), 
+playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
 					    generate(Idx, CoupIA),
 					    generate(OtherIdx,CoupOther),
-					    h(Idx,OtherIdx,CoupIA,CoupOther,Sol).					      
+					    h(Idx,OtherIdx,CoupIA,CoupOther,Gain),
+					    meilleurGain(AncienGain),
+					    Gain >= AncienGain,
+					    retract(meilleurGain(_)),
+					    assert(meilleurGain(Gain)),
+					    ProchainCoup = CoupIA.
+					    					      
 	
 
 % Heuristique qui calcule le gain associé à un coup.
@@ -36,6 +63,7 @@ playHybride(Idx,Sol) :-	otherPlayer(Idx, OtherIdx),
 % OtherPlayer : indice de l'autre joueur en entrée
 % CoupIA : Liste d'actions de l'IA en entrée
 % CoupOther : Liste d'actions de l'autre joueur
+% Les deux listes doivent avoir le meme nombre d'élements.
 % Gain : gain associé en sortie.
 % Le gain correspond à une valeur entre -3 et 3 : 
 %  - une valeur négative correspond à un nombre de tirs encaissés > au nombre de tirs donnés
@@ -68,10 +96,12 @@ hr(Idx,OtherPlayer,TmpPlane1,TmpPlane2,[ActionIA|CoupIA],[ActionOther|CoupOther]
 generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,Action2,Action3]),Liste).
 
 % Genere tous les triplets d'actions possibles pour un avion à partir de sa position sans sortir du tableau à la fin des 3 actions.
+% Une action est gardé si on se rapproche aussi de l'autre joueur
 generate(Idx,[Action1,Action2,Action3]) :- action(Action1),action(Action2),action(Action3), % Génération des triplets d'actions
 					   update(Idx,3),
 					   callPlaneAction(3,Action1),
 					   callPlaneAction(3,Action2),
 					   callPlaneAction(3,Action3),
 					   testPosition(3).
-%      
+
+					   

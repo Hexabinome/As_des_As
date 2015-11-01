@@ -40,7 +40,7 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiOffensive(1), %rather defensive
+	aiHybride(1),
 	actions(1, ActionsP1),
 	% joueur 2:
 	aiDefensiveBest(2), %pretty aggressive
