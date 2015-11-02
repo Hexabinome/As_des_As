@@ -6,12 +6,12 @@
 :- use_module('../Game/plane_actions').
 
 :- dynamic meilleurGain/1.
-:- dynamic meilleurCoup/1.
+:- dynamic meilleurCoup/2.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-meilleurGain(-3).
-meilleurCoup([]).
+meilleurGain(0).
+meilleurCoup([],0).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,8 +21,7 @@ meilleurCoup([]).
 % Son but est de maximiser ses tirs tout en minimisant les possibilités de tirs de l'adversaire.
 % Elle suppose que l'adversaire joue les coups qui sont le plus en sa faveur.
 % Principe : A partir d'un état du jeu, on construit l'arbre de jeu c'est à dire tous les coups (triplets d'actions) possibles 
-% pour l'IA et l'autre joueur tout en ne sortant pas du tableau. On évalue ensuite les coups grâce à une heuristique pour faire remonter
-% les max.
+% pour l'IA. On évalue ensuite les coups grâce à une heuristique pour faire remonter les min puis les max des ces mins.
 % L'arbre de recherche n'a pas une grande profondeur mais un nombre très important de noeuds dû aux coups possibles à chaque "step".
 % TODO : élagage alpha beta  
 
@@ -31,52 +30,7 @@ meilleurCoup([]).
 %minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
 %						 generate(OtherIdx,CoupOther)
 
-% Donne le coup max de la map
-accMaxMap([],Ag,Ag,CoupMax,CoupMax).
-accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
-								   E = [CMax|_],
-								   Gain > Ac,
-								   accMaxMap(T,Gain,Ag,CMax,CoupMax).
-
-accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
-								   Gain =< Ac,
-								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
-
-maxMap(Idx,CoupMax) :- mapCoupGain(Idx, Map),
-					   Map = [E|_], % On chope le premier élément de la map
-					   E = [_|G], % On chope le reste du premier coup c'est à dire le gain associé
-					   G = [Gain|_], % On recupère le premier gain 
-					   E = [CoupDefault|_], % On récupère le premier coup de la map
-					   
-					   accMaxMap(Map, Gain,_, CoupDefault,CoupMax).
-					   
-
-% Construis une sorte de map qui contient un coup et le gain minimum associé à ce coup sous la forme
-% [ [[Action,Action,Action],Gain], [[Action,Action,Action],Gain] ...].
-% Exemple : [ [['FF','UT',RT'],2], [['FF','UT','RT'],-1]]
-mapCoupGain(Idx,Map) :- findall([Coup,Min],setOfMin(Idx,Min,Coup),Map).
-
-% Donne le gain minimal et le coup de notre IA associé à ce gain minimal pour l'ensemble des coups de l'adversaire.
-% On supposera que l'adversaire jouera toujours le coup qui nous avantage le moins d'où le gain minimal choisi.
-setOfMin(Idx,Min,CoupIA) :- otherPlayer(Idx, OtherIdx),
-				 generate(Idx, CoupIA),
-				 setof(CoupOther,generate(OtherIdx,CoupOther),ListeCoup),
-				 mapMin(Idx, OtherIdx, CoupIA, ListeCoup, Min).
-
-% Donne le gain min d'une série liste de coups pour un coup donné.
-accMapMin(_,_,_,[],A,A).
-accMapMin(Idx,OtherIdx,T,[H2|T2],A,Min) :-  h(Idx,OtherIdx,T,H2,ValeurCoup),
-												ValeurCoup < A,
-										   		accMapMin(Idx,OtherIdx, T, T2, ValeurCoup, Min).
-										   
-accMapMin(Idx,OtherIdx,T,[H2|T2],A,Min) :-	h(Idx,OtherIdx,T,H2,ValeurCoup),
-												ValeurCoup >= A,
-										   		accMapMin(Idx,OtherIdx, T, T2, A, Min).
-
-mapMin(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMapMin(Idx,OtherIdx,CoupIa, ListeCoup, 3 ,Min).
-
-
-% Un petit soucis avec celui qui marche ne pas
+% Un petit soucis avec celui ci qui  marche ne plus
 aiHybride(Idx) :-
 				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
 				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
@@ -88,26 +42,72 @@ aiHybride(Idx) :-
 				resetMeilleurGain.
 aiHybrideBest(Idx) :-
 				maxMap(Idx,Coup),
-				%write('Coup : '),write(Coup),nl,
 				retract(actions(Idx, _)),
 				assert(actions(Idx, Coup)),
 				resetMeilleurGain.
-
 
 playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
 					    generate(Idx, CoupIA),
 					    generate(OtherIdx,CoupOther),
 					    h(Idx,OtherIdx,CoupIA,CoupOther,Gain),
 					    meilleurGain(AncienGain),
-					    
 					    Gain > AncienGain,
 					    retract(meilleurGain(_)),
 					    assert(meilleurGain(Gain)),
 					    ProchainCoup = CoupIA.
-					    					      
-	
 
-% Heuristique qui calcule le gain associé à un coup.
+
+% Donne le coup associé au gain Max dans la map. C'est à dire le coup qui permet de maximiser le gain.
+% accMaxMap est le prédicat qui parcours la map de façon récursive.
+% maxMap est le prédicat qui donne ce coup max. Il utilise accMaxMap
+accMaxMap([],Ag,Ag,CoupMax,CoupMax).
+accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+								   E = [CMax|_],
+								   Gain > Ac,
+								   accMaxMap(T,Gain,Ag,CMax,CoupMax).
+accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+								   Gain =< Ac,
+								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
+maxMap(Idx,CoupMax) :- mapCoupGain(Idx, Map),
+					   Map = [E|_], % On chope le premier élément de la map
+					   E = [_|G], % On chope le gain associé à ce premier coup sous la forme [Gain]
+					   G = [Gain|_], % On recupère le gain 
+					   E = [CoupDefault|_], % On récupère le premier coup de la map
+					   % On suppose que ce couple constitue notre max
+					   accMaxMap(Map, Gain,_, CoupDefault,CoupMax).
+
+
+% Construis une sorte de map qui contient un coup et le gain minimum associé à ce coup sous la forme
+% [ [[Action,Action,Action],Gain], [[Action,Action,Action],Gain] ].
+% Exemple : [ [['FF','UT',RT'],2], [['FF','UT','RT'],-1]] => Si l'ia joue ['FF','UT',RT'] au pire il gagne 2 donc il aura 
+% intérêt à choisir ce coup dans notre exemple. 
+mapCoupGain(Idx,Map) :- findall([Coup,Min],setOfMin(Idx,Min,Coup),Map).
+
+% Donne le gain minimal et le coup de notre IA associé à ce gain minimal pour l'ensemble des coups de l'adversaire.
+% On supposera que l'adversaire jouera toujours le coup qui nous avantage le moins d'où le gain minimal choisi.
+% Idx : id de notre IA en entrée
+% Min : le minimum des coups en sortie
+% CoupIA : le coup de notre IA associé à ce gain min
+setOfMin(Idx,Min,CoupIA) :- otherPlayer(Idx, OtherIdx),
+				 generate(Idx, CoupIA),
+				 setof(CoupOther,generate(OtherIdx,CoupOther),ListeCoup), % On récupère l'ensemble des coups de l'adversaire
+				 minGain(Idx, OtherIdx, CoupIA, ListeCoup, Min).
+
+% Donne le gain min d'une série liste de coups pour un coup donné.
+accMinGain(_,_,_,[],A,A).
+accMinGain(Idx,OtherIdx,T,[H2|T2],A,Min) :-  h(Idx,OtherIdx,T,H2,ValeurCoup),
+												ValeurCoup < A,
+										   		accMinGain(Idx,OtherIdx, T, T2, ValeurCoup, Min).
+										   
+accMinGain(Idx,OtherIdx,T,[H2|T2],A,Min) :-	h(Idx,OtherIdx,T,H2,ValeurCoup),
+												ValeurCoup >= A,
+										   		accMinGain(Idx,OtherIdx, T, T2, A, Min).
+
+minGain(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMinGain(Idx,OtherIdx,CoupIa, ListeCoup, -3 ,Min).
+
+					    					      
+
+% Fonction d'évaluation qui calcule le gain associé à un coup.
 % Idx : indice de l'avion de l'ia en entrée
 % OtherPlayer : indice de l'autre joueur en entrée
 % CoupIA : Liste d'actions de l'IA en entrée

@@ -10,7 +10,7 @@
 								gameoverRoundLimit/0]).
 
 :- use_module('plane').
-:- use_module('display').
+:- use_module('../display').
 :- use_module('../game').
 								
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
