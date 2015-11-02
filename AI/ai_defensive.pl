@@ -37,7 +37,7 @@ aiDefensiveBest(Idx):-
 				assert(actions(Idx, Sol)).
 				
 
-% Genere des listes de 3 coups qui suivent une heuristique defensive (algo min-max like)
+% Genere des listes de 3 coups qui suivent une heuristique defensive
 % La logique de cette IA est de s eloigner le plus de son adversaire tout en prenant le moins de coups possible
 % elle ne prend pas en compte les degats potentiels qu elle peut infliger				
 playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),

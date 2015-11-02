@@ -39,7 +39,7 @@ aiOffensiveBest(Idx):-
 				retract(actions(Idx, _)),
 				assert(actions(Idx, Sol)).
 
-% Genere des listes de 3 coups qui suivent une heuristique offensive (algo min-max like)
+% Genere des listes de 3 coups qui suivent une heuristique offensive
 % La logique de cette IA est de se rapprocher le plus possible de sa cible tout en prenant les coups
 % qui lui permettent de tirer sur celle ci, elle ne prend pas en compte les degats qui lui sont fait
 playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),

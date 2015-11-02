@@ -34,12 +34,12 @@ aiDraw(Idx):-
 playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				% Distance initiale entre les deux avions
 				dist(Idx, OtherIdx, Dinit),
-				retractall(bestDistO(_)),
-				assert(bestDistO(Dinit)),
+				retractall(bestDistDraw(_)),
+				assert(bestDistDraw(Dinit)),
 				
 				% Nombre de tirs initial du meilleur
-				retractall(bestFire(_)),
-				assert(bestFire(0)),
+				retractall(bestFireDraw(_)),
+				assert(bestFireDraw(0)),
 				
 				% Genere tous les couples d'actions possibles pour le premier coup
 				coupleAction(A1, B1),
@@ -49,7 +49,7 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				callPlaneAction(3, A1),
 				callPlaneAction(4, B1),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
-				betterPositionO(Idx, OtherIdx, 3, 4),
+				betterPositionDraw(Idx, OtherIdx, 3, 4),
 				
 				% Genere tous les couples d'actions possibles pour le second coup
 				coupleAction(A2, B2),
@@ -70,7 +70,7 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				callPlaneAction(7, A3),
 				callPlaneAction(8, B3),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
-				betterPositionO(5, 6, 7, 8),
+				betterPositionDraw(5, 6, 7, 8),
 				
 				% Verifie que la position finale des deux avions n'est pas hors de l'air de jeu [0,15]
 				testPosition(7), testPosition(8),
@@ -78,25 +78,25 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				% On verifie combien de fois les 2 avions ont pu se tirer dessus simultanément
 				retractall(actFire(_)),
 				assert(actFire(0)),
-				testFireO(3,4),
-				testFireO(4,3),
-				testFireO(5,6),
-				testFireO(6,5),
-				testFireO(7,8),
-				testFireO(8,7),
+				testFireDraw(3,4),
+				testFireDraw(4,3),
+				testFireDraw(5,6),
+				testFireDraw(6,5),
+				testFireDraw(7,8),
+				testFireDraw(8,7),
 				actFire(F),
 				% On verifie que notre liste d'actions a pu tirer à égalité au moins autant de fois que la meilleure trouvée jusqu'ici
-				bestFire(BF),
+				bestFireDraw(BF),
 				BF =< F,
-				retract(bestFire(BF)),
-				assert(bestFire(F)),
+				retract(bestFireDraw(BF)),
+				assert(bestFireDraw(F)),
 				
 				% On verifie que la distance finale entre les deux avions est au plus aussi grande que la meilleur trouvée jusqu'ici
 				dist(7, 8, D),
-				bestDistO(BD),
+				bestDistDraw(BD),
 				D =< BD,
-				retract(bestDistO(BD)),
-				assert(bestDistO(D)),
+				retract(bestDistDraw(BD)),
+				assert(bestDistDraw(D)),
 				
 				%write("---------------------------"),nl,
 				%write(A1),nl,write(A2),nl,write(A3),nl,write(D), nl,
@@ -111,14 +111,16 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 
 
 % Is better if on the new position you can shoot on the other player.
-testFireO(I1, I2) :- canFire(I1, I2),
+% TODO faire un testfire draw, si a peut tirer sur b ET b peut tirer sur a alors on incrémente.
+testFireDraw(I1, I2) :- canFire(I1, I2),
 					retract(actFire(X)),
 					assert(actFire(X+1)).
 
-testFireO(I1, I2) :- not(canFire(I1, I2)).
+testFireDraw(I1, I2) :- not(canFire(I1, I2)).
 								
 
 % Is also better if the new position is closer than the old one.
-betterPositionO(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
+% mettre un =<, si le gars est derriere nous on pourra jamais se rapprocher en un seul coup
+betterPositionDraw(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 									dist(J1, J2, D2),
 									D1 > D2.
