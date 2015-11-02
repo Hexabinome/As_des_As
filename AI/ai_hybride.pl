@@ -1,4 +1,4 @@
-:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1]).
+:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1,mapMin/5]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -97,11 +97,11 @@ hr(Idx,OtherPlayer,TmpPlane1,TmpPlane2,[ActionIA|CoupIA],[ActionOther|CoupOther]
 							   			update(OtherPlayer, TmpPlane2), % Remplissage du premier avion temporaire
 							   			callPlaneAction(TmpPlane1, ActionIA), %  Déplacement du premier avion
 							   			callPlaneAction(TmpPlane2, ActionOther), %  Déplacement du second avion
-							   			(canFire(TmpPlane1, TmpPlane2) -> NewGain is AccGain + 1; % +1 si l'ia peut tirer
-							   						( canFire(TmpPlane2, TmpPlane1) -> NewGain is AccGain - 1;NewGain is AccGain )), % -1 si l'autre joueur peut tirer
+							   			(canFire(TmpPlane1, TmpPlane2) -> NewGain is AccGain + 1;NewGain is AccGain), % +1 si l'ia peut tirer
+							   			(canFire(TmpPlane2, TmpPlane1) -> NewPerte is NewGain - 1;NewPerte is NewGain), % -1 si l'autre joueur peut tirer
 							   			NewTmpPlane1 is TmpPlane1 + 2, % Passage au prochain avion temporaire
 							   			NewTmpPlane2 is TmpPlane2 + 2, % Passage au prochain avion temporaire
-							   			hr(TmpPlane1,TmpPlane2,NewTmpPlane1,NewTmpPlane2,CoupIA,CoupOther,NewGain,Gain). % Appel récursif			   	
+							   			hr(TmpPlane1,TmpPlane2,NewTmpPlane1,NewTmpPlane2,CoupIA,CoupOther,NewPerte,Gain). % Appel récursif			   	
  
 % Met tous les triplets dans une liste (j'en aurai peut etre pas besoin)
 generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,Action2,Action3]),Liste).
