@@ -1,4 +1,4 @@
-:- module(simulation, [simulate/0]).
+:- module(simulation, [simulate/0, simulateWinnerIs/1]).
 
 :- use_module('simulation_gameover_plane').
 
@@ -49,13 +49,13 @@ simulate :-
 	maxGames(MaxGames),
 	% Display current round
 	write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
-	reset,
+	reset, simulateWinnerIs(-1),
 	playOneGame,
 	!,
 	incrementWinnerCounter,
 	simulate.
 
-incrementWinnerCounter :-	
+incrementWinnerCounter :-
 								gameWinner(Idx),
 								retract(playerWinsCounter(Idx, Wins)),
 								IncrementedWins is Wins+1,
@@ -66,15 +66,17 @@ incrementWinnerCounter :-
 
 % Fills the the winning index in gameWinner fact (assert made by gameover predicates in 'simulation_gameover_plane' file
 playOneGame :- gameoverRoundSimulation, !.
-playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \== -1).
+playOneGame :- gameWinner(Idx), Idx \== -1, !.
+playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 
 % Is false if one plane died during actions
 simulationStep :- 
-	aiRandom(1),	% joueur 1
+	simulateWinnerIs(-1),
+	aiOffensive(1),	% joueur 1
 	actions(1, ActionsP1),
-	aiDefensive(2), % joueur 2
+	aiOffensive(2), % joueur 2
 	actions(2, ActionsP2),
-	updatePlanesSimulation(ActionsP1, ActionsP2), % Execution des coups de chaque avion
+	updatePlanesSimulation(ActionsP1, ActionsP2),	% Execution des coups de chaque avion
 	playOneGame.
 
 	
@@ -110,3 +112,9 @@ displayStatistics :-
 						write('/'),
 						write(MaxGames),
 						nl.
+						
+
+% Asserts the current winner
+simulateWinnerIs(Idx) :- 
+	retractall(gameWinner(_)),
+	assert(gameWinner(Idx)).

@@ -11,6 +11,7 @@
 :- use_module('../Game/plane').
 :- use_module('../game').
 :- use_module('../Game/gameover').
+:- use_module('simulation').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
@@ -29,8 +30,8 @@ gameoverBoardLimitSimulation(Idx) :- gameoverBoardLimitTest(Idx), otherPlayer(Id
 % --- Collision at the end of the round
 gameoverCollisionSimulation :- plane(1, X1, Y1, _, _), plane(2, X2, Y2, _, _), X1 == X2, Y1 == Y2, simulateWinnerIs(3), !.
 
-% --- Limit number of 200 rounds reached for a simulation game
-gameoverRoundLimitSimulation :- round(200), simulateWinnerIs(0), !.
+% --- Limit number of 100 rounds reached for a simulation game
+gameoverRoundLimitSimulation :- round(X), X >= 100, !, simulateWinnerIs(0), !.
 
 
 % End of round gameover
@@ -42,13 +43,8 @@ gameoverRoundSimulation :- gameoverCollisionSimulation, !.
 
 % End of step gameover
 gameoverStepSimulation :- gameoverDeathSimulation, !.
-gameoverStepSimulation :- gameoverDeathSimulation(1).
-gameoverStepSimulation :- gameoverDeathSimulation(2).
-
-% Asserts the current winner
-simulateWinnerIs(Idx) :-
-	retract(gameWinner(_)),
-	assert(gameWinner(Idx)).
+gameoverStepSimulation :- gameoverDeathSimulation(1), !.
+gameoverStepSimulation :- gameoverDeathSimulation(2), !.
 	
 updatePlanesSimulation([], []).
 updatePlanesSimulation([Action1|ActionList1], [Action2|ActionList2]) :- 
