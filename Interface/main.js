@@ -103,7 +103,7 @@ function bindClick()
 		
 		nextProlog();
 
-		interval = setInterval(nextProlog, 1000 * 3);
+		//interval = setInterval(nextProlog, 1000 * 3);
 	});
 	
 	$("#Play").bind('click', function(e) 

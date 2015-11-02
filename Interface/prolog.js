@@ -1,4 +1,5 @@
-
+var finAction1 = false;
+var finAction2 = false;
 // ----------------------------------------  Appelle prolog et callback
 //Appeller par prolog
 function updatePlane(param)
@@ -23,21 +24,50 @@ function updatePlane(param)
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
 		avion1.deplacer(move1[0]).then(function(){
+			avion1.tentativeDeTir(avion2);
 			testFinJeux();
 			avion1.deplacer(move1[1]).then(function(){
+				avion1.tentativeDeTir(avion2);
 				testFinJeux();
 				avion1.deplacer(move1[2]).then(function(){
+					avion1.tentativeDeTir(avion2);
 					testFinJeux();
+					timeout = setTimeout(function()
+					{
+						finAction1 =true;
+						if(finAction1 && finAction2)
+						{
+							avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
+							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
+							finAction1 = false;
+							finAction2 = false;
+						}
+					}, 1000);
+					
 				});
 			});
 		}); 
 		
 		avion2.deplacer(move2[0]).then(function(){
+			avion2.tentativeDeTir(avion1);
 			testFinJeux();
 			avion2.deplacer(move2[1]).then(function(){
+				avion2.tentativeDeTir(avion1);
 				testFinJeux();
 				avion2.deplacer(move2[2]).then(function(){
+					avion2.tentativeDeTir(avion1);
 					testFinJeux();
+					timeout = setTimeout(function()
+					{
+						finAction2 =true;
+						if(finAction1 && finAction2)
+						{
+							avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
+							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
+							finAction1 = false;
+							finAction2 = false;
+						}
+					}, 1000);
 				})
 			});
 		}); 
