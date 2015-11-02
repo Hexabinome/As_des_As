@@ -26,6 +26,7 @@
 :- use_module('AI/ai_hybride').
 :- use_module('AI/ai_draw').
 :- use_module('AI/ai_orientation_defensive').
+:- use_module('AI/ai_orientation_offensive').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
@@ -40,10 +41,10 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiHybrideBest(1),
+	aiOrOffensiveBest(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiHybride(2), 
+	aiOrDefensiveBest(2), 
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion

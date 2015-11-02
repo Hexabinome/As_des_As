@@ -12,6 +12,8 @@
 :- use_module('../AI/ai_probabilistic').
 :- use_module('../AI/ai_hybride').
 :- use_module('../AI/ai_draw').
+:- use_module('../AI/ai_orientation_defensive').
+:- use_module('AI/ai_orientation_offensive').
 
 :- dynamic gameWinner/1.
 :- dynamic playerWinsCounter/2.
@@ -49,11 +51,11 @@ simulate :-
 	simulatedGames(NbGames),
 	maxGames(MaxGames),
 	% Display current round
-	write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
+	write('Round: '), write(NbGames), write('/'), write(MaxGames), flush,
 	reset, simulateWinnerIs(-1),
 	playOneGame,
 	!,
-	incrementWinnerCounter,
+	incrementWinnerCounter, write(' finished in '), round(Round), write(Round), write(' rounds'), nl,
 	simulate.
 
 incrementWinnerCounter :-
@@ -73,9 +75,9 @@ playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 % Is false if one plane died during actions
 simulationStep :- 
 	simulateWinnerIs(-1),
-	aiDefensive(1),	% joueur 1
+	aiOrOffensive(1), % joueur 1
 	actions(1, ActionsP1),
-	aiDefensive(2), % joueur 2
+	aiOrDefensiveBest(2), % joueur 2
 	actions(2, ActionsP2),
 	updatePlanesSimulation(ActionsP1, ActionsP2),	% Execution des coups de chaque avion
 	playOneGame.
