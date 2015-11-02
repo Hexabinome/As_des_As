@@ -21,6 +21,7 @@ display([Row|B]) :- displayRow(Row), display(B).
 % Ends a row display (if row is empty)
 displayRow([]) :- nl.
 % Displays one element of the row and calls recursively for the rest of the row.
+displayRow([Element|Row]) :- Element == '.', write(' '), write(Element), write('|'), displayRow(Row).
 displayRow([Element|Row]) :- write(Element), write('|'), displayRow(Row).
 
 % Gameover displays

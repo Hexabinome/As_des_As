@@ -50,7 +50,9 @@ replaceBoard(X, Y, Value, Board, Result):-
 displayBoard :- 
 			defaultBoard(Board),
 			plane(1, C1x, C1y, _, Orientation1),
-			replaceBoard(C1x, C1y, Orientation1, Board, BoardSortie),
+			string_concat(1, Orientation1, OutPlane1),
+			replaceBoard(C1x, C1y, OutPlane1, Board, BoardSortie),
 			plane(2, C2x, C2y, _, Orientation2),
-			replaceBoard(C2x, C2y, Orientation2, BoardSortie, BoardFinal),
+			string_concat(2, Orientation2, OutPlane2),
+			replaceBoard(C2x, C2y, OutPlane2, BoardSortie, BoardFinal),
 			display(BoardFinal).
