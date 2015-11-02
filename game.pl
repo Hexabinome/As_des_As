@@ -41,10 +41,10 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiOffensiveBest(1),
+	aiHybrideNonDeterministe(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiOffensive(2), 
+	aiOrDefensiveBest(2), 
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion

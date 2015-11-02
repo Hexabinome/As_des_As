@@ -1,4 +1,4 @@
-:- module(ai_hybride, [aiHybride/1]).
+:- module(ai_hybride, [aiHybride/1,aiHybrideNonDeterministe/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -30,16 +30,28 @@ meilleurCoup([],0).
 %minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
 %						 generate(OtherIdx,CoupOther)
 
-%aiHybrideNonDeterministe(Idx) :- maxMap(Idx,_,GainMax),
+aiHybrideNonDeterministe(Idx) :- mapCoupGain(Idx, Map), 
+								 maxMap(_,GainMax,Map),
+								 coupVautGain(ListeCoup,GainMax,Map),
+								 random_member(FinalSol, ListeCoup),
+								 % Crée le prochain coup à jouer
+								retract(actions(Idx, _)),
+								assert(actions(Idx, FinalSol)).
 								
 
-% Donne les coups dont le gain vaut Gain
-coupVautGain(Idx,Coup,Gain) :- maxMap(Idx, NewCoup, GainMax) 
-								mapCoupGain(Idx,Map),
+% Donne les coups de la map dont le gain vaut Gain dans une liste
+accCoupVautGain(L,_,[],L).
+accCoupVautGain(Liste,Gain, [First|Map],AccL) :-   First = [_|G], G = [NewGain|_],
+										  First = [CMax|_],
+										  NewGain == Gain,
+										  accCoupVautGain(Liste,Gain,Map,[CMax|AccL]).
+accCoupVautGain(Liste,Gain, [First|Map],AccL) :-   First = [_|G], G = [NewGain|_],
+										  %First = [CMax|_],
+										  NewGain \= Gain,
+										  accCoupVautGain(Liste,Gain,Map,AccL).
+coupVautGain(Liste,Gain,Map) :- accCoupVautGain(Liste, Gain, Map,[]).				  
 
-
-						  
-
+% AI hybride qui prend le premier meilleur coup
 aiHybride(Idx) :-
 				mapCoupGain(Idx, Map),
 				maxMap(Coup,_,Map),
