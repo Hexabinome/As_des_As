@@ -107,7 +107,7 @@ playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				append([A1, A2, A3], [], Sol).
 				
 				
-% Is better if on the new position you can shoot on the other player.
+% Is better if on the new position you can't be shot by the other player.
 testFireD(I1, I2) :- canFire(I2, I1),
 					retract(actFireD(X)),
 					assert(actFireD(X+1)).
@@ -115,9 +115,9 @@ testFireD(I1, I2) :- canFire(I2, I1),
 testFireD(I1, I2) :- not(canFire(I2, I1)).
 								
 
-% Is also better if the new position is closer than the old one.
-betterPositionD(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
-									dist(J1, J2, D2),
-									D1 =< D2.
+% Is also better if the new position is further than the old one.
+betterPositionD(I1, I2, J1, J2) :- dist(I1, I2, D1),
+				dist(J1, J2, D2),
+				D1 =< D2.
 				
 

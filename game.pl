@@ -25,7 +25,7 @@
 :- use_module('AI/ai_probabilistic').
 :- use_module('AI/ai_hybride').
 :- use_module('AI/ai_draw').
-
+:- use_module('AI/ai_orientation_defensive').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
