@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-meilleurGain(0).
+meilleurGain(-3).
 meilleurCoup([]).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
@@ -27,12 +27,29 @@ meilleurCoup([]).
 % TODO : élagage alpha beta  
 
 % P : Profondeur dans l'arbre
-%minimax(1,_,_).
-%minimax(P,Idx,OtherIdx) :- NewProfondeur is P -1,
-%						   minimax(NewProfondeur,Idx,OtherIdx),
-%						   generate(Idx, CoupIA).
-						   %generate(OtherIdx,CoupOther).
+%minimax(_,_).
+%minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
+%						 generate(OtherIdx,CoupOther)
+						 
 
+
+% Donne le gain min d'une série liste de coups
+%accMapMin(_,_,[],_,A,A).
+%accMapMin(_,_,_,[],A,A).
+accMapMin(_,_,[],[],A,A).
+accMapMin(Idx,OtherIdx,[H|T],[H2|T2],A,Min) :-  h(Idx,OtherIdx,H,H2,ValeurCoup),
+												ValeurCoup < A,
+										   		NewIdx is Idx +6, % on recupère les anciens avions temporaires qui contiennent les dernières positions
+										   		NewOther is OtherIdx +6, % On récupère les avions temporaires qui contiennent les dernières positions
+										   		accMapMin(NewIdx,NewOther, T, T2, ValeurCoup, Min).
+										   
+accMapMin(Idx,OtherIdx,[H|T],[H2|T2],A,Min) :-	h(Idx,OtherIdx,H,H2,ValeurCoup),
+												NewIdx is Idx +6, % on recupère les anciens avions temporaires qui contiennent les dernières positions
+										   		NewOther is OtherIdx +6, % On récupère les avions temporaires qui contiennent les dernières positions
+										   		ValeurCoup >= A,
+										   		accMapMin(NewIdx,NewOther, T, T2, A, Min).
+
+mapMin(Idx,OtherIdx,ListeCoup1,ListeCoup2,Min) :- accMapMin(Idx,OtherIdx,ListeCoup1, ListeCoup2, 3 ,Min).
 
 aiHybride(Idx) :-
 				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
@@ -42,8 +59,7 @@ aiHybride(Idx) :-
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)),
-				retract(meilleurGain(_)),
-				assert(meilleurGain(0)).
+				resetMeilleurGain.
 
 aiHybrideBest(Idx) :-
 				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
@@ -53,8 +69,7 @@ aiHybrideBest(Idx) :-
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, Sol)),
-				retract(meilleurGain(_)),
-				assert(meilleurGain(0)).
+				resetMeilleurGain.
 
 % Pas encore fini
 playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
@@ -62,7 +77,8 @@ playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx),
 					    generate(OtherIdx,CoupOther),
 					    h(Idx,OtherIdx,CoupIA,CoupOther,Gain),
 					    meilleurGain(AncienGain),
-					    Gain >= AncienGain,
+					    
+					    Gain > AncienGain,
 					    retract(meilleurGain(_)),
 					    assert(meilleurGain(Gain)),
 					    ProchainCoup = CoupIA.
@@ -115,4 +131,9 @@ generate(Idx,[Action1,Action2,Action3]) :- action(Action1),action(Action2),actio
 					   callPlaneAction(3,Action3),
 					   testPosition(3).
 
-					   
+% Réinitialise le meilleur gain
+resetMeilleurGain :- retract(meilleurGain(_)),
+				assert(meilleurGain(-3)).
+
+resetMeilleurGain(NouveauMeilleurGain) :- retract(meilleurGain(_)),
+										  assert(meilleurGain(NouveauMeilleurGain)).    
