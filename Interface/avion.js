@@ -102,8 +102,6 @@ Avion.prototype.deplacer= function(move)
 	return def.promise();
 };
 
-
-
 Avion.prototype.modifierVie= function(vie)
 {
 	this.vie = vie;
@@ -114,7 +112,7 @@ Avion.prototype.afficher = function() {
 	var position = $("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']");
 
 	$("#" + this.nom).remove();
-	position.append("<img id='" + this.nom + "' src='avion.png' class='avion " + this.orientation + "'/>");
+	position.append("<img id='" + this.nom + "' src='" + this.nom + ".png' class='avion " + this.orientation + "'/>");
 };
 
 Avion.prototype.moveRight = function() {

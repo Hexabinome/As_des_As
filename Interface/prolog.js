@@ -23,26 +23,39 @@ function updatePlane(param)
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
 		avion1.deplacer(move1[0]).then(function(){
+			testFinJeux();
 			avion1.deplacer(move1[1]).then(function(){
-				avion1.deplacer(move1[2]);
+				testFinJeux();
+				avion1.deplacer(move1[2]).then(function(){
+					testFinJeux();
+				});
 			});
 		}); 
 		
 		avion2.deplacer(move2[0]).then(function(){
+			testFinJeux();
 			avion2.deplacer(move2[1]).then(function(){
-				avion2.deplacer(move2[2]);
+				testFinJeux();
+				avion2.deplacer(move2[2]).then(function(){
+					testFinJeux();
+				})
 			});
 		}); 
 		
 		//TODO à effacer quand tous fonctionnera
-		timeout = setTimeout(function()
+		/*timeout = setTimeout(function()
 		{
 			avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
 			avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-		}, 3000);
+		}, 3000);*/
 	}
 
-	if(avion1.vie <= 0 || avion2.vie <= 0)
+	
+}
+
+function testFinJeux()
+{
+	if(avion1.vie <= 0 || avion2.vie <= 0 || (avion1.x === avion2.x && avion1.y === avion2.y))
 	{
 		score2 += (avion1.vie <= 0)?1:0;
 		score1 += (avion2.vie <= 0)?1:0;

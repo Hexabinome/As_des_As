@@ -4,7 +4,7 @@
 :- use_module(library(http/http_files)).
 :- use_module(library(http/http_parameters)).
 
-:- [game].
+:- use_module('game').
 
 %lance le server
 server(Port) :-
@@ -21,20 +21,20 @@ homePage(Request) :-
 	http_reply_from_files('/Interface/avion.html', [], Request).
 
 initPlane(Request) :-
-	reset,
-	plane(1, X1, Y1, V1, D1),
-	plane(2, X2, Y2, V2, D2),
+	game:reset,
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
     format('Content-type: text/jsonp~n~n'),
     format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
 						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', 
 						[X1, Y1, V1, D1, X2, Y2, V2, D2] ).
 
 next(Request) :-
-	stepHttp,
-	plane(1, X1, Y1, V1, D1),
-	plane(2, X2, Y2, V2, D2),
-	actionHttp(1, Action1),
-	actionHttp(2, Action2),
+	game:stepHttp,
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
+	game:actionHttp(1, Action1),
+	game:actionHttp(2, Action2),
     format('Content-type: text/jsonp~n~n'),
     format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
 						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"},
@@ -49,11 +49,11 @@ nextPlayer(Request) :-
 		  act2(Act2, []),
 		  act3(Act3, [])
 		]),
-	stepHttpPlayer([Act1, Act2, Act3]),
-	plane(1, X1, Y1, V1, D1),
-	plane(2, X2, Y2, V2, D2),
-	actionHttp(1, Action1),
-	actionHttp(2, Action2),
+	game:stepHttpPlayer([Act1, Act2, Act3]),
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
+	game:actionHttp(1, Action1),
+	game:actionHttp(2, Action2),
     format('Content-type: text/jsonp~n~n'),
     format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
 						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"},

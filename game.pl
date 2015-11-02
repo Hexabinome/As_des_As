@@ -41,7 +41,7 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiHybride(1),
+	aiOffensiveBest(1),
 	actions(1, ActionsP1),
 	% joueur 2:
 	aiOffensive(2), 
@@ -86,9 +86,11 @@ reset :-
 
 stepHttp :-
 	incrementRoundCounter,
-	aiDefensiveBest(1),
+	% joueur 1:
+	aiOffensiveBest(1),
 	actions(1, ActionsP1),
-	aiRandom(2),
+	% joueur 2:
+	aiOffensive(2), 
 	actions(2, ActionsP2),
 	
 	retractall(actionHttp(_, _)),

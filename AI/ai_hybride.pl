@@ -34,8 +34,8 @@ meilleurCoup([],0).
 								
 
 % Donne les coups dont le gain vaut Gain
-%coupVautGain(Idx,Coup,Gain) :- maxMap(Idx, NewCoup, GainMax) 
-%								mapCoupGain(Idx,Map),
+coupVautGain(Idx,Coup,Gain) :- maxMap(Idx, NewCoup, GainMax) 
+								mapCoupGain(Idx,Map),
 
 
 						  
