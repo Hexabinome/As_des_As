@@ -129,11 +129,11 @@ betterPositionOrD(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 % Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
 % l'endroit ou il y a le plus d'espace
 % au milieu du plateau l'orientation ne compte pas.
-testOrientation(Idx) :-	plane(Idx,X,Y,_,Orientation),
+testOrientation(Idx) :-	plane(Idx,X,_,_,Orientation),
 	X < 5,
 	Orientation == 'E'.
 
-testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
+testOrientation(Idx) :- plane(Idx,X,_,_,Orientation),
 	X > 12,
 	Orientation == 'O'.
 

@@ -26,10 +26,11 @@ simulatedGames(1).
 maxGames(10).
 
 
+playerWinsCounter(0, 0). % Round limit
 playerWinsCounter(1, 0). % Player 1
 playerWinsCounter(2, 0). % Player 2
 playerWinsCounter(3, 0). % Collision draws
-playerWinsCounter(4, 0). % Killed at the same time draws
+playerWinsCounter(4, 0). % Killed at the same time draw
 playerWinsCounter(5, 0). % Out of board draws
 
 gameWinner(-1).
@@ -72,15 +73,16 @@ playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 % Is false if one plane died during actions
 simulationStep :- 
 	simulateWinnerIs(-1),
-	aiOffensive(1),	% joueur 1
+	aiDefensive(1),	% joueur 1
 	actions(1, ActionsP1),
-	aiOffensive(2), % joueur 2
+	aiDefensive(2), % joueur 2
 	actions(2, ActionsP2),
 	updatePlanesSimulation(ActionsP1, ActionsP2),	% Execution des coups de chaque avion
 	playOneGame.
 
 	
 displayStatistics :- 
+						playerWinsCounter(0, RoundLimitDraws),
 						playerWinsCounter(1, P1),
 						playerWinsCounter(2, P2),
 						playerWinsCounter(3, CollisionDraws),
@@ -94,6 +96,11 @@ displayStatistics :-
 						nl,
 						write('Player 2 wins: '),
 						write(P2),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Draws due to round limit reach: '),
+						write(RoundLimitDraws),
 						write('/'),
 						write(MaxGames),
 						nl,
