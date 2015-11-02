@@ -1,4 +1,4 @@
-:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1]). %,mapMin/5]).
+:- module(ai_hybride, [generate/2,maxMap/2,aiHybride/1,aiHybrideBest/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -30,27 +30,53 @@ meilleurCoup([]).
 %minimax(_,_).
 %minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
 %						 generate(OtherIdx,CoupOther)
-						 
 
+% Donne le coup max de la map
+accMaxMap([],Ag,Ag,CoupMax,CoupMax).
+accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+								   E = [CMax|_],
+								   Gain > Ac,
+								   accMaxMap(T,Gain,Ag,CMax,CoupMax).
 
-% Donne le gain min d'une série liste de coups
-%accMapMin(_,_,[],_,A,A).
-%accMapMin(_,_,_,[],A,A).
-accMapMin(_,_,[],[],A,A).
-accMapMin(Idx,OtherIdx,[H|T],[H2|T2],A,Min) :-  h(Idx,OtherIdx,H,H2,ValeurCoup),
+accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+								   Gain =< Ac,
+								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
+
+maxMap(Idx,CoupMax) :- mapCoupGain(Idx, Map),
+					   Map = [E|_], % On chope le premier élément de la map
+					   E = [_|G], % On chope le reste du premier coup c'est à dire le gain associé
+					   G = [Gain|_], % On recupère le premier gain 
+					   E = [CoupDefault|_], % On récupère le premier coup de la map
+					   
+					   accMaxMap(Map, Gain,_, CoupDefault,CoupMax).
+					   
+
+% Construis une sorte de map qui contient un coup et le gain minimum associé à ce coup sous la forme
+% [ [[Action,Action,Action],Gain], [[Action,Action,Action],Gain] ...].
+% Exemple : [ [['FF','UT',RT'],2], [['FF','UT','RT'],-1]]
+mapCoupGain(Idx,Map) :- findall([Coup,Min],setOfMin(Idx,Min,Coup),Map).
+
+% Donne le gain minimal et le coup de notre IA associé à ce gain minimal pour l'ensemble des coups de l'adversaire.
+% On supposera que l'adversaire jouera toujours le coup qui nous avantage le moins d'où le gain minimal choisi.
+setOfMin(Idx,Min,CoupIA) :- otherPlayer(Idx, OtherIdx),
+				 generate(Idx, CoupIA),
+				 setof(CoupOther,generate(OtherIdx,CoupOther),ListeCoup),
+				 mapMin(Idx, OtherIdx, CoupIA, ListeCoup, Min).
+
+% Donne le gain min d'une série liste de coups pour un coup donné.
+accMapMin(_,_,_,[],A,A).
+accMapMin(Idx,OtherIdx,T,[H2|T2],A,Min) :-  h(Idx,OtherIdx,T,H2,ValeurCoup),
 												ValeurCoup < A,
-										   		NewIdx is Idx +6, % on recupère les anciens avions temporaires qui contiennent les dernières positions
-										   		NewOther is OtherIdx +6, % On récupère les avions temporaires qui contiennent les dernières positions
-										   		accMapMin(NewIdx,NewOther, T, T2, ValeurCoup, Min).
+										   		accMapMin(Idx,OtherIdx, T, T2, ValeurCoup, Min).
 										   
-accMapMin(Idx,OtherIdx,[H|T],[H2|T2],A,Min) :-	h(Idx,OtherIdx,H,H2,ValeurCoup),
-												NewIdx is Idx +6, % on recupère les anciens avions temporaires qui contiennent les dernières positions
-										   		NewOther is OtherIdx +6, % On récupère les avions temporaires qui contiennent les dernières positions
-										   		ValeurCoup >= A,
-										   		accMapMin(NewIdx,NewOther, T, T2, A, Min).
+accMapMin(Idx,OtherIdx,T,[H2|T2],A,Min) :-	h(Idx,OtherIdx,T,H2,ValeurCoup),
+												ValeurCoup >= A,
+										   		accMapMin(Idx,OtherIdx, T, T2, A, Min).
 
-mapMin(Idx,OtherIdx,ListeCoup1,ListeCoup2,Min) :- accMapMin(Idx,OtherIdx,ListeCoup1, ListeCoup2, 3 ,Min).
+mapMin(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMapMin(Idx,OtherIdx,CoupIa, ListeCoup, 3 ,Min).
 
+
+% Un petit soucis avec celui qui marche ne pas
 aiHybride(Idx) :-
 				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
 				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
@@ -60,18 +86,14 @@ aiHybride(Idx) :-
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)),
 				resetMeilleurGain.
-
 aiHybrideBest(Idx) :-
-				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
-				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
-				% Choisi une solution parmis les solutions selectionnées
-				last(AllSolutions, Sol),
-				% Crée le prochain coup à jouer
+				maxMap(Idx,Coup),
+				%write('Coup : '),write(Coup),nl,
 				retract(actions(Idx, _)),
-				assert(actions(Idx, Sol)),
+				assert(actions(Idx, Coup)),
 				resetMeilleurGain.
 
-% Pas encore fini
+
 playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
 					    generate(Idx, CoupIA),
 					    generate(OtherIdx,CoupOther),
@@ -133,7 +155,8 @@ generate(Idx,[Action1,Action2,Action3]) :- action(Action1),action(Action2),actio
 
 % Réinitialise le meilleur gain
 resetMeilleurGain :- retract(meilleurGain(_)),
-				assert(meilleurGain(-3)).
+				assert(meilleurGain(0)).
 
 resetMeilleurGain(NouveauMeilleurGain) :- retract(meilleurGain(_)),
 										  assert(meilleurGain(NouveauMeilleurGain)).    
+										  
