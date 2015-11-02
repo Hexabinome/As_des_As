@@ -41,10 +41,10 @@ round(0).
 % Game loop
 step :-
 	% joueur 1:
-	aiHybrideBest(1),
+	aiOffensiveBest(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiOffensiveBest(2), 
+	aiOffensive(2), 
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
@@ -52,7 +52,7 @@ step :-
 	playerDisplay(1),
 	playerDisplay(2),
 	displayBoard,
-	pressToContinue,
+	%pressToContinue,
 	game.
 
 %game :- gameover, !.
@@ -86,9 +86,11 @@ reset :-
 
 stepHttp :-
 	incrementRoundCounter,
-	aiDefensiveBest(1),
+	% joueur 1:
+	aiOffensiveBest(1),
 	actions(1, ActionsP1),
-	aiRandom(2),
+	% joueur 2:
+	aiOffensive(2), 
 	actions(2, ActionsP2),
 	
 	retractall(actionHttp(_, _)),

@@ -101,9 +101,9 @@ function bindClick()
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
 		
-		initPlaneProlog();
-		
-		//interval = setInterval(nextProlog, 1000 * 2 );
+		nextProlog();
+
+		interval = setInterval(nextProlog, 1000 * 3);
 	});
 	
 	$("#Play").bind('click', function(e) 
