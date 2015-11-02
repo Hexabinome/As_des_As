@@ -1,4 +1,4 @@
-:- module(ai_hybride, [generate/2,maxMap/2,aiHybride/1,aiHybrideBest/1]).
+:- module(ai_hybride, [aiHybride/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -30,18 +30,19 @@ meilleurCoup([],0).
 %minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
 %						 generate(OtherIdx,CoupOther)
 
-% Un petit soucis avec celui ci qui  marche ne plus
+%aiHybrideNonDeterministe(Idx) :- maxMap(Idx,_,GainMax),
+								
+
+% Donne les coups dont le gain vaut Gain
+coupVautGain(Idx,Coup,Gain) :- maxMap(Idx, NewCoup, GainMax) 
+								mapCoupGain(Idx,Map),
+
+
+						  
+
 aiHybride(Idx) :-
-				% Crée une liste à partir de toutes les solutions renvoyées par playHybride (sans doublon)
-				setof(OneSol, playHybride(Idx, OneSol), AllSolutions),
-				% Choisi une solution parmis les solutions selectionnées
-				random_member(FinalSol, AllSolutions),
-				% Crée le prochain coup à jouer
-				retract(actions(Idx, _)),
-				assert(actions(Idx, FinalSol)),
-				resetMeilleurGain.
-aiHybrideBest(Idx) :-
-				maxMap(Idx,Coup),
+				mapCoupGain(Idx, Map),
+				maxMap(Coup,_,Map),
 				retract(actions(Idx, _)),
 				assert(actions(Idx, Coup)),
 				resetMeilleurGain.
@@ -68,13 +69,13 @@ accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 								   Gain =< Ac,
 								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
-maxMap(Idx,CoupMax) :- mapCoupGain(Idx, Map),
+maxMap(CoupMax,GainMax,Map) :- %mapCoupGain(Idx, Map),
 					   Map = [E|_], % On chope le premier élément de la map
 					   E = [_|G], % On chope le gain associé à ce premier coup sous la forme [Gain]
 					   G = [Gain|_], % On recupère le gain 
 					   E = [CoupDefault|_], % On récupère le premier coup de la map
 					   % On suppose que ce couple constitue notre max
-					   accMaxMap(Map, Gain,_, CoupDefault,CoupMax).
+					   accMaxMap(Map, Gain,GainMax, CoupDefault,CoupMax).
 
 
 % Construis une sorte de map qui contient un coup et le gain minimum associé à ce coup sous la forme
@@ -103,7 +104,7 @@ accMinGain(Idx,OtherIdx,T,[H2|T2],A,Min) :-	h(Idx,OtherIdx,T,H2,ValeurCoup),
 												ValeurCoup >= A,
 										   		accMinGain(Idx,OtherIdx, T, T2, A, Min).
 
-minGain(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMinGain(Idx,OtherIdx,CoupIa, ListeCoup, -3 ,Min).
+minGain(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMinGain(Idx,OtherIdx,CoupIa, ListeCoup, 3 ,Min).
 
 					    					      
 
