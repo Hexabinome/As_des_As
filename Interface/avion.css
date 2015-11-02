@@ -48,6 +48,14 @@
 }
 
 
+#bullet
+{
+  position: absolute;
+  right: 0;
+  top:0;
+}
+
+
 /* réduit la taille de l'avion */
 .avion
 {

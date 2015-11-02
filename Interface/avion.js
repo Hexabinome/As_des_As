@@ -101,6 +101,32 @@ Avion.prototype.deplacer= function(move)
 	return def.promise();
 };
 
+
+Avion.prototype.tentativeDeTir= function(avion)
+{
+	var distance;
+	switch(this.orientation){
+		case 'N':
+			distance = this.y - avion.y;
+			break;
+		case 'S':
+			distance = avion.y - this.y;
+			break;
+		case 'E':
+			distance = avion.x - this.x;
+			break;
+		case 'W':
+			distance = this.x - avion.x;
+			break;
+	}
+	if ( (distance < 5) && (distance > 0) )
+	{
+		this.tirer(distance);
+	}
+};
+
+
+
 Avion.prototype.tirer= function(distance)
 {
 	//Because this will change in then(function)
@@ -110,6 +136,7 @@ Avion.prototype.tirer= function(distance)
 	$this.afficherTir().then(function() {
 		$this.deplacerTir(distance)
 			.then(function() {
+				console.log('coucou');
 				 $this.supprimerTir();
 				def.resolve();
 		});
@@ -144,7 +171,7 @@ Avion.prototype.deplacerTir = function(distance) {
 		case 'E':
 			toTest = "right";
 			signe = "-";
-			$("#bullet").animate({ "right" : + "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
+			$("#bullet").animate({ "right" : "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
 			break;
 		case 'S':
 			toTest = "top";
@@ -154,9 +181,10 @@ Avion.prototype.deplacerTir = function(distance) {
 	}
 
 
-
   var timer = setInterval(function() {
-		if ( $('#bullet').css(toTest) === signe + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance + "px") {
+  	console.log(( $('#bullet').css(toTest)));
+  	console.log((signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)+ "px") );
+		if ( $('#bullet').css(toTest) === (signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)/10 + "px") ){
 			clearInterval(timer);
 			def.resolve();
 		}
