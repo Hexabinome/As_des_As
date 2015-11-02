@@ -179,6 +179,29 @@ test(planeFire) :-
 	assertion(Life2 == 2)
 	.
 
+test(planeDecrementLife) :- 
+	setPlaneLife(1, 2),
+	decrementLife(1),
+	plane(1, _, _, Life1, _),
+	assertion(Life1 == 1),
+	
+	decrementLife(1),
+	plane(1, _, _, Life2, _),
+	assertion(Life2 == 0)
+	.
+	
+test(planeUpdatePlanes) :-
+	setPlanePosition(1, 1, 1, 'S'),
+	setPlaneLife(1, 3),
+	setPlanePosition(2, 3, 4, 'N'),
+	setPlaneLife(2, 3),
+	updatePlanes(['LT', 'RT', 'F'], ['LT', 'UT', 'F']),
+	plane(1, X1, Y1, Life1, O1),
+	plane(2, X2, Y2, Life2, O2),
+	assertion(X1 == 3), assertion(Y1 == 4), assertion(Life1 == 2), assertion(O1 == 'S'),
+	assertion(X2 == 3), assertion(Y2 == 3), assertion(Life2 == 3), assertion(O2 == 'E')
+	.
+	
 :- end_tests(testsPlane).
 
 setPlanePosition(Idx, X, Y, Orientation) :-
