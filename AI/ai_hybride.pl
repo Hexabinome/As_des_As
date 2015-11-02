@@ -1,4 +1,4 @@
-:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1,mapMin/5]).
+:- module(ai_hybride, [playHybride/2,generate/2,generateAll/2,aiHybride/1,aiHybrideBest/1]). %,mapMin/5]).
 
 :- use_module('../game').
 :- use_module('ai_general').
