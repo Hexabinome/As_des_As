@@ -4,7 +4,9 @@
 									actionFastForward/1,
 									actionRightTurn/1,
 									actionLeftTurn/1,
-									actionUTurn/1]).
+									actionUTurn/1,
+									turnRight/1,
+									turnLeft/1]).
 
 :- use_module('plane').
 									
