@@ -99,8 +99,6 @@ stepHttp :-
 	assert(actionHttp(2, ActionsP2)),
 	
 	updatePlanesHttp(ActionsP1, ActionsP2).
-	
-list(['F', 'F', 'F']).
 
 stepHttpPlayer(ListP):-
 	incrementRoundCounter,
