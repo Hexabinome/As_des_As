@@ -159,12 +159,21 @@ generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,
 
 % Genere tous les triplets d'actions possibles pour un avion à partir de sa position sans sortir du tableau à la fin des 3 actions.
 % Une action est gardé si on se rapproche aussi de l'autre joueur
-generate(Idx,[Action1,Action2,Action3]) :- action(Action1),action(Action2),action(Action3), % Génération des triplets d'actions
+generate(Idx,[Action1,Action2,Action3]) :- otherPlayer(Idx, OtherIdx),
+					   action(Action1),action(Action2),action(Action3), % Génération des triplets d'actions
 					   update(Idx,3),
 					   callPlaneAction(3,Action1),
 					   callPlaneAction(3,Action2),
 					   callPlaneAction(3,Action3),
-					   testPosition(3).
+					   testPosition(3),
+					   betterPosition(Idx, OtherIdx, 3, OtherIdx).
+
+
+% Une position est meilleure si on se rapproche de l'autre joueur
+betterPosition(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
+									dist(J1, J2, D2),
+									D1 >= D2.
+
 
 % Réinitialise le meilleur gain
 resetMeilleurGain :- retract(meilleurGain(_)),

@@ -49,9 +49,9 @@ step :-
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
 	not(gameoverRound),
-	playerDisplay(1),
-	playerDisplay(2),
-	displayBoard,
+	%playerDisplay(1),
+	%playerDisplay(2),
+	%displayBoard,
 	%pressToContinue,
 	game.
 
