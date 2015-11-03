@@ -24,43 +24,32 @@ function updatePlane(param)
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
 		avion2.deplacer(move2[0]).then(function(){
-			finMove(avion2, avion1);
-
-			avion1.deplacer(move1[0]).then(function(){
-				finMove(avion1, avion2);
-
-				avion2.deplacer(move2[1]).then(function(){
-					finMove(avion2, avion1);
-
-					avion1.deplacer(move1[1]).then(function(){
-						finMove(avion1, avion2);
-
-						avion2.deplacer(move2[2]).then(function(){
-							finMove(avion2, avion1);
-
-							avion1.deplacer(move1[2]).then(function(){
-								finMove(avion1, avion2);
-
-								timeout = setTimeout(function()
-								{
-									avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
-									avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-
-									console.debug(avion2);
-
-									console.debug(avion1);
-	
-									finAction1 = false;
-									finAction2 = false;
-
-									avion1.debug_ihm();
-									avion2.debug_ihm();
-								}, 1000);
-							});
+			if(finMove(avion2, avion1))
+			{
+				avion1.deplacer(move1[0]).then(function(){
+					if(finMove(avion1, avion2))
+					{
+						avion2.deplacer(move2[1]).then(function(){
+							if(finMove(avion2, avion1))
+							{
+								avion1.deplacer(move1[1]).then(function(){
+									if(finMove(avion1, avion2))
+									{
+										avion2.deplacer(move2[2]).then(function(){
+											if(finMove(avion2, avion1))
+											{
+												avion1.deplacer(move1[2]).then(function(){
+													finMove(avion1, avion2);
+												});
+											}
+										});
+									}
+								});
+							}
 						});
-					});
+					}
 				});
-			});
+			}
 		});
 	}
 }
@@ -69,9 +58,10 @@ function finMove(avion1P, avion2P)
 {
 	//avion1P.tentativeDeTir(avion2P);
 	avion1P.debug_ihm();
-	testFinJeux();
+	return testFinJeux();
 }
 
+//TODO arête prolog quand la partie est finie
 function testFinJeux()
 {
 	if(avion1.vie <= 0 || avion2.vie <= 0 || (avion1.x === avion2.x && avion1.y === avion2.y))
@@ -88,7 +78,10 @@ function testFinJeux()
 		{
 			openPopUp("popupScore");
 		}, 1000);
+
+		return false;
 	}
+	return true;
 }
 
 //Function appellant le prolog. Le callback est sur planeState
