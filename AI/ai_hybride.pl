@@ -25,10 +25,7 @@ meilleurCoup([],0).
 % L'arbre de recherche n'a pas une grande profondeur mais un nombre très important de noeuds dû aux coups possibles à chaque "step".
 % TODO : élagage alpha beta  
 
-% P : Profondeur dans l'arbre
-%minimax(_,_).
-%minimax(Idx,OtherIdx) :- generate(Idx, CoupIA),
-%						 generate(OtherIdx,CoupOther)
+%
 
 aiHybrideNonDeterministe(Idx) :- mapCoupGain(Idx, Map), 
 								 maxMap(_,GainMax,Map),
@@ -166,7 +163,8 @@ generate(Idx,[Action1,Action2,Action3]) :- otherPlayer(Idx, OtherIdx),
 					   callPlaneAction(3,Action2),
 					   callPlaneAction(3,Action3),
 					   testPosition(3),
-					   betterPosition(Idx, OtherIdx, 3, OtherIdx).
+					   betterPosition(Idx, OtherIdx, 3, OtherIdx),
+					   testOrientation(3).
 
 
 % Une position est meilleure si on se rapproche de l'autre joueur
@@ -178,7 +176,34 @@ betterPosition(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 % Réinitialise le meilleur gain
 resetMeilleurGain :- retract(meilleurGain(_)),
 				assert(meilleurGain(0)).
-
+% Reinitialise le meilleur gain avec le NouveauMeilleurGain
 resetMeilleurGain(NouveauMeilleurGain) :- retract(meilleurGain(_)),
-										  assert(meilleurGain(NouveauMeilleurGain)).    
+										  assert(meilleurGain(NouveauMeilleurGain)).
+										  
+% Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
+% l'endroit ou il y a le plus d'espace au milieu du plateau l'orientation ne compte pas.
+testOrientation(Idx) :-	plane(Idx,X,_,_,Orientation),
+	X < 5,
+	Orientation == 'E'.
+
+testOrientation(Idx) :- plane(Idx,X,_,_,Orientation),
+	X > 11,
+	Orientation == 'W'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
+	X > 4, X < 12,
+	Y < 6,
+	Orientation == 'S'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
+	X > 4, X < 12,
+	Y > 11,
+	Orientation == 'N'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,_),
+	X > 4, X < 12,
+	Y > 5, Y < 12.
+										  
+
+    
 										  
