@@ -19,3 +19,20 @@ In order to make this program, as ludic as possible, we provide the possibility 
 
 ### IHM:
 We have developed a light web interface to show the fight result between 2 AIs or to take part of the battle!
+
+selectPlayers(J1, J2)
+-1->Human player
+0->aiRandom
+1->aiOffensive
+2->aiDefensive
+3->aiDraw
+4->aiOffensiveBest
+5->aiDefensiveBest
+6->aiDrawBest
+7->aiProbab with 0.5 agro
+8->aiOrOffensive
+9->aiOrDefensive
+10->aiOrOffensiveBest
+11->aiOrDefensiveBest
+12->aiHybride
+13->aiHybrideNonDeterministe
