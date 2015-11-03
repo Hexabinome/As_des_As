@@ -118,22 +118,27 @@ Avion.prototype.deplacer= function(move)
 Avion.prototype.tentativeDeTir= function(avion)
 {
 	var distance;
+	var testEnLigne;
 	switch(this.orientation){
 		case 'N':
 			distance = this.y - avion.y;
+			testEnLigne = this.x - avion.x;
 			break;
 		case 'S':
 			distance = avion.y - this.y;
+			testEnLigne = this.x - avion.x;
 			break;
 		case 'E':
 			distance = avion.x - this.x;
+			testEnLigne = avion.y - this.y;
 			break;
 		case 'W':
 			distance = this.x - avion.x;
+			testEnLigne = avion.y - this.y;
 			break;
 	}
 	console.debug(this.nom + ' ' + distance);
-	if ( (distance < 5) && (distance > 0) )
+	if ( (distance < 5) && (distance > 0) && (testEnLigne === 0) )
 	{
 		this.tirer(distance);
 	}

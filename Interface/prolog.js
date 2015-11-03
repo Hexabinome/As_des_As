@@ -44,6 +44,9 @@ function updatePlane(param)
 							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
 							finAction1 = false;
 							finAction2 = false;
+							avion1.debug_ihm();
+							avion2.debug_ihm();
+
 						}
 					}, 1000);
 
@@ -72,6 +75,8 @@ function updatePlane(param)
 							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
 							finAction1 = false;
 							finAction2 = false;
+							avion1.debug_ihm();
+							avion2.debug_ihm();
 						}
 					}, 1000);
 				})
