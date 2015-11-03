@@ -1,5 +1,6 @@
 :- module(ai_orientation_offensive, [aiOrOffensive/1,
-									aiOrOffensiveBest/1]).
+									aiOrOffensiveBest/1,
+									betterPositionOrO/4]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
@@ -131,28 +132,3 @@ testFireOrO(I1, I2) :- not(canFire(I1, I2)).
 betterPositionOrO(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
 									dist(J1, J2, D2),
 									D1 >= D2.
-
-% Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
-% l'endroit ou il y a le plus d'espace
-% au milieu du plateau l'orientation ne compte pas.
-testOrientation(Idx) :-	plane(Idx,X,_,_,Orientation),
-	X < 5,
-	Orientation == 'E'.
-
-testOrientation(Idx) :- plane(Idx,X,_,_,Orientation),
-	X > 11,
-	Orientation == 'W'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
-	X > 4, X < 12,
-	Y < 6,
-	Orientation == 'S'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
-	X > 4, X < 12,
-	Y > 11,
-	Orientation == 'N'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,_),
-	X > 4, X < 12,
-	Y > 5, Y < 12.

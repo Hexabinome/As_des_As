@@ -51,6 +51,14 @@ test(aiGeneralUpdate) :-
 	plane(2, X2, Y2, L2, O2),
 	assertion(X2 == 0), assertion(Y2 == 5000), assertion(L2 == 5), assertion(O2 == 'S').
 	
+	
+test(aiGeneralTestOrientation) :-
+	setPlanePosition(1, 5, 1, 'N'),
+	setPlanePosition(2, 5, 1, 'S'),
+	not(testOrientation(1)),
+	testOrientation(2)
+	.
+
 :- end_tests(testsAiGeneral).
 
 setPlanePos(Idx, X, Y) :-
