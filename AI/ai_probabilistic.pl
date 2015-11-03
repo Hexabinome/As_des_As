@@ -1,21 +1,8 @@
-<<<<<<< HEAD
 % [Maxou]
 % This file containes the predicates for two AIs:
 %
 % [1] => aiProbab is the implementation of an A.I. internally relying on other A.I., given
 % a previously defined static propability.
-=======
-:- module(ai_probabilistic, [aiProbab/2]).
-
-:- use_module('ai_general').
-:- use_module('ai_offensive').
-:- use_module('ai_defensive').
-:- use_module('../Game/plane').
-:- use_module('../Game/plane_actions').
-
-% Implementation of an A.I. internally relying on other A.I., given
-% a previously defined propability.
->>>>>>> 67e8c6db685eead281fa00eea829b86e2a809e31
 %. E.g. for each action-triple choosing an aggresive choice at 42
 % percent while choosing a defensive option at 58 percent.
 %
@@ -37,7 +24,6 @@
 
 % [1] pick static float between 0 an 1 to specify aggressiveness. 1 is entirely offensive, 0 is entirely defensive.
 aiProbab(Idx, Aggressiveness) :- random(C), chooseStrat(Idx, C, Aggressiveness).
-<<<<<<< HEAD
 chooseStrat(Idx, C, Aggressiveness) :- C > Aggressiveness, !, aiDefensive(Idx).
 chooseStrat(Idx, C, Aggressiveness) :- C =< Aggressiveness, !, aiOffensive(Idx).
 
@@ -48,8 +34,3 @@ aiMechante(Idx) :- mechantite(Idx, Aggressiveness), aiProbab(Idx, Aggressiveness
 % if about to win the ai becomes more aggressive, if it is about to lose it is rather defensive.
 mechantite(1, Aggressiveness) :- plane(1, _, _, Hp1, _), plane(2, _, _, Hp2, _), Aggressiveness is (Hp1-Hp2+2)/4.
 mechantite(2, Aggressiveness) :- plane(2, _, _, Hp1, _), plane(1, _, _, Hp2, _), Aggressiveness is (Hp1-Hp2+2)/4. 
-=======
-chooseStrat(Idx, C, Aggressiveness) :- C > Aggressiveness, !, strategyA(Idx).
-chooseStrat(Idx, C, Aggressiveness) :- C =< Aggressiveness, !, strategyB(Idx).
- 
->>>>>>> 67e8c6db685eead281fa00eea829b86e2a809e31
