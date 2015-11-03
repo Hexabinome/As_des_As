@@ -3,7 +3,7 @@ var Avion = function (nom, x, y, player, orientation) {
 	this.x = x;
 	this.y = y;
 	this.vie = 0;
-	this.modifierVie(12);
+	this.modifierVie(3);
 	this.color = (player == 1) ? "vert" : "rouge";
 	this.orientation = orientation;
 };
@@ -30,6 +30,7 @@ Avion.prototype.debug_ihm = function() {
 	+ "<div class='col-xs-5 ' id='debug_" + this.nom + "_orientation'> orientation : " + this.orientation + "</div>");
 };
 
+// ============================================================================================DEPLACEMENT
 Avion.prototype.deplacer= function(move)
 {
   var def = $.Deferred();
@@ -123,105 +124,6 @@ Avion.prototype.deplacer= function(move)
 	return def.promise();
 };
 
-Avion.prototype.tentativeDeTir= function(avion)
-{
-	var distance;
-	var testEnLigne;
-	switch(this.orientation){
-		case 'N':
-			distance = this.y - avion.y;
-			testEnLigne = this.x - avion.x;
-			break;
-		case 'S':
-			distance = avion.y - this.y;
-			testEnLigne = this.x - avion.x;
-			break;
-		case 'E':
-			distance = avion.x - this.x;
-			testEnLigne = avion.y - this.y;
-			break;
-		case 'W':
-			distance = this.x - avion.x;
-			testEnLigne = avion.y - this.y;
-			break;
-	}
-	//console.debug(this.nom + ' ' + distance);
-	if ( (distance < 5) && (distance > 0) && (testEnLigne === 0) )
-	{
-		this.tirer(distance);
-	}
-};
-
-Avion.prototype.tirer= function(distance)
-{
-	//Because this will change in then(function)
-	var $this = this;
-
-	var def = $.Deferred();
-	$this.afficherTir().then(function() {
-		$this.deplacerTir(distance)
-			.then(function() {
-				 $this.supprimerTir();
-				def.resolve();
-		});
-	});
-	return def.promise();
-};
-
-Avion.prototype.afficherTir = function() {
-	var def = $.Deferred();
-	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='bullet.png' class='avion " + this.orientation + "'/>");
-	def.resolve();
-	return def.promise();
-};
-
-Avion.prototype.deplacerTir = function(distance) {
-	var def = $.Deferred();
-
-	var direction = '';
-	var operation = '';
-
-	switch(this.orientation){
-		case 'N':
-			toTest = "top";
-			signe = "-";
-			$("#bullet").animate({ "top" : "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
-			break;
-		case 'W':
-			toTest = "right";
-			signe = "";
-			$("#bullet").animate({ "right" : "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
-			break;
-		case 'E':
-			toTest = "right";
-			signe = "-";
-			$("#bullet").animate({ "right" : "-=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
-			break;
-		case 'S':
-			toTest = "top";
-			signe = "";
-			$("#bullet").animate({ "top" : "+=" + ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance }, "fast" );
-			break;
-	}
-
-
-  var timer = setInterval(function() {
-  	//console.log(( $('#bullet').css(toTest)));
-  	//console.log((signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)+ "px") );
-		if ( $('#bullet').css(toTest) === (signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)/10 + "px") ){
-			clearInterval(timer);
-			def.resolve();
-		}
-  },1);
-
-	return def.promise();
-};
-
-Avion.prototype.supprimerTir= function()
-{
-	$("#bullet").remove();
-};
-
 Avion.prototype.modifierVie= function(vie)
 {
 	this.vie = vie;
@@ -252,7 +154,7 @@ Avion.prototype.moveBottom = function() {
 };
 
 Avion.prototype.rotate = function(direction) {
-  var def = $.Deferred();
+  	var def = $.Deferred();
 	var degree;
 	var toDegree;
 	var nom = this.nom;
@@ -328,4 +230,90 @@ Avion.prototype.rotate = function(direction) {
     },1);
 
   	return def.promise();
+};
+
+// =========================================================================================== TIRE
+
+Avion.prototype.tentativeDeTir= function(avion)
+{
+	var distance;
+	var testEnLigne;
+	var def = $.Deferred();
+
+	switch(this.orientation){
+		case 'N':
+			distance = this.y - avion.y;
+			testEnLigne = this.x - avion.x;
+			break;
+		case 'S':
+			distance = avion.y - this.y;
+			testEnLigne = this.x - avion.x;
+			break;
+		case 'E':
+			distance = avion.x - this.x;
+			testEnLigne = avion.y - this.y;
+			break;
+		case 'W':
+			distance = this.x - avion.x;
+			testEnLigne = avion.y - this.y;
+			break;
+	}
+
+	if ( (distance < 5) && (distance > 0) && (testEnLigne === 0) )
+	{
+		avion.modifierVie(avion.vie-1);
+		this.tirer(distance).then(function() {
+			def.resolve();
+		});
+	}
+
+	def.resolve();
+	return def.promise();
+};
+
+Avion.prototype.tirer= function(distance)
+{
+	//Because this will change in then(function)
+	var $this = this;
+	var def = $.Deferred();
+
+	$this.afficherTir();
+
+	switch(this.orientation){
+		case 'N':
+			$("#bullet").animate({ "top" : "-=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+				$this.supprimerTir();
+				def.resolve();
+			});
+			break;
+		case 'W':
+			$("#bullet").animate({ "right" : "+=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+				$this.supprimerTir();
+				def.resolve();
+			});
+			break;
+		case 'E':
+			$("#bullet").animate({ "right" : "-=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+				$this.supprimerTir();
+				def.resolve();
+			});
+			break;
+		case 'S':
+			$("#bullet").animate({ "top" : "+=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+				$this.supprimerTir();
+				def.resolve();
+			});
+			break;
+	}
+
+	return def.promise();
+};
+
+Avion.prototype.afficherTir = function() {
+	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='bullet.png' class='avion " + this.orientation + "'/>");;
+};
+
+Avion.prototype.supprimerTir= function()
+{
+	$("#bullet").remove();
 };
