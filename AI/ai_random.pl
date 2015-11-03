@@ -21,7 +21,7 @@ aiRandom(Idx) :- retract(actions(Idx, _)),
 		%print(Idx), print(':'),
 		randomMove(Move1),
 		randomMove(Move2),
-		randomMove(Move3),
+		randomMove(Move3), !,
 		%nl,
 		retract(plane(42,_,_,_,_)),
 		assert(actions(Idx, [Move1, Move2, Move3])).
