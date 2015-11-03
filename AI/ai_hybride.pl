@@ -1,4 +1,4 @@
-:- module(ai_hybride, [aiHybride/1,aiHybrideNonDeterministe/1]).
+:- module(ai_hybride, [aiHybride/1, aiHybrideNonDeterministe/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -27,7 +27,7 @@ meilleurGain(0).
 
 aiHybrideNonDeterministe(Idx) :- mapCoupGain(Idx, Map), 
 								 maxMap(_,GainMax,Map),
-								 coupVautGain(ListeCoup,GainMax,Map),
+								 coupVautGain(ListeCoup,GainMax,Map), !,
 								 random_member(FinalSol, ListeCoup),
 								 % Crée le prochain coup à jouer
 								retract(actions(Idx, _)),
@@ -177,31 +177,4 @@ resetMeilleurGain :- retract(meilleurGain(_)),
 % Reinitialise le meilleur gain avec le NouveauMeilleurGain
 resetMeilleurGain(NouveauMeilleurGain) :- retract(meilleurGain(_)),
 										  assert(meilleurGain(NouveauMeilleurGain)).
-										  
-% Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
-% l'endroit ou il y a le plus d'espace au milieu du plateau l'orientation ne compte pas.
-testOrientation(Idx) :-	plane(Idx,X,_,_,Orientation),
-	X < 5,
-	Orientation == 'E'.
-
-testOrientation(Idx) :- plane(Idx,X,_,_,Orientation),
-	X > 11,
-	Orientation == 'W'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
-	X > 4, X < 12,
-	Y < 6,
-	Orientation == 'S'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
-	X > 4, X < 12,
-	Y > 11,
-	Orientation == 'N'.
-
-testOrientation(Idx) :- plane(Idx,X,Y,_,_),
-	X > 4, X < 12,
-	Y > 5, Y < 12.
-										  
-
-    
 										  
