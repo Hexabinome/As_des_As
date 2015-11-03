@@ -1,16 +1,32 @@
-:- dynamic actions/2.
+:- module(game, [round/1,
+							game/0,
+							otherPlayer/2,
+							reset/0,
+							simulate/0,
+							incrementRoundCounter/0]).
+
 :- dynamic round/1.
 
-% Load files
-:- ['Game/plane'].
-:- ['Game/board'].
-:- ['Game/human_player'].
-:- ['AI/ai_general'].
-:- ['AI/ai_random'].
-:- ['AI/ai_offensive'].
-:- ['AI/ai_defensive'].
-:- ['AI/ai_probabilistic'].
-:- ['Simulation/simulation'].
+:- use_module(library(plunit)).
+:- use_module('Game/plane').
+:- use_module('Game/plane_actions').
+:- use_module('Game/gameover').
+:- use_module('Simulation/simulation').
+
+:- use_module('Game/board').
+:- use_module('Game/human_player').
+
+:- use_module('display').
+
+:- use_module('AI/ai_general').
+:- use_module('AI/ai_random').
+:- use_module('AI/ai_offensive').
+:- use_module('AI/ai_defensive').
+:- use_module('AI/ai_probabilistic').
+:- use_module('AI/ai_hybride').
+:- use_module('AI/ai_draw').
+:- use_module('AI/ai_orientation_defensive').
+:- use_module('AI/ai_orientation_offensive').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
@@ -18,24 +34,24 @@
 % Round counter
 round(0).
 
-		
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Game loop
 step :-
 	% joueur 1:
-	aiProbab(1, 0.2), %rather defensive
+	aiHybrideNonDeterministe(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiProbab(2, 0.9), %pretty aggressive
+	aiOrDefensiveBest(2), 
 	actions(2, ActionsP2),
 	%displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
 	not(gameoverRound),
 	%playerDisplay(1),
-	%displayBoard,
 	%playerDisplay(2),
+	%displayBoard,
 	%pressToContinue,
 	game.
 
@@ -55,34 +71,44 @@ otherPlayer(InIdx, OutIdx) :- InIdx == 2, OutIdx is 1, !.
 								
 pressToContinue :- 	write('** Write any character + "." to go to the next step. **'), nl,
 					read(_).
-
-					
+		
 % Game reset
-
 reset :-
 	retract(plane(1, _, _, _, _)),
 	retract(plane(2, _, _, _, _)),
 	retractall(round(_)),
 	assert(plane(1, 0, 0, 3, 'S')),
-	assert(plane(2, 15, 15, 3, 'W')),
+	assert(plane(2, 15, 15, 3, 'N')),
 	assert(round(0)).
 	
 % ----------------------------- Server exchange section 
 % Game loop
+
 stepHttp :-
 	incrementRoundCounter,
-	aiDefensive(1),
+	% joueur 1:
+	aiOffensiveBest(1),
 	actions(1, ActionsP1),
-	aiOffensive(2),
+	% joueur 2:
+	aiOffensive(2), 
 	actions(2, ActionsP2),
-	updatePlanes(ActionsP1, ActionsP2),
-	not(gameoverRound).
 	
-stepHttpPlayer(list):-
+	retractall(actionHttp(_, _)),
+	
+	assert(actionHttp(1, ActionsP1)),
+	assert(actionHttp(2, ActionsP2)),
+	
+	updatePlanesHttp(ActionsP1, ActionsP2).
+
+stepHttpPlayer(ListP):-
 	incrementRoundCounter,
+	assert(actions(1, ListP)),
 	aiOffensive(2),
 	actions(2, ActionsP2),
-	retract(actions(1, _)),
-	assert(actions(1, list)),
-	updatePlanes(list, ActionsP2),
-	not(gameoverRound).
+	
+	retractall(actionHttp(_, _)),
+	
+	assert(actionHttp(1, ListP)),
+	assert(actionHttp(2, ActionsP2)),
+
+	updatePlanesHttp(ListP, ActionsP2).

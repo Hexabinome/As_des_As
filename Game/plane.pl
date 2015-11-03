@@ -1,6 +1,18 @@
-﻿:- dynamic plane/5.
-:- [plane_actions].
-:- [gameover].
+﻿:- module(plane, [plane/5, 
+							updatePlanes/2,
+							callPlaneAction/2,
+							fire/1,
+							canFire/2,
+							decrementLife/1,
+							updatePlanesHttp/2,
+							fireHttp/1]).
+
+:- dynamic plane/5.
+
+:- use_module('plane_actions').
+:- use_module('gameover').
+:- use_module('../game').
+:- use_module('../display').
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,7 +28,7 @@
 
 % Les avions 1 et 2 sont les avions des joueurs
 plane(1, 0, 0, 3, 'S').
-plane(2, 15, 15, 3, 'W').
+plane(2, 15, 15, 3, 'N').
 
 % Les avions 3 à 8 sont des avions temporaires pour les IA
 plane(3, 0, 0, 0, 0).
@@ -52,7 +64,7 @@ callPlaneAction(Idx, Action) :- write('Unknown action '), write(Action), write('
 
 % Fire methods
 fire(Idx) :- 	otherPlayer(Idx, OutIdx),
-				canFire(Idx, OutIdx),
+				canFire(Idx, OutIdx), !,
 				decrementLife(OutIdx),
 				shotDisplay(Idx, OutIdx).
 fire(_).
@@ -91,3 +103,17 @@ canFire(IdxSrc, IdxTarget) :- 	plane(IdxSrc, X1, Y1, _, Orientation1),
 decrementLife(Idx) :- 	retract(plane(Idx, X, Y, Life, Orientation)),
 						NewLife is Life-1,
 						assert(plane(Idx, X, Y, NewLife, Orientation)).
+						
+% ------------------------------------------------------------------------- update sans affichage sur la console				
+updatePlanesHttp([], []).
+updatePlanesHttp([Action1|ActionList1], [Action2|ActionList2]) :- 	
+																callPlaneAction(1, Action1),
+																callPlaneAction(2, Action2),
+																fireHttp(1), fireHttp(2), !,
+																updatePlanesHttp(ActionList1, ActionList2).
+
+fireHttp(Idx) :- 	
+				otherPlayer(Idx, OutIdx),
+				canFire(Idx, OutIdx),
+				decrementLife(OutIdx).
+fireHttp(_).

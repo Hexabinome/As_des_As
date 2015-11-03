@@ -1,5 +1,5 @@
-:- module(ai_defensive, [aiDefensive/1,
-									aiDefensiveBest/1]).
+:- module(ai_orientation_defensive, [aiOrDefensive/1,
+									aiOrDefensiveBest/1]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
@@ -15,9 +15,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
-aiDefensive(Idx):-
+aiOrDefensive(Idx):- 
 				% Crée une liste à partir de toutes les solutions renvoyées par playDefensive (sans doublon)
-				setof(OneSol, playDefensive(Idx, OneSol), AllSolutions),
+				setof(OneSol, playOrDefensive(Idx, OneSol), AllSolutions),
 				% Choisi une solution parmis les solutions selectionnées
 				random_member(FinalSol, AllSolutions),
 				% Crée le prochain coup à jouer
@@ -26,10 +26,9 @@ aiDefensive(Idx):-
 				
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
 % Utilise le meilleur coup generé
-aiDefensiveBest(Idx):-
-				
+aiOrDefensiveBest(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive (sans doublon)
-				setof(OneSol, playDefensive(Idx, OneSol), AllSolutions),
+				setof(OneSol, playOrDefensive(Idx, OneSol), AllSolutions),
 				% Choisi la meilleure solution trouvée
 				last(AllSolutions, Sol),
 				% Crée le prochain coup à jouer
@@ -39,16 +38,18 @@ aiDefensiveBest(Idx):-
 
 % Genere des listes de 3 coups qui suivent une heuristique defensive
 % La logique de cette IA est de s eloigner le plus de son adversaire tout en prenant le moins de coups possible
+% Cette IA est identique à l'IA defensive simple à un detail près, elle essaye toujours de s'orienter dans la direction
+% ou il y a le plus d'espace vide afin de prévenir un tir éventuel
 % elle ne prend pas en compte les degats potentiels qu elle peut infliger				
-playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+playOrDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				% Distance initiale entre les deux avions
-				dist(Idx, OtherIdx, Dinit),
-				retractall(bestDistD(_)),
-				assert(bestDistD(Dinit)),
+				%dist(Idx, OtherIdx, _),
+				retractall(bestDistOrD(_)),
+				assert(bestDistOrD(0)),
 				
 				% Nombre de tirs initial du meilleur
-				retractall(bestFireD(_)),
-				assert(bestFireD(3)),
+				retractall(bestFireOrD(_)),
+				assert(bestFireOrD(3)),
 				
 				% Genere tous les couples d'actions possibles pour le premier coup
 				coupleAction(A1, B1),
@@ -58,7 +59,9 @@ playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				callPlaneAction(3, A1),
 				callPlaneAction(4, B1),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
-				betterPositionD(Idx, OtherIdx, 3, 4),
+				betterPositionOrD(Idx, OtherIdx, 3, 4),
+				% Verifie que l'orientation est bonne
+				testOrientation(3),
 				
 				% Genere tous les couples d'actions possibles pour le second coup
 				coupleAction(A2, B2),
@@ -68,8 +71,9 @@ playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				callPlaneAction(5, A2),
 				callPlaneAction(6, B2),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
-				betterPositionD(3, 4, 5, 6),
-				
+				betterPositionOrD(3, 4, 5, 6),
+				% Verifie que l'orientation est bonne
+				testOrientation(5),
 				
 				% Genere tous les couples d'actions possibles pour le troisieme coup
 				coupleAction(A3, B3),
@@ -79,45 +83,70 @@ playDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				callPlaneAction(7, A3),
 				callPlaneAction(8, B3),
 				% Verifie que la position actuelle des deux avions est au moins aussi bonne que la position précedente
-				betterPositionD(5, 6, 7, 8),
-				
+				betterPositionOrD(5, 6, 7, 8),
+				% Verifie que l'orientation est bonne
+				testOrientation(7),
 				% Verifie que la position finale des deux avions n'est pas hors de l'air de jeu [0,15]
 				testPosition(7), testPosition(8),
 				
 				% On verifie combien de fois l'avion d'indice Idx s est fait tirer dessus
-				retractall(actFireD(_)),
-				assert(actFireD(0)),
-				testFireD(3,4),
-				testFireD(5,6),
-				testFireD(7,8),
-				actFireD(F),
-				bestFireD(BF),
+				retractall(actFireOrD(_)),
+				assert(actFireOrD(0)),
+				testFireOrD(3,4),
+				testFireOrD(5,6),
+				testFireOrD(7,8),
+				actFireOrD(F),
+				bestFireOrD(BF),
 				F =< BF,
-				retract(bestFireD(BF)),
-				assert(bestFireD(F)),
+				retract(bestFireOrD(BF)),
+				assert(bestFireOrD(F)),
 				
 				% On verifie que la distance finale entre les deux avions est au moins aussi grande que la meilleur trouvée jusqu'ici
 				dist(7, 8, D),
-				bestDistD(BD),
+				bestDistOrD(BD),
 				D >= BD,
-				retract(bestDistD(BD)),
-				assert(bestDistD(D)),
+				retract(bestDistOrD(BD)),
+				assert(bestDistOrD(D)),
 				
 				% On met nos actions dans une liste afin de les retourner
 				append([A1, A2, A3], [], Sol).
 				
 				
-% Is better if on the new position you can't be shot by the other player.
-testFireD(I1, I2) :- canFire(I2, I1),
+% Is better if on the new position you can shoot on the other player.
+testFireOrD(I1, I2) :- canFire(I2, I1),
 					retract(actFireD(X)),
 					assert(actFireD(X+1)).
 
-testFireD(I1, I2) :- not(canFire(I2, I1)).
+testFireOrD(I1, I2) :- not(canFire(I2, I1)).
 								
 
-% Is also better if the new position is further than the old one.
-betterPositionD(I1, I2, J1, J2) :- dist(I1, I2, D1),
-				dist(J1, J2, D2),
-				D1 =< D2.
-				
+% Is also better if the new position is closer than the old one.
+betterPositionOrD(I1, I2, J1, J2) :- 	dist(I1, I2, D1),
+					dist(J1, J2, D2),
+					D1-2 =< D2.
+
+% Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
+% l'endroit ou il y a le plus d'espace
+% au milieu du plateau l'orientation ne compte pas.
+testOrientation(Idx) :-	plane(Idx,X,_,_,Orientation),
+	X < 5,
+	Orientation == 'E'.
+
+testOrientation(Idx) :- plane(Idx,X,_,_,Orientation),
+	X > 11,
+	Orientation == 'W'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
+	X > 4, X < 12,
+	Y < 6,
+	Orientation == 'S'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,Orientation),
+	X > 4, X < 12,
+	Y > 11,
+	Orientation == 'N'.
+
+testOrientation(Idx) :- plane(Idx,X,Y,_,_),
+	X > 4, X < 12,
+	Y > 5, Y < 12.
 

@@ -30,32 +30,29 @@
 .N
 {
   transform:rotate(0deg);
-  position: relative;
-  right: 7px;
-  top: 2px;
 }
 
 .E
 {
   transform:rotate(90deg);
-  position: relative;
-  right: 7px;
-  top: 2px;
 }
 
 .S
 {
   transform:rotate(180deg);
-  position: relative;
-  right: 7px;
-  top: 5px;
 }
 
-.O
+.W
 {
 	transform:rotate(270deg);
-	position: relative;
-	right: 7px;
+}
+
+
+#bullet
+{
+  position: absolute;
+  right: 0;
+  top:0;
 }
 
 
@@ -65,7 +62,7 @@
 	width:35px;
 	height:40px;
 	opacity: 1;
-
+	position:relative;
 }
 
 /* affiche l'image en arrière plan*/
@@ -123,6 +120,18 @@
 
 .icon-flipped {
 	transform: rotate(90deg);
+}
+
+.debug {
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7),
+            -1px 2px 20px rgba(255, 255, 255, 0.6) inset;
+    position:relative;
+    top:50%;
+
+	margin-bottom: 20px;
+	padding: 10px 5px 10px 10px;
 }
 
 /* pop - up : http://sohtanaka.developpez.com/tutoriels/javascript/creez-fenetre-modale-avec-css-et-jquery/*/

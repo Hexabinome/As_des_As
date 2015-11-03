@@ -1,5 +1,8 @@
-% Ressources utiles pour tous types d'IA
+:- module(ai_general, [coupleAction/2, dist/3, testPosition/1, update/2]).
 
+% Ressources utiles pour tous types d'IA
+:- use_module('../Game/plane_actions').
+:- use_module('../Game/plane').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
@@ -26,3 +29,4 @@ testPosition(Idx) :- plane(Idx, X, Y, _, _),
 update(Idx1, Idx2) :- 	retract(plane(Idx2, _, _, _, _)),
 						plane(Idx1, X, Y, Life, Orientation),
 						assert(plane(Idx2, X, Y, Life, Orientation)).
+						

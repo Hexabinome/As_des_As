@@ -1,10 +1,23 @@
-﻿% Ce fichier defini toutes les actions possibles
+﻿:- module(plane_actions, [action/1,
+									actions/2,
+									actionForward/1,
+									actionFastForward/1,
+									actionRightTurn/1,
+									actionLeftTurn/1,
+									actionUTurn/1,
+									turnRight/1,
+									turnLeft/1]).
+
+:- use_module('plane').
+									
+:- dynamic actions/2.
+
+% Ce fichier defini toutes les actions possibles
 % ainsi que les effets qu'elles ont sur les avions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 action('FF').
 action('F').
 action('RT').

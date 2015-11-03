@@ -1,76 +1,39 @@
 var avion1;
 var avion2;
+
 var boolPlayer = false;
 var counter;
+
 var tabActionUser = [];
+var interval; 
+
+var score1 = 0;
+var score2 = 0;
 
 $(function() {
 	init();
 	bindClick();
 	bindKeyAction();
-    
-});
 
-//Initialisation de divers paramètres.
-function init()
-{
-	openPopUp();
-	$('#Jouer').prop('disabled', true);
-	boolPlayer = false;
-	
-	//TODO se metre d'accord sur les positions de base avec prolog
-	avion1 = new Avion('avion1', 3, 3, 1, 'sud');
-	avion2 = new Avion('avion2', 5, 5, 2, 'est');
-}
-
-//Ouvre la popup
-function openPopUp()
-{
-	var popID = "popup";
-	var popWidth = 500;
-	
-	$('#' + popID).fadeIn().css({ 'width': popWidth}).prepend('<a href="#" class="close"><span class=" glyphicon glyphicon-remove"></span></a>');
-		
-	//Récupération du margin, qui permettra de centrer la fenêtre - on ajuste de 80px en conformité avec le CSS
-	var popMargTop = ($('#' + popID).height() + 80) / 2;
-	var popMargLeft = ($('#' + popID).width() + 80) / 2;
-	
-	//Apply Margin to Popup
-	$('#' + popID).css({ 
-		'margin-top' : -popMargTop,
-		'margin-left' : -popMargLeft
-	});
-	
-	//Apparition du fond - .css({'filter' : 'alpha(opacity=80)'}) pour corriger les bogues d'anciennes versions de IE
-	$('body').append('<div id="fade"></div>');
-	$('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
-	
-	$('body').on('click', 'a.close, #fade', function() { //Au clic sur le body...
-		closePopUp();
-	});
-}
-
-function closePopUp()
-{
-	$('#fade , .popup_block').fadeOut(function() {
-		$('#fade, a.close').remove();  
-	});
-}
-
-//Gestion de la toltips sur le bouton play lorsque le joueur n'a pas fait aux moins trois action
-$(function() {
-	$('#Play').popover({
+	//Gestion de la toltips sur le bouton play lorsque le joueur n'a pas fait aux moins trois action
+    $('#Play').popover({
 	    html: true,
 	    content: 'Select at least 3 actions to realize',
 	});
 });
 
-function viderActionFaites()
+//Initialisation de divers paramètres.
+function init()
 {
-	for(var i = 0; i <3; i++)
-	{
-		$("#action_" + i).html('');
-	}	
+	//TODO se metre d'accord sur les positions de base avec prolog
+	avion1 = new Avion('avion1', 3, 3, 1, 'sud');
+	avion2 = new Avion('avion2', 5, 5, 2, 'est');
+
+	initPlaneProlog();
+
+	openPopUp();
+	disablePlayButton();
+	boolPlayer = false;
 }
 
 //---------------------------------- Bind js 
@@ -126,44 +89,27 @@ function bindKeyAction()
 	});
 }
 
-//TODO a supprimer si plus utile
 function bindClick()
 {
-	$(".carre").bind("click", function(e)
-	{
-		if($(this).hasClass("vert"))
-		{
-			//TODO appeler le prolog
-			avion1.deplacer($(this).data("x"), $(this).data("y"));
-		}
-		if($(this).hasClass("rouge"))
-		{
-			//TODO appeler le prolog
-			avion2.deplacer($(this).data("x"), $(this).data("y"));
-		}
-	});
-
-	$("#PvVIa").bind('click', function() {
+	$("#PlVsIa").bind('click', function() {
 		closePopUp();
-		$('#Jouer').prop('disabled', false);
+		enablePlayButton();
 		
 		boolPlayer = true;
-		
-		initPlaneProlog();
 	});
 	
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
 		
-		initPlaneProlog();
-		
-		setInterval(nextProlog, 1000 * 1 );
+		//nextProlog();
+
+		//interval = setInterval(nextProlog, 1000 * 3);
 	});
 	
 	$("#Play").bind('click', function(e) 
 	{
 		e.stopPropagation();
-		console.debug(tabActionUser.length);
+
 		if(tabActionUser.length >=3)
 		{
 			$("#Play").popover('disable');
@@ -176,59 +122,17 @@ function bindClick()
 		}
 		else
 		{
-			$("#Play").popover('enable');
-			$("#Play").popover('show');
+			$("#Play").popover('enable').popover('show');
 		}
-		appelerProlog();
 	});
 	
 	$("#Reset").bind('click', function() {
 		init();
 	});
-}
-
-// ----------------------------------------  Appelle prolog et callback
-//Appeller par prolog
-function initPlane(param)
-{
-	console.debug(param);
-	avion1.deplacer((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
-	avion1.modifierVie(param.avion1.v);
 	
-	avion2.deplacer((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-	avion2.modifierVie(param.avion2.v);	
-}
-
-
-//Function appellant le prolog. Le callback est sur planeState
-function initPlaneProlog()
-{
-	$.ajax({
-		url: "http://localhost:8000/initPlane",
-		type: "GET",
-		dataType: "jsonp",
-		success: function (data) {
-			data;
-		}
+	$("#PlayAgain").bind('click', function() {
+		closePopUp();
+		init();
 	});
-}
-
-function nextProlog()
-{
-	console.debug('ho');
-	$.ajax({
-		url: "http://localhost:8000/next",
-		type: "GET",
-		dataType: "jsonp",
-		success: function (data) {
-			data;
-		}
-	});
-}
-
-//Fonction appellant le prolog. Le callback est sur planeState
-function appelerPrologWithParam(param)
-{
-	//TODO
 }
 

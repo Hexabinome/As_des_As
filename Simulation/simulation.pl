@@ -1,8 +1,24 @@
+:- module(simulation, [simulate/0, simulateWinnerIs/1]).
+
+:- use_module('simulation_gameover_plane').
+
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
+:- use_module('../AI/ai_general').
+:- use_module('../AI/ai_random').
+:- use_module('../AI/ai_offensive').
+:- use_module('../AI/ai_defensive').
+:- use_module('../AI/ai_probabilistic').
+:- use_module('../AI/ai_hybride').
+:- use_module('../AI/ai_draw').
+:- use_module('../AI/ai_orientation_defensive').
+:- use_module('../AI/ai_orientation_offensive').
+
 :- dynamic gameWinner/1.
 :- dynamic playerWinsCounter/2.
 :- dynamic simulatedGames/1.
 
-:- [simulation_gameover_plane].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
@@ -12,10 +28,11 @@ simulatedGames(1).
 maxGames(10).
 
 
+playerWinsCounter(0, 0). % Round limit
 playerWinsCounter(1, 0). % Player 1
 playerWinsCounter(2, 0). % Player 2
 playerWinsCounter(3, 0). % Collision draws
-playerWinsCounter(4, 0). % Killed at the same time draws
+playerWinsCounter(4, 0). % Killed at the same time draw
 playerWinsCounter(5, 0). % Out of board draws
 
 gameWinner(-1).
@@ -34,14 +51,14 @@ simulate :-
 	simulatedGames(NbGames),
 	maxGames(MaxGames),
 	% Display current round
-	write('Round: '), write(NbGames), write('/'), write(MaxGames), nl,
-	reset,
+	write('Round: '), write(NbGames), write('/'), write(MaxGames), flush,
+	reset, simulateWinnerIs(-1),
 	playOneGame,
 	!,
-	incrementWinnerCounter,
+	incrementWinnerCounter, write(' finished in '), round(Round), write(Round), write(' rounds'), nl,
 	simulate.
 
-incrementWinnerCounter :-	
+incrementWinnerCounter :-
 								gameWinner(Idx),
 								retract(playerWinsCounter(Idx, Wins)),
 								IncrementedWins is Wins+1,
@@ -52,19 +69,22 @@ incrementWinnerCounter :-
 
 % Fills the the winning index in gameWinner fact (assert made by gameover predicates in 'simulation_gameover_plane' file
 playOneGame :- gameoverRoundSimulation, !.
-playOneGame :- incrementRoundCounter, (simulationStep ; gameWinner(Idx), Idx \== -1).
+playOneGame :- gameWinner(Idx), Idx \== -1, !.
+playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 
 % Is false if one plane died during actions
 simulationStep :- 
-	aiDefensive(1),	% joueur 1
+	simulateWinnerIs(-1),
+	aiOrOffensive(1), % joueur 1
 	actions(1, ActionsP1),
-	aiOffensive(2), % joueur 2
+	aiOrDefensiveBest(2), % joueur 2
 	actions(2, ActionsP2),
-	updatePlanesSimulation(ActionsP1, ActionsP2), % Execution des coups de chaque avion
+	updatePlanesSimulation(ActionsP1, ActionsP2),	% Execution des coups de chaque avion
 	playOneGame.
 
 	
 displayStatistics :- 
+						playerWinsCounter(0, RoundLimitDraws),
 						playerWinsCounter(1, P1),
 						playerWinsCounter(2, P2),
 						playerWinsCounter(3, CollisionDraws),
@@ -78,6 +98,11 @@ displayStatistics :-
 						nl,
 						write('Player 2 wins: '),
 						write(P2),
+						write('/'),
+						write(MaxGames),
+						nl,
+						write('Draws due to round limit reach: '),
+						write(RoundLimitDraws),
 						write('/'),
 						write(MaxGames),
 						nl,
@@ -96,3 +121,9 @@ displayStatistics :-
 						write('/'),
 						write(MaxGames),
 						nl.
+						
+
+% Asserts the current winner
+simulateWinnerIs(Idx) :- 
+	retractall(gameWinner(_)),
+	assert(gameWinner(Idx)).

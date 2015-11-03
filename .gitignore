@@ -1,4 +1,11 @@
 #################
+## Persi
+#################
+
+.idea
+
+
+#################
 ## Eclipse
 #################
 
@@ -15,7 +22,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+.pdtproperties
 # External tool builders
 .externalToolBuilders/
 

@@ -2,8 +2,9 @@
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_files)).
+:- use_module(library(http/http_parameters)).
 
-:- [game].
+:- use_module('game').
 
 %lance le server
 server(Port) :-
@@ -13,31 +14,51 @@ server(Port) :-
 :- http_handler(root(.), homePage, []).
 :- http_handler(root(initPlane), initPlane, []).
 :- http_handler(root(next), next, []).
-
-%indexPage(Request):- 
-%	http_reply_from_files('C:\\Temp\\As_des_As\\Interface\\avion.html', [], Request).
+:- http_handler(root(nextPlayer), nextPlayer, []).
 
 %todo
 homePage(Request) :- 
 	http_reply_from_files('/Interface/avion.html', [], Request).
 
 initPlane(Request) :-
-	plane(1, X1, Y1, V1, D1),
-	plane(2, X2, Y2, V2, D2),
+	game:reset,
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
     format('Content-type: text/jsonp~n~n'),
-    format('initPlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
-						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', [X1, Y1, V1, D1, X2, Y2, V2, D2] ).
+    format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
+						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', 
+						[X1, Y1, V1, D1, X2, Y2, V2, D2] ).
 
 next(Request) :-
-	stepHttp,
-	plane(1, X1, Y1, V1, D1),
-	plane(2, X2, Y2, V2, D2),
+	game:stepHttp,
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
+	game:actionHttp(1, Action1),
+	game:actionHttp(2, Action2),
     format('Content-type: text/jsonp~n~n'),
-    format('initPlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
-						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"}} ~n)', [X1, Y1, V1, D1, X2, Y2, V2, D2] ).
+    format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
+						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"},
+						move1 : "~w",
+						move2 : "~w"} ~n)', 
+						[X1, Y1, V1, D1, X2, Y2, V2, D2, Action1, Action2] ).
 
-		%http_parameters(Request,
-		%	[ title(Title, [ optional(true) ]),
-		%	  name(Name,   [ length >= 2 ]),
-		%	  age(Age,     [ between(0, 150) ])
-		%	]),
+%TODO player humain
+nextPlayer(Request) :-
+	http_parameters(Request, 
+		[ act1(Act1, []),
+		  act2(Act2, []),
+		  act3(Act3, [])
+		]),
+	game:stepHttpPlayer([Act1, Act2, Act3]),
+	plane:plane(1, X1, Y1, V1, D1),
+	plane:plane(2, X2, Y2, V2, D2),
+	game:actionHttp(1, Action1),
+	game:actionHttp(2, Action2),
+    format('Content-type: text/jsonp~n~n'),
+    format('updatePlane({avion1 : {x : ~w, y : ~w, v : ~w, d : "~w"}, 
+						avion2 : {x : ~w, y : ~w, v : ~w, d : "~w"},
+						move1 : "~w",
+						move2 : "~w"} ~n)', 
+						[X1, Y1, V1, D1, X2, Y2, V2, D2, Action1, Action2] ).
+
+		
