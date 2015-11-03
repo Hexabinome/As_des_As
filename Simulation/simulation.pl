@@ -25,7 +25,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plays a lots of game between two AIs without output and counts who wins and looses
 simulatedGames(1).
-maxGames(10).
+maxGames(100).
 
 
 playerWinsCounter(0, 0). % Round limit

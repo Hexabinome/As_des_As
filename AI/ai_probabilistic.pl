@@ -1,4 +1,4 @@
-:- module(ai_probabilistic, [aiProbab/2,aiMechante/1]).
+:- module(ai_probabilistic, [aiProbab/2, aiMechante/1]).
 :- use_module('ai_general').
 :- use_module('ai_offensive').
 :- use_module('ai_defensive').
