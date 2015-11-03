@@ -101,7 +101,7 @@ function bindClick()
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
 		
-		nextProlog();
+		//nextProlog();
 
 		//interval = setInterval(nextProlog, 1000 * 3);
 	});

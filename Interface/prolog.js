@@ -10,8 +10,8 @@ function updatePlane(param)
 	console.debug(param.move1);
 	console.debug(param.move2);
 
-	console.debug((param.avion1.x+1) + ' ' + (param.avion1.y+1) + ' ' + param.avion1.d);
-	console.debug((param.avion2.x+1) + ' ' + (param.avion2.y+1) + ' ' +param.avion2.d);
+	/*console.debug((param.avion1.x+1) + ' ' + (param.avion1.y+1) + ' ' + param.avion1.d);
+	console.debug((param.avion2.x+1) + ' ' + (param.avion2.y+1) + ' ' +param.avion2.d);*/
 
 	if(param.move1 === undefined)
 	{
@@ -23,75 +23,53 @@ function updatePlane(param)
 		var move1 = param.move1.substring(1, (param.move1.length -1)).split(',');
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
-		avion1.deplacer(move1[0]).then(function(){
-			avion1.tentativeDeTir(avion2);
-			avion1.debug_ihm();
-			testFinJeux();
-			avion1.deplacer(move1[1]).then(function(){
-				avion1.tentativeDeTir(avion2);
-				avion1.debug_ihm();
-				testFinJeux();
-				avion1.deplacer(move1[2]).then(function(){
-					avion1.tentativeDeTir(avion2);
-					avion1.debug_ihm();
-					testFinJeux();
-					timeout = setTimeout(function()
-					{
-						finAction1 =true;
-						if(finAction1 && finAction2)
-						{
-							avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
-							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-							finAction1 = false;
-							finAction2 = false;
-							avion1.debug_ihm();
-							avion2.debug_ihm();
+		avion2.deplacer(move2[0]).then(function(){
+			finMove(avion2, avion1);
 
-						}
-					}, 1000);
+			avion1.deplacer(move1[0]).then(function(){
+				finMove(avion1, avion2);
 
+				avion2.deplacer(move2[1]).then(function(){
+					finMove(avion2, avion1);
+
+					avion1.deplacer(move1[1]).then(function(){
+						finMove(avion1, avion2);
+
+						avion2.deplacer(move2[2]).then(function(){
+							finMove(avion2, avion1);
+
+							avion1.deplacer(move1[2]).then(function(){
+								finMove(avion1, avion2);
+
+								timeout = setTimeout(function()
+								{
+									avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
+									avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
+
+									console.debug(avion2);
+
+									console.debug(avion1);
+	
+									finAction1 = false;
+									finAction2 = false;
+
+									avion1.debug_ihm();
+									avion2.debug_ihm();
+								}, 1000);
+							});
+						});
+					});
 				});
 			});
 		});
-
-		avion2.deplacer(move2[0]).then(function(){
-			avion2.tentativeDeTir(avion1);
-			avion2.debug_ihm();
-			testFinJeux();
-			avion2.deplacer(move2[1]).then(function(){
-				avion2.tentativeDeTir(avion1);
-				avion2.debug_ihm();
-				testFinJeux();
-				avion2.deplacer(move2[2]).then(function(){
-					avion2.tentativeDeTir(avion1);
-					avion2.debug_ihm();
-					testFinJeux();
-					timeout = setTimeout(function()
-					{
-						finAction2 =true;
-						if(finAction1 && finAction2)
-						{
-							avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
-							avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-							finAction1 = false;
-							finAction2 = false;
-							avion1.debug_ihm();
-							avion2.debug_ihm();
-						}
-					}, 1000);
-				})
-			});
-		});
-
-		//TODO à effacer quand tous fonctionnera
-		/*timeout = setTimeout(function()
-		{
-			avion1.positionner((param.avion1.x+1), (param.avion1.y+1), param.avion1.d);
-			avion2.positionner((param.avion2.x+1), (param.avion2.y+1), param.avion2.d);
-		}, 3000);*/
 	}
+}
 
-
+function finMove(avion1P, avion2P)
+{
+	//avion1P.tentativeDeTir(avion2P);
+	avion1P.debug_ihm();
+	testFinJeux();
 }
 
 function testFinJeux()

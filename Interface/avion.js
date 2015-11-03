@@ -43,23 +43,27 @@ Avion.prototype.deplacer= function(move)
 				case 'N':
 					$this.moveTop();
 					$this.moveTop();
+					$this.y -=2;
 					def.resolve();
 					break;
 				case 'W':
 					$this.moveLeft();
 					$this.moveLeft();
+					$this.x -=2;
 					def.resolve();
 
 					break;
 				case 'E':
 					$this.moveRight();
 					$this.moveRight();
+					$this.x +=2;
 					def.resolve();
 
 					break;
 				case 'S':
 					$this.moveBottom();
 					$this.moveBottom();
+					$this.y +=2;
 					def.resolve();
 
 					break;
@@ -70,18 +74,22 @@ Avion.prototype.deplacer= function(move)
 			{
 				case 'N':
 					$this.moveTop();
+					$this.y -=1;
 					def.resolve();
 					break;
 				case 'W':
 					$this.moveLeft();
+					$this.x -=1;
 					def.resolve();
 					break;
 				case 'E':
 					$this.moveRight();
+					$this.x +=1;
 					def.resolve();
 					break;
 				case 'S':
 					$this.moveBottom();
+					$this.y +=1;
 					def.resolve();
 					break;
 			}
@@ -137,7 +145,7 @@ Avion.prototype.tentativeDeTir= function(avion)
 			testEnLigne = avion.y - this.y;
 			break;
 	}
-	console.debug(this.nom + ' ' + distance);
+	//console.debug(this.nom + ' ' + distance);
 	if ( (distance < 5) && (distance > 0) && (testEnLigne === 0) )
 	{
 		this.tirer(distance);
@@ -153,7 +161,6 @@ Avion.prototype.tirer= function(distance)
 	$this.afficherTir().then(function() {
 		$this.deplacerTir(distance)
 			.then(function() {
-				console.log('coucou');
 				 $this.supprimerTir();
 				def.resolve();
 		});
@@ -199,8 +206,8 @@ Avion.prototype.deplacerTir = function(distance) {
 
 
   var timer = setInterval(function() {
-  	console.log(( $('#bullet').css(toTest)));
-  	console.log((signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)+ "px") );
+  	//console.log(( $('#bullet').css(toTest)));
+  	//console.log((signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)+ "px") );
 		if ( $('#bullet').css(toTest) === (signe + Math.round( ($("div").find("[data-x='1'][data-y='1']").height() + 2.7) * distance * 10)/10 + "px") ){
 			clearInterval(timer);
 			def.resolve();
