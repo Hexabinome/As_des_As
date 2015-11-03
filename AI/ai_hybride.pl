@@ -6,12 +6,10 @@
 :- use_module('../Game/plane_actions').
 
 :- dynamic meilleurGain/1.
-:- dynamic meilleurCoup/2.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				FAITS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 meilleurGain(0).
-meilleurCoup([],0).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
