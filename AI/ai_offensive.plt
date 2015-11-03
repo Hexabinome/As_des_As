@@ -22,7 +22,28 @@ test(aiOffensiveBestTest) :-
 	.
 
 test(aiOffensiveBetterPositionO) :-
-	false.
+	setPlanePosition(1, 1, 1, 'S'),
+	setPlanePosition(2, 4, 5, 'N'),
+	setPlanePosition(3, 2, 2, 'S'),
+	setPlanePosition(4, 2, 1, 'S'),
+	setPlanePosition(5, 1, 2, 'S'),
+	setPlanePosition(6, 0, 0, 'S'),
+	betterPositionO(1, 2, 3, 2),
+	betterPositionO(1, 2, 4, 2),
+	betterPositionO(1, 2, 5, 2),
+	betterPositionO(6, 2, 1, 2),
+	betterPositionO(6, 2, 3, 2),
+	betterPositionO(6, 2, 4, 2),
+	betterPositionO(6, 2, 5, 2),
+	not(betterPositionO(3, 2, 1, 2)),
+	not(betterPositionO(4, 2, 1, 2)),
+	not(betterPositionO(5, 2, 1, 2)),
+	not(betterPositionO(1, 2, 6, 2)),
+	not(betterPositionO(3, 2, 6, 2)),
+	not(betterPositionO(4, 2, 6, 2)),
+	not(betterPositionO(5, 2, 6, 2))
+	.
+	
 	
 :- end_tests(testsAiOffensive).
 
