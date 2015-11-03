@@ -68,8 +68,8 @@ incrementWinnerCounter :-
 								assert(simulatedGames(IncrementedNbGames)).
 
 % Fills the the winning index in gameWinner fact (assert made by gameover predicates in 'simulation_gameover_plane' file
-playOneGame :- gameoverRoundSimulation, !.
 playOneGame :- gameWinner(Idx), Idx \== -1, !.
+playOneGame :- gameoverRoundSimulation, !.
 playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 
 % Is false if one plane died during actions
