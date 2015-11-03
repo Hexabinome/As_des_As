@@ -5,7 +5,7 @@ var finAction2 = false;
 function updatePlane(param)
 {
 	avion1.modifierVie(param.avion1.v);
-	avion2.modifierVie(param.avion2.v);	
+	avion2.modifierVie(param.avion2.v);
 
 	console.debug(param.move1);
 	console.debug(param.move2);
@@ -25,12 +25,15 @@ function updatePlane(param)
 
 		avion1.deplacer(move1[0]).then(function(){
 			avion1.tentativeDeTir(avion2);
+			avion1.debug_ihm();
 			testFinJeux();
 			avion1.deplacer(move1[1]).then(function(){
 				avion1.tentativeDeTir(avion2);
+				avion1.debug_ihm();
 				testFinJeux();
 				avion1.deplacer(move1[2]).then(function(){
 					avion1.tentativeDeTir(avion2);
+					avion1.debug_ihm();
 					testFinJeux();
 					timeout = setTimeout(function()
 					{
@@ -43,19 +46,22 @@ function updatePlane(param)
 							finAction2 = false;
 						}
 					}, 1000);
-					
+
 				});
 			});
-		}); 
-		
+		});
+
 		avion2.deplacer(move2[0]).then(function(){
 			avion2.tentativeDeTir(avion1);
+			avion2.debug_ihm();
 			testFinJeux();
 			avion2.deplacer(move2[1]).then(function(){
 				avion2.tentativeDeTir(avion1);
+				avion2.debug_ihm();
 				testFinJeux();
 				avion2.deplacer(move2[2]).then(function(){
 					avion2.tentativeDeTir(avion1);
+					avion2.debug_ihm();
 					testFinJeux();
 					timeout = setTimeout(function()
 					{
@@ -70,8 +76,8 @@ function updatePlane(param)
 					}, 1000);
 				})
 			});
-		}); 
-		
+		});
+
 		//TODO à effacer quand tous fonctionnera
 		/*timeout = setTimeout(function()
 		{
@@ -80,7 +86,7 @@ function updatePlane(param)
 		}, 3000);*/
 	}
 
-	
+
 }
 
 function testFinJeux()
@@ -94,7 +100,7 @@ function testFinJeux()
 		$("#score2").text(score2);
 
 		clearInterval(interval);
-		
+
 		timeout = setTimeout(function()
 		{
 			openPopUp("popupScore");
@@ -123,7 +129,7 @@ function nextProlog()
 		dataType: "jsonp",
 		success: function (data) {
 			data;
-		}, 
+		},
 		error: function(e)
 		{
 			//On passe bisarement dans erreur même quand on a un http 200
@@ -143,7 +149,7 @@ function appelerPrologWithParam(tab)
 		data : {act1 : tab[0], act2 : tab[1], act3 : tab[2]},
 		success: function (data) {
 			data;
-		}, 
+		},
 		error: function(e)
 		{
 			//On passe bisarement dans erreur même quand on a un http 200
