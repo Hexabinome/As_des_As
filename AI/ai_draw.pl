@@ -1,4 +1,4 @@
-:- module(ai_draw, [aiDraw/1]).
+:- module(ai_draw, [aiDraw/1, betterPositionDraw/4]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
