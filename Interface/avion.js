@@ -16,6 +16,20 @@ Avion.prototype.positionner= function(x, y, orientation)
 	this.afficher();
 };
 
+Avion.prototype.debug_ihm = function() {
+	$("#debug_" + this.nom + "_nom").remove();
+	$("#debug_" + this.nom + "_x").remove();
+	$("#debug_" + this.nom + "_y").remove();
+	$("#debug_" + this.nom + "_orientation").remove();
+
+
+	$("#debug_" + this.nom ).append(
+	 "<div class='col-xs-3' id='debug_avion1_nom' > Avion 1: </div>"
+	+	"<div class='col-xs-2 ' id='debug_" + this.nom + "_x'> x : " + this.x + "</div>"
+	+ "<div class='col-xs-2 ' id='debug_" + this.nom + "_x'> y : " + this.y + "</div>"
+	+ "<div class='col-xs-5 ' id='debug_" + this.nom + "_x'> orientation : " + this.orientation + "</div>");
+};
+
 Avion.prototype.deplacer= function(move)
 {
   var def = $.Deferred();
