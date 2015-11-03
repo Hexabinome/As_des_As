@@ -1,3 +1,10 @@
+:- module(ai_probabilistic, [aiProbab/2,aiMechante/1]).
+:- use_module('ai_general').
+:- use_module('ai_offensive').
+:- use_module('ai_defensive').
+:- use_module('../Game/plane').
+:- use_module('../Game/plane_actions').
+
 % [Maxou]
 % This file containes the predicates for two AIs:
 %
