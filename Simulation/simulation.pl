@@ -13,7 +13,7 @@
 :- use_module('../AI/ai_hybride').
 :- use_module('../AI/ai_draw').
 :- use_module('../AI/ai_orientation_defensive').
-:- use_module('AI/ai_orientation_offensive').
+:- use_module('../AI/ai_orientation_offensive').
 
 :- dynamic gameWinner/1.
 :- dynamic playerWinsCounter/2.
