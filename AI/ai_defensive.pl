@@ -1,5 +1,6 @@
 :- module(ai_defensive, [aiDefensive/1,
-									aiDefensiveBest/1]).
+									aiDefensiveBest/1,
+									betterPositionD/4]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
