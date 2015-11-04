@@ -1,5 +1,6 @@
 :- module(game, [round/1,
 							game/0,
+							gameNoDisplay/0,
 							playGame/0,
 							otherPlayer/2,
 							reset/0,
@@ -42,8 +43,8 @@
 round(0).
 
 % PLAYERS
-player(1, 1).
-player(2, 1).
+player(1, 12).
+player(2, 14).
 % -1 = human
 % 0 = random
 % 1 = offensive
@@ -80,7 +81,7 @@ game :-
 			displayEndOfGame(Winner), !.
 			
 gameNoDisplay :-
-			playGame, % while not game finished
+			playGameNoDisplay, % while not game finished
 			endOfGame(Winner),
 			displayEndOfGame(Winner), !.
 
