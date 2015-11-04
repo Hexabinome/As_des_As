@@ -1,4 +1,4 @@
-:- module(ai_hybride, [aiHybride/1, aiHybrideNonDeterministe/1]).
+:- module(ai_hybride, [aiHybrid/1, aiHybridNonDeterministic/1]).
 
 :- use_module('../game').
 :- use_module('ai_general').
@@ -23,18 +23,33 @@ meilleurGain(0).
 % L'arbre de recherche n'a pas une grande profondeur mais un nombre très important de noeuds dû aux coups possibles à chaque "step".
 % TODO : élagage alpha beta  
 
-%
-
-aiHybrideNonDeterministe(Idx) :- mapCoupGain(Idx, Map), 
-								 maxMap(_,GainMax,Map),
+% Choisi une solution au hasard parmi l'ensemble des solutions dont le gain est maximal.
+% Idx : indice du joueur en entrée
+aiHybridNonDeterministic(Idx) :- mapCoupGain(Idx, Map), % Construction de la map <Coup,Gain>
+								 maxMap(_,GainMax,Map), % Calcul du gain max de la map qu
 								 coupVautGain(ListeCoup,GainMax,Map), !,
 								 random_member(FinalSol, ListeCoup),
 								 % Crée le prochain coup à jouer
 								retract(actions(Idx, _)),
 								assert(actions(Idx, FinalSol)).
+
+
+% AI hybride qui prend le premier meilleur coup
+% Idx : indice du joueur en entrée
+aiHybrid(Idx) :-
+				mapCoupGain(Idx, Map),
+				maxMap(Coup,_,Map),
+				retract(actions(Idx, _)),
+				assert(actions(Idx, Coup)),
+				resetMeilleurGain.
 								
 
 % Donne les coups de la map dont le gain vaut Gain dans une liste
+% accCoupVautGain est le prédicat qui parcours la map de façon récursive.
+% coupVautGain est le prédicat qui donne l'ensemble des coups
+% Liste : Liste des coups en sortie
+% Gain : gain à comparer en entrée
+% Map : map<Coup,Gain> en entrée
 accCoupVautGain(L,_,[],L).
 accCoupVautGain(Liste,Gain, [First|Map],AccL) :-   First = [_|G], G = [NewGain|_],
 										  First = [CMax|_],
@@ -46,14 +61,7 @@ accCoupVautGain(Liste,Gain, [First|Map],AccL) :-   First = [_|G], G = [NewGain|_
 										  accCoupVautGain(Liste,Gain,Map,AccL).
 coupVautGain(Liste,Gain,Map) :- accCoupVautGain(Liste, Gain, Map,[]).				  
 
-% AI hybride qui prend le premier meilleur coup
-aiHybride(Idx) :-
-				mapCoupGain(Idx, Map),
-				maxMap(Coup,_,Map),
-				retract(actions(Idx, _)),
-				assert(actions(Idx, Coup)),
-				resetMeilleurGain.
-
+% DEPRECATED
 playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
 					    generate(Idx, CoupIA),
 					    generate(OtherIdx,CoupOther),
@@ -67,7 +75,7 @@ playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx),
 
 % Donne le coup associé au gain Max dans la map. C'est à dire le coup qui permet de maximiser le gain.
 % accMaxMap est le prédicat qui parcours la map de façon récursive.
-% maxMap est le prédicat qui donne ce coup max. Il utilise accMaxMap
+% maxMap est le prédicat qui donne ce coup max. Il utilise accMaxMap.
 accMaxMap([],Ag,Ag,CoupMax,CoupMax).
 accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 								   E = [CMax|_],
@@ -76,7 +84,7 @@ accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 								   Gain =< Ac,
 								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
-maxMap(CoupMax,GainMax,Map) :- %mapCoupGain(Idx, Map),
+maxMap(CoupMax,GainMax,Map) :- 
 					   Map = [E|_], % On chope le premier élément de la map
 					   E = [_|G], % On chope le gain associé à ce premier coup sous la forme [Gain]
 					   G = [Gain|_], % On recupère le gain 
@@ -102,6 +110,11 @@ setOfMin(Idx,Min,CoupIA) :- otherPlayer(Idx, OtherIdx),
 				 minGain(Idx, OtherIdx, CoupIA, ListeCoup, Min).
 
 % Donne le gain min d'une série liste de coups pour un coup donné.
+% Idx : Indice de l'ia en entrée
+% CoupIa : coup de l'ia en entrée
+% OtherIdx : indice de l'autre joueur en entrée
+% ListeCoup : liste de coups de l'autre ia en entrée
+% Min : gain minimal en sortie
 accMinGain(_,_,_,[],A,A).
 accMinGain(Idx,OtherIdx,T,[H2|T2],A,Min) :-  h(Idx,OtherIdx,T,H2,ValeurCoup),
 												ValeurCoup < A,
@@ -118,19 +131,18 @@ minGain(Idx,OtherIdx,CoupIa,ListeCoup,Min) :- accMinGain(Idx,OtherIdx,CoupIa, Li
 % Fonction d'évaluation qui calcule le gain associé à un coup.
 % Idx : indice de l'avion de l'ia en entrée
 % OtherPlayer : indice de l'autre joueur en entrée
-% CoupIA : Liste d'actions de l'IA en entrée
-% CoupOther : Liste d'actions de l'autre joueur
+% CoupIA : Coup de l'IA en entrée
+% CoupOther : Coup de l'autre joueur
 % Les deux listes doivent avoir le meme nombre d'élements.
 % Gain : gain associé en sortie.
 % Le gain correspond à une valeur entre -3 et 3 : 
 %  - une valeur négative correspond à un nombre de tirs encaissés > au nombre de tirs donnés
-%  - 0 implique pas de tirs ou 3 tirs donnés et 3 tirs reçus.
+%  - 0 implique pas de tirs donnés ou nombre tirs donnés = nombre tirs reçus.
 %  - Une valeur positive correspond à un nombre de tirs donnés > nombre de tirs encaissés.
-% L'objectif sera ainsi de maximiser ce gain.
 % Au départ on met le gain à zero et on choisit l'avion 3 et 4 comme avions temporaires
 h(Idx,OtherPlayer,CoupIA,CoupOther,Gain) :- hr(Idx,OtherPlayer,3,4,CoupIA,CoupOther,0,Gain).						   			
 
-% Effectue l'appel récursif pour le calcul de l'heuristique
+% Effectue l'appel récursif pour le calcul de la fonction d'évaluation
 % TmpPlane1 et TmpPlane2 : avions temporaires en entrée
 % ActionIA : action courante de l'IA en entrée
 % ActionOther : action courante de l'autre joueur en entrée
@@ -152,8 +164,10 @@ hr(Idx,OtherPlayer,TmpPlane1,TmpPlane2,[ActionIA|CoupIA],[ActionOther|CoupOther]
 % Met tous les triplets dans une liste (j'en aurai peut etre pas besoin)
 generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,Action2,Action3]),Liste).
 
-% Genere tous les triplets d'actions possibles pour un avion à partir de sa position sans sortir du tableau à la fin des 3 actions.
-% Une action est gardé si on se rapproche aussi de l'autre joueur
+% Genere tous les triplets d'actions possibles pour un avion à partir de sa position 
+% - sans sortir du tableau à la fin des 3 actions.
+% - sans s'éloigner de l'autre joueur
+% - sans ne pas être orienté dans le sens du jeu.
 generate(Idx,[Action1,Action2,Action3]) :- otherPlayer(Idx, OtherIdx),
 					   action(Action1),action(Action2),action(Action3), % Génération des triplets d'actions
 					   update(Idx,3),

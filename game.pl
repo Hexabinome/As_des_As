@@ -197,10 +197,10 @@ playIA(Idx, 11) :-
 	aiOrDefensiveBest(Idx).
 	
 playIA(Idx, 12) :-
-	aiHybride(Idx).
+	aiHybrid(Idx).
 
 playIA(Idx, 13) :-
-	aiHybrideNonDeterministe(Idx).
+	aiHybridNonDeterministic(Idx).
 	
 playIA(Idx, 14) :-
 	aiMechante(Idx).
