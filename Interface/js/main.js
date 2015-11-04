@@ -2,10 +2,11 @@ var avion1;
 var avion2;
 
 var boolPlayer = false;
+var boolAuto = false;
 var counter;
 
 var tabActionUser = [];
-var interval; 
+var interval;
 
 var score1 = 0;
 var score2 = 0;
@@ -34,9 +35,10 @@ function init()
 	openPopUp();
 	disablePlayButton();
 	boolPlayer = false;
+	boolAuto = false;
 }
 
-//---------------------------------- Bind js 
+//---------------------------------- Bind js
 //Bind les divers actions à réaliser sur l'évenement clique
 function bindKeyAction()
 {
@@ -91,69 +93,75 @@ function bindKeyAction()
 
 function bindClick()
 {
-	//TODO à supprimer
-	$("#PlVsIa").bind('click', function() {
-		closePopUp();
-		enablePlayButton();
-		
-		boolPlayer = true;
-	});
-	
 	$("#startGame").bind('click', function() {
 		var p1 = $("#player1Choice").val();
 		var p2 = $("#player2Choice").val();
-		
+
 		if (p1 == -1) { // Human player
 			boolPlayer = true;
 			definiJoueur(2, p2);
-		
-			enablePlayButton();
+
+			enableHumanPlayButton();
 			closePopUp();
 		}
 		else {
 			boolPlayer = false;
 			definiJoueur(1, p1);
 			definiJoueur(2, p2);
-		
-			enablePlayButton();
+
+			enableAutoButton();
+			enableIaPlayButton();
 			closePopUp();
-			nextProlog();
+			// nextProlog();
 		}
 	});
-	
+
 	//TODO à supprimer
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
-		
+
 		nextProlog();
 
 		//interval = setInterval(nextProlog, 1000 * 3);
 	});
-	
-	$("#Play").bind('click', function(e) 
-	{
-		e.stopPropagation();
 
-		if(tabActionUser.length >=3)
+	$("#Play").bind('click', function(e)
+	{
+		if (boolPlayer)
+		{
+			e.stopPropagation();
+
+			if(tabActionUser.length >=3)
+			{
+				$("#Play").popover('disable');
+				//récupère les trois dernières action faites
+				var action = tabActionUser.slice(tabActionUser.length - 3, tabActionUser.length);
+				tabActionUser = [];
+				viderActionFaites();
+
+				appelerPrologWithParam(action);
+			}
+			else
+			{
+				$("#Play").popover('enable').popover('show');
+			}
+		}
+		else//launch the next step if it's 2 a IA game
 		{
 			$("#Play").popover('disable');
-			//récupère les trois dernières action faites
-			var action = tabActionUser.slice(tabActionUser.length - 3, tabActionUser.length);
-			tabActionUser = [];
-			viderActionFaites();
-			
-			appelerPrologWithParam(action);
-		}
-		else
-		{
-			$("#Play").popover('enable').popover('show');
+			nextProlog();
 		}
 	});
-	
+
 	$("#Reset").bind('click', function() {
 		init();
 	});
-	
+
+	$("#Auto").bind('click', function() {
+		boolAuto = true;
+		nextProlog();
+	});
+
 	$("#PlayAgain").bind('click', function() {
 		closePopUp();
 		init();

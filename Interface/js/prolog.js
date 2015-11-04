@@ -38,11 +38,11 @@ function updatePlane(param)
 												finMove().then(function(res){
 													if(res && testFinCrash())
 													{
-														if(!boolPlayer)
+														if( (!boolPlayer) && (boolAuto) )
 														{
 															nextProlog();
-														}	
-													}	
+														}
+													}
 												})
 											});
 										});
