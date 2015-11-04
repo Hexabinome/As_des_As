@@ -77,13 +77,13 @@ playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx),
 % accMaxMap est le prédicat qui parcours la map de façon récursive.
 % maxMap est le prédicat qui donne ce coup max. Il utilise accMaxMap.
 accMaxMap([],Ag,Ag,CoupMax,CoupMax).
-accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+accMaxMap([E|Map],Ac,Ag,_,CoupMax) :- E = [_|G], G = [Gain|_],
 								   E = [CMax|_],
 								   Gain > Ac,
-								   accMaxMap(T,Gain,Ag,CMax,CoupMax).
-accMaxMap([E|T],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
+								   accMaxMap(Map,Gain,Ag,CMax,CoupMax).
+accMaxMap([E|Map],Ac,Ag,GMax,CoupMax) :- E = [_|G], G = [Gain|_],
 								   Gain =< Ac,
-								   accMaxMap(T,Ac,Ag,GMax,CoupMax).
+								   accMaxMap(Map,Ac,Ag,GMax,CoupMax).
 maxMap(CoupMax,GainMax,Map) :- 
 					   Map = [E|_], % On chope le premier élément de la map
 					   E = [_|G], % On chope le gain associé à ce premier coup sous la forme [Gain]

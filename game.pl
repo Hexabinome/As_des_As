@@ -14,7 +14,7 @@
 
 :- dynamic round/1.
 :- dynamic endOfGame/1.
-
+:- dynamic player/2.
 :- use_module(library(plunit)).
 :- use_module('Game/plane').
 :- use_module('Game/plane_actions').
