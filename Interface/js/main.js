@@ -91,6 +91,7 @@ function bindKeyAction()
 
 function bindClick()
 {
+	//TODO à supprimer
 	$("#PlVsIa").bind('click', function() {
 		closePopUp();
 		enablePlayButton();
@@ -113,8 +114,12 @@ function bindClick()
 		
 		enablePlayButton();
 		closePopUp();
+
+
+		nextProlog();
 	});
 	
+	//TODO à supprimer
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
 		
