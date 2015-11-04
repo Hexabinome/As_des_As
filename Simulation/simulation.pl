@@ -1,18 +1,5 @@
 :- module(simulation, [simulate/0]).
 
-:- use_module('../Game/plane').
-:- use_module('../Game/plane_actions').
-
-:- use_module('../AI/ai_general').
-:- use_module('../AI/ai_random').
-:- use_module('../AI/ai_offensive').
-:- use_module('../AI/ai_defensive').
-:- use_module('../AI/ai_probabilistic').
-:- use_module('../AI/ai_hybride').
-:- use_module('../AI/ai_draw').
-:- use_module('../AI/ai_orientation_defensive').
-:- use_module('../AI/ai_orientation_offensive').
-
 :- dynamic playerWinsCounter/2.
 :- dynamic simulatedGames/1.
 
