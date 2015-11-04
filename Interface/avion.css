@@ -1,9 +1,15 @@
 /* Une case*/
+
+.my-container
+{
+	margin-top: 20px;
+}
+
 .carre
 {
 	width:40px;
 	height:40px;
-	border:1px solid #000;
+	border:1px solid #fff;
 }
 
 .vert
@@ -72,7 +78,7 @@
     top: 0;
     width: 100%;
     height: auto;
-    opacity: 0.4;
+    opacity: 0.89;
 }
 
 /* box pour les scores*/
@@ -173,4 +179,19 @@ position: absolute;
 }
 *html .popup_block {
 position: absolute;
+}
+
+.missile
+{
+	width:40px;
+	height:60px;
+	opacity: 1;
+	position:relative;
+}
+
+.explotion
+{
+	position: relative;
+	right: 20px;
+	bottom: 20px;
 }

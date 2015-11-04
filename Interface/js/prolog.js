@@ -24,43 +24,30 @@ function updatePlane(param)
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
 		avion2.deplacer(move2[0]).then(function(){
-			/*finMove().then(function(res){
-				if(res)
-				{*/
-					avion1.deplacer(move1[0]).then(function(){
-						finMove().then(function(res){
-							if(res)
-							{
-								avion2.deplacer(move2[1]).then(function(){
-									/*finMove().then(function(res){
-										if(res)
-										{*/
-											avion1.deplacer(move1[1]).then(function(){
+			avion1.deplacer(move1[0]).then(function(){
+				finMove().then(function(res){
+					if(res)
+					{
+						avion2.deplacer(move2[1]).then(function(){
+							avion1.deplacer(move1[1]).then(function(){
+								finMove().then(function(res){
+									if(res)
+									{
+										avion2.deplacer(move2[2]).then(function(){
+											avion1.deplacer(move1[2]).then(function(){
 												finMove().then(function(res){
-													if(res)
-													{
-														avion2.deplacer(move2[2]).then(function(){
-															/*finMove().then(function(res){
-																if(res)
-																{*/
-																	avion1.deplacer(move1[2]).then(function(){
-																		finMove();
-																		testFinCrash();
-																	});
-																/*}
-															});*/
-														});
-													}
-												});
+													if(res && testFinCrash())
+														nextProlog();
+												})
 											});
-										/*}
-									});*/
+										});
+									}
 								});
-							}
+							});
 						});
-					});
-				/*}
-			});*/
+					}
+				});
+			});
 		});
 	}
 }
@@ -79,7 +66,7 @@ function finMove()
 
 function testFinVie()
 {
-	if(avion1.vie <= 0 || avion2.vie <= 0 )
+	if(avion1.vie <= 0 || avion2.vie <= 0)
 	{
 		score2 += (avion1.vie <= 0)?1:0;
 		score1 += (avion2.vie <= 0)?1:0;
