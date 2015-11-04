@@ -169,11 +169,6 @@ function appelerPrologWithParam(tab)
 	});
 }
 
-function test()
-{
-	console.log("TEst success");
-}
-
 function definiJoueur(joueur, valeur) {
 	$.ajax({
 		url: "http://localhost:8000/definePlayer",
@@ -186,10 +181,11 @@ function definiJoueur(joueur, valeur) {
 		},
 		error: function(e)
 		{
-			console.log("ECHEC " + e.status);
-			console.log(e);
-			if(e.status != 200)
-				clearInterval(interval);
+			if(e.status !== 200)
+			{
+				console.log("ECHEC " + e.status);
+				console.log(e);
+			}
 		}
 	});
 }
