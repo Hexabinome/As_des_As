@@ -1,6 +1,4 @@
-:- module(simulation, [simulate/0, simulateWinnerIs/1]).
-
-:- use_module('simulation_gameover_plane').
+:- module(simulation, [simulate/0]).
 
 :- use_module('../Game/plane').
 :- use_module('../Game/plane_actions').
@@ -15,7 +13,6 @@
 :- use_module('../AI/ai_orientation_defensive').
 :- use_module('../AI/ai_orientation_offensive').
 
-:- dynamic gameWinner/1.
 :- dynamic playerWinsCounter/2.
 :- dynamic simulatedGames/1.
 
@@ -27,15 +24,12 @@
 simulatedGames(1).
 maxGames(100).
 
-
 playerWinsCounter(0, 0). % Round limit
 playerWinsCounter(1, 0). % Player 1
 playerWinsCounter(2, 0). % Player 2
 playerWinsCounter(3, 0). % Collision draws
 playerWinsCounter(4, 0). % Killed at the same time draw
 playerWinsCounter(5, 0). % Out of board draws
-
-gameWinner(-1).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
@@ -52,37 +46,24 @@ simulate :-
 	maxGames(MaxGames),
 	% Display current round
 	write('Round: '), write(NbGames), write('/'), write(MaxGames), flush,
-	reset, simulateWinnerIs(-1),
-	playOneGame,
+	reset,
+	playGameNoDisplay,
 	!,
 	incrementWinnerCounter, write(' finished in '), round(Round), write(Round), write(' rounds'), nl,
 	simulate.
 
 incrementWinnerCounter :-
-								gameWinner(Idx),
+								endOfGame(Idx),
+								
 								retract(playerWinsCounter(Idx, Wins)),
 								IncrementedWins is Wins+1,
 								assert(playerWinsCounter(Idx, IncrementedWins)),
+								
 								retract(simulatedGames(NbGames)),
 								IncrementedNbGames is NbGames+1,
 								assert(simulatedGames(IncrementedNbGames)).
 
-% Fills the the winning index in gameWinner fact (assert made by gameover predicates in 'simulation_gameover_plane' file
-playOneGame :- gameWinner(Idx), Idx \== -1, !.
-playOneGame :- gameoverRoundSimulation, !.
-playOneGame :- incrementRoundCounter, (simulationStep ; playOneGame), !.
 
-% Is false if one plane died during actions
-simulationStep :- 
-	simulateWinnerIs(-1),
-	play(1), % joueur 1
-	actions(1, ActionsP1),
-	play(2), % joueur 2
-	actions(2, ActionsP2),
-	updatePlanesSimulation(ActionsP1, ActionsP2),	% Execution des coups de chaque avion
-	playOneGame.
-
-	
 displayStatistics :- 
 						playerWinsCounter(0, RoundLimitDraws),
 						playerWinsCounter(1, P1),
@@ -121,9 +102,3 @@ displayStatistics :-
 						write('/'),
 						write(MaxGames),
 						nl.
-						
-
-% Asserts the current winner
-simulateWinnerIs(Idx) :- 
-	retractall(gameWinner(_)),
-	assert(gameWinner(Idx)).

@@ -1,5 +1,6 @@
 ﻿:- module(plane, [plane/5, 
 							updatePlanes/2,
+							updatePlanesNoDisplay/2,
 							callPlaneAction/2,
 							fire/1,
 							canFire/2,
@@ -46,12 +47,21 @@ plane(8, 0, 0, 0, 0).
 
 % Execute les coups de même indice en même temps
 updatePlanes([], []).
-updatePlanes([Action1|ActionList1], [Action2|ActionList2]) :- 	callPlaneAction(1, Action1),
+updatePlanes([Action1|ActionList1], [Action2|ActionList2]) :- 
+																callPlaneAction(1, Action1),
 																callPlaneAction(2, Action2),
 																fire(1), fire(2), !,
 																not(gameoverStep),
 																updatePlanes(ActionList1, ActionList2).
+updatePlanesNoDisplay([], []).
+updatePlanesNoDisplay([Action1|ActionList1], [Action2|ActionList2]) :- 
+																callPlaneAction(1, Action1),
+																callPlaneAction(2, Action2),
+																fireNoDisplay(1), fireNoDisplay(2), !,
+																not(gameoverStep),
+																updatePlanesNoDisplay(ActionList1, ActionList2).
 
+																
 % Big kind of switch, choosing between all implemented actions 
 callPlaneAction(Idx, Action) :- Action == 'F', actionForward(Idx), !.
 callPlaneAction(Idx, Action) :- Action == 'FF', actionFastForward(Idx), !.
@@ -68,6 +78,10 @@ fire(Idx) :- 	otherPlayer(Idx, OutIdx),
 				decrementLife(OutIdx),
 				shotDisplay(Idx, OutIdx).
 fire(_).
+fireNoDisplay(Idx) :- 	otherPlayer(Idx, OutIdx),
+				canFire(Idx, OutIdx), !,
+				decrementLife(OutIdx).
+fireNoDisplay(_).
 
 % Prédicats qui renvoient True si l'avion d'indice IdxSrc peut
 % tirer sur l'avion d'indice IdxTarget	

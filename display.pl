@@ -9,9 +9,11 @@
 							outOfBoundaryDisplay/1,
 							deathDisplay/1,
 							collisionDisplay/0,
-							roundLimitDisplay/0]).
+							roundLimitDisplay/0,
+							displayEndOfGame/1]).
 
 :- use_module('Game/plane').
+:- use_module('game').
 
 % Stop condition for displaying the board
 display([]).
@@ -51,4 +53,11 @@ displayActions([FirstAction|Rest]) :- write(FirstAction), write(', '), displayAc
 outOfBoundaryDisplay(Idx) :- write('Player '), write(Idx), write(' out of board.'), nl.
 deathDisplay(Idx) :- write('Player '), write(Idx), write(' has been killed!'), nl.
 collisionDisplay :- write('Both players are at the same coordinates. Collision!'), nl.
-roundLimitDisplay :- write('The round limit has been reached'), nl.
+roundLimitDisplay :- write('The round limit has been reached.'), nl.
+
+displayEndOfGame(0) :- roundLimitDisplay, drawDisplay.
+displayEndOfGame(1) :- playerWinDisplay(1).
+displayEndOfGame(2) :- playerWinDisplay(2).
+displayEndOfGame(3) :- collisionDisplay, drawDisplay.
+displayEndOfGame(4) :- deathDisplay(1), deathDisplay(2), drawDisplay.
+displayEndOfGame(5) :- outOfBoundaryDisplay(1), outOfBoundaryDisplay(2), drawDisplay.
