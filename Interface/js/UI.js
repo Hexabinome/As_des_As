@@ -25,9 +25,6 @@ function openPopUp(popupID)
 	$('body').append('<div id="fade"></div>');
 	$('#fade').css({'filter' : 'alpha(opacity=80)'}).fadeIn();
 	
-	$('body').on('click', 'a.close, #fade', function() { //Au clic sur le body...
-		closePopUp();
-	});
 }
 
 function closePopUp()

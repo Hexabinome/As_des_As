@@ -98,6 +98,23 @@ function bindClick()
 		boolPlayer = true;
 	});
 	
+	$("#startGame").bind('click', function() {
+		var p1 = $("#player1Choice").val();
+		var p2 = $("#player2Choice").val();
+		
+		if (p1 == -1) { // Human player
+			boolPlayer = true;
+		}
+		else {
+			boolPlayer = false;
+			definiJoueur(1, p1);
+		}
+		definiJoueur(2, p2);
+		
+		enablePlayButton();
+		closePopUp();
+	});
+	
 	$("#IaVsIa").bind('click', function() {
 		closePopUp();
 		

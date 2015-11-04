@@ -29,8 +29,25 @@
         <div class="row">
             <div class="row center-block">
                 <div class="center-block col-md-12" style="float:none;">
-                    <button id="PlVsIa" type="button" class="btn btn-primary col-md-5">Player VS. IA</button>
-                    <button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-5">IA VS. IA</button>
+				<!-- TODO Comment faire pour ne pas afficher le glyphicon-remove -->
+					Player 1:
+					 <select id="player1Choice">
+					  <option value="-1">Human player</option>
+					  <option value="0">Random</option>
+					  <option value="1">Offensive</option>
+					  <option value="2">Defensive</option>
+					</select><br/>
+					Player 2:
+					<select id="player2Choice">
+					  <!-- <option value="-1">Human player</option> -->
+					  <option value="0">Random</option>
+					  <option value="1">Offensive</option>
+					  <option value="2">Defensive</option>
+					</select>
+					<br/>
+					<button id="startGame" type="button" class="btn btn-primary">Go !</button>
+                    <!--<button id="PlVsIa" type="button" class="btn btn-primary col-md-5">Player VS. IA</button>
+                    <button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-5">IA VS. IA</button>-->
 
                 </div>
             </div>
