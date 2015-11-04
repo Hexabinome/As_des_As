@@ -211,10 +211,10 @@ playIA(Idx, 14) :-
 stepHttp :-
 	incrementRoundCounter,
 	% joueur 1:
-	aiOffensiveBest(1),
+	play(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	aiOffensive(2), 
+	play(2), 
 	actions(2, ActionsP2),
 	
 	retractall(actionHttp(_, _)),
@@ -227,7 +227,7 @@ stepHttp :-
 stepHttpPlayer(ListP):-
 	incrementRoundCounter,
 	assert(actions(1, ListP)),
-	aiOffensive(2),
+	play(2),
 	actions(2, ActionsP2),
 	
 	retractall(actionHttp(_, _)),

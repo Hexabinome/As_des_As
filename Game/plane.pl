@@ -5,8 +5,7 @@
 							fire/1,
 							canFire/2,
 							decrementLife/1,
-							updatePlanesHttp/2,
-							fireHttp/1]).
+							updatePlanesHttp/2]).
 
 :- dynamic plane/5.
 
@@ -123,11 +122,6 @@ updatePlanesHttp([], []).
 updatePlanesHttp([Action1|ActionList1], [Action2|ActionList2]) :- 	
 																callPlaneAction(1, Action1),
 																callPlaneAction(2, Action2),
-																fireHttp(1), fireHttp(2), !,
+																fireNoDisplay(1), fireNoDisplay(2), !,
 																updatePlanesHttp(ActionList1, ActionList2).
 
-fireHttp(Idx) :- 	
-				otherPlayer(Idx, OutIdx),
-				canFire(Idx, OutIdx),
-				decrementLife(OutIdx).
-fireHttp(_).
