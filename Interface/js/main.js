@@ -105,18 +105,20 @@ function bindClick()
 		
 		if (p1 == -1) { // Human player
 			boolPlayer = true;
+			definiJoueur(2, p2);
+		
+			enablePlayButton();
+			closePopUp();
 		}
 		else {
 			boolPlayer = false;
 			definiJoueur(1, p1);
-		}
-		definiJoueur(2, p2);
+			definiJoueur(2, p2);
 		
-		enablePlayButton();
-		closePopUp();
-
-
-		nextProlog();
+			enablePlayButton();
+			closePopUp();
+			nextProlog();
+		}
 	});
 	
 	//TODO à supprimer

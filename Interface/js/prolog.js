@@ -37,7 +37,12 @@ function updatePlane(param)
 											avion1.deplacer(move1[2]).then(function(){
 												finMove().then(function(res){
 													if(res && testFinCrash())
-														nextProlog();
+													{
+														if(!boolPlayer)
+														{
+															nextProlog();
+														}	
+													}	
 												})
 											});
 										});
