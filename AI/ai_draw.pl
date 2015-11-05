@@ -102,8 +102,10 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				%write(B1),nl,write(B2),nl,write(B3),nl,
 				%write("---------------------------"),nl,
 				
+				actionRank,
+                		actualRank(Rank),
 				% On met nos actions dans une liste afin de les retourner
-				append([A1, A2, A3], [], Sol).
+				append([[A1, A2, A3],Rank], [], Sol).
 				
 				
 %actionRank permet d'affecter un rang à une liste d'action, le rang 1 est meilleur que le rang 0
