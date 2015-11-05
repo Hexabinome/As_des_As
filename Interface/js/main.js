@@ -116,15 +116,6 @@ function bindClick()
 		}
 	});
 
-	//TODO à supprimer
-	$("#IaVsIa").bind('click', function() {
-		closePopUp();
-
-		nextProlog();
-
-		//interval = setInterval(nextProlog, 1000 * 3);
-	});
-
 	$("#Play").bind('click', function(e)
 	{
 		if (boolPlayer)
