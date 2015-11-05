@@ -112,7 +112,7 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 actionRank :-
 % On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
 				bestFireDraw(BF),
-				actFireDraw(F),
+				actFire(F),
 				BF < F,
 				retract(bestFireDraw(BF)),
 				assert(bestFireDraw(F)),
@@ -133,7 +133,7 @@ actionRank :-
 actionRank :-
 % On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
 				bestFireDraw(BF),
-				actFireDraw(F),
+				actFire(F),
 				BF = F,
 				retract(bestFireDraw(BF)),
 				assert(bestFireDraw(F)),
