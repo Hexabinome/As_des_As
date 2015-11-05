@@ -31,6 +31,14 @@ Avion.prototype.debug_ihm = function() {
 	+ "<div class='col-xs-5 ' id='debug_" + this.nom + "_orientation'> orientation : " + this.orientation + "</div>");
 };
 
+Avion.prototype.testSortie = function()
+{
+	
+	if(this.x < 1 || this.x > 16 || this.y < 1 || this.x > 16)
+		return false;
+	return true;
+};
+
 // ============================================================================================DEPLACEMENT
 Avion.prototype.deplacer= function(move)
 {
@@ -135,7 +143,7 @@ Avion.prototype.afficher = function() {
 	var position = $("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']");
 
 	$("#" + this.nom).remove();
-	position.append("<img id='" + this.nom + "' src='" + this.nom + ".png' class='avion " + this.orientation + "'/>");
+	position.append("<img id='" + this.nom + "' src='image/" + this.nom + ".png' class='avion " + this.orientation + "'/>");
 };
 
 Avion.prototype.moveRight = function() {
@@ -218,7 +226,7 @@ Avion.prototype.rotate = function(direction) {
 	}
 
     var timer = setInterval(function() {
-        degree += direction;
+        degree += direction * 2 ;
 
 	    $("#" + nom).css({ WebkitTransform: 'rotate(' + degree + 'deg)'});
 	    $("#" + nom).css({ '-moz-transform': 'rotate(' + degree + 'deg)'});
@@ -228,7 +236,7 @@ Avion.prototype.rotate = function(direction) {
     		clearInterval(timer);
     		def.resolve();
 	    }
-    },1);
+    },10);
 
   	return def.promise();
 };
@@ -296,7 +304,7 @@ Avion.prototype.tirer= function(distance)
 
 				var inter = setInterval(function(){
 					$("#explotion").remove();
-					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='image/boum" + i + ".png' class='explotion'/>");
 
 					if(++i === 6)
 					{
@@ -315,7 +323,7 @@ Avion.prototype.tirer= function(distance)
 
 				var inter = setInterval(function(){
 					$("#explotion").remove();
-					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='image/boum" + i + ".png' class='explotion'/>");
 
 					if(++i === 6)
 					{
@@ -334,7 +342,7 @@ Avion.prototype.tirer= function(distance)
 
 				var inter = setInterval(function(){
 					$("#explotion").remove();
-					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='image/boum" + i + ".png' class='explotion'/>");
 
 					if(++i === 6)
 					{
@@ -353,7 +361,7 @@ Avion.prototype.tirer= function(distance)
 
 				var inter = setInterval(function(){
 					$("#explotion").remove();
-					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='image/boum" + i + ".png' class='explotion'/>");
 
 					if(++i === 6)
 					{
@@ -372,7 +380,7 @@ Avion.prototype.tirer= function(distance)
 };
 
 Avion.prototype.afficherTir = function() {
-	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='missile.png' class='missile " + this.orientation + "'/>");
+	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='image/missile.png' class='missile " + this.orientation + "'/>");
 };
 
 Avion.prototype.supprimerTir= function()

@@ -112,7 +112,6 @@ function bindClick()
 			enableAutoButton();
 			enableIaPlayButton();
 			closePopUp();
-			// nextProlog();
 		}
 	});
 

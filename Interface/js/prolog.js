@@ -93,11 +93,11 @@ function testFinVie()
 
 function testOutBoard(){
 
-	if( (avion1.x > 16) || (avion1.x < 1) || (avion1.y > 16) || (avion1.y < 1) )
+	if( avion1.testSortie() )
 	{
 		avion1.vie = 0;
 	}
-	if( (avion2.x > 16) || (avion2.x < 1) || (avion2.y > 16) || (avion2.y < 1) )
+	if( avion2.testSortie() )
 	{
 		avion2.vie = 0;
 	}
