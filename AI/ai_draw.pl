@@ -1,4 +1,4 @@
-:- module(ai_draw, [aiDraw/1, betterPositionDraw/4]).
+:- module(ai_draw, [aiDraw/1, aiDrawBest/1, betterPositionDraw/4]).
 
 :- use_module('ai_general').
 :- use_module('../Game/plane').
@@ -27,6 +27,17 @@ aiDraw(Idx):-
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
 
+
+aiDrawBest(Idx) :- 
+				% Crée une liste à partir de toutes les solutions renvoyées par playDraw (sans doublon)
+				setof(OneSol, playDraw(Idx, OneSol), AllSolutions),
+				
+				% Choisi la meilleure solution parmis les solutions selectionnées
+				last(AllSolutions, FinalSol),
+				
+				% Crée le prochain coup à jouer
+				retract(actions(Idx, _)),
+				assert(actions(Idx, FinalSol)).
 
 % Genere des listes de 3 coups qui suivent une heuristique d'égalité (algo min-max like)
 % La logique de cette IA est de rentrer en collision avec l'ennemi tout en prenant les coups
