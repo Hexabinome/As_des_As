@@ -1,4 +1,4 @@
-:- module(ai_general, [coupleAction/2, dist/3, testPosition/1, update/2, testOrientation/1]).
+:- module(ai_general, [coupleAction/2, dist/3, testPosition/1, update/2, testOrientation/1,listOfFirstElem/2,selectSol/3]).
 
 % Ressources utiles pour tous types d'IA
 :- use_module('../Game/plane_actions').
@@ -30,6 +30,16 @@ update(Idx1, Idx2) :- 	retract(plane(Idx2, _, _, _, _)),
 						plane(Idx1, X, Y, Life, Orientation),
 						assert(plane(Idx2, X, Y, Life, Orientation)).
 
+
+listOfFirstElem(FirstList, Elem) :-
+                nth0(_,FirstList,SecondList),
+                nth0(0,SecondList, Elem).
+
+selectSol(AllSolutions, Rank, Sol):-
+                nth0(_, AllSolutions, Elem),
+                nth0(1, Elem, ElemRank),
+                ElemRank = Rank,
+                nth0(0,Elem,Sol).
 
 % Ce predicat permet de verifier qu'à un moment donné un avion est orienté vers
 % l'endroit ou il y a le plus d'espace

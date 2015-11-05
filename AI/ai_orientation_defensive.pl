@@ -20,7 +20,8 @@ aiOrDefensive(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playDefensive (sans doublon)
 				setof(OneSol, playOrDefensive(Idx, OneSol), AllSolutions),
 				% Choisi une solution parmis les solutions selectionnées
-				random_member(FinalSol, AllSolutions),
+				setof(Sol, listOfFirstElem(AllSolutions, Sol), GoodSolutions),
+				random_member(FinalSol, GoodSolutions),
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
@@ -30,12 +31,14 @@ aiOrDefensive(Idx):-
 aiOrDefensiveBest(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playOffensive (sans doublon)
 				setof(OneSol, playOrDefensive(Idx, OneSol), AllSolutions),
-				% Choisi la meilleure solution trouvée
 				last(AllSolutions, Sol),
+				last(Sol, Rank),
+				% choisit un solution au hasard parmis un ensemble de solutions de même rang
+                		setof(ASol,selectSol(AllSolutions, Rank, ASol), GoodSolutions),
+                		random_member(FinalSol, GoodSolutions),
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
-				assert(actions(Idx, Sol)).
-				
+				assert(actions(Idx, FinalSol)).
 
 % Genere des listes de 3 coups qui suivent une heuristique defensive
 % La logique de cette IA est de s eloigner le plus de son adversaire tout en prenant le moins de coups possible
@@ -43,6 +46,10 @@ aiOrDefensiveBest(Idx):-
 % ou il y a le plus d'espace vide afin de prévenir un tir éventuel
 % elle ne prend pas en compte les degats potentiels qu elle peut infliger				
 playOrDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+				retractall(actualRank(_)),
+				assert(actualRank(0)),
+				retractall(bestRank(_)),
+				assert(bestRank(0)),
 				% Distance initiale entre les deux avions
 				%dist(Idx, OtherIdx, _),
 				retractall(bestDistOrD(_)),
@@ -96,27 +103,53 @@ playOrDefensive(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				testFireOrD(3,4),
 				testFireOrD(5,6),
 				testFireOrD(7,8),
-				actFireOrD(F),
+				
+				actionRank,
+               			actualRank(Rank),
+				% On met nos actions dans une liste afin de les retourner
+				append([[A1, A2, A3],Rank], [], Sol).
+
+%actionRank permet d'affecter un rang à une liste d'action, le rang 1 est meilleur que le rang 0				
+actionRank :-
+% On verifie que notre avion ne s'est pas fait tirer dessus plus de foi que la meilleur trouvée jusqu'ici
 				bestFireOrD(BF),
-				F =< BF,
+				actFireOrD(F),
+				F < BF,
 				retract(bestFireOrD(BF)),
 				assert(bestFireOrD(F)),
-				
+
 				% On verifie que la distance finale entre les deux avions est au moins aussi grande que la meilleur trouvée jusqu'ici
 				dist(7, 8, D),
 				bestDistOrD(BD),
-				D >= BD,
+				BD =< D,
 				retract(bestDistOrD(BD)),
 				assert(bestDistOrD(D)),
-				
-				% On met nos actions dans une liste afin de les retourner
-				append([A1, A2, A3], [], Sol).
-				
-				
+                bestRank(Rank),
+                NewRank is Rank+1,
+                retractall(actualRank(_)),
+                assert(actualRank(NewRank)),
+                retractall(bestRank(_)),
+                assert(bestRank(NewRank)).
+
+actionRank :-
+% On verifie que notre avion ne s'est pas fait tirer dessus plus de foi que la meilleur trouvée jusqu'ici
+				bestFireOrD(BF),
+				actFireOrD(F),
+				BF = F,
+				retract(bestFireOrD(BF)),
+				assert(bestFireOrD(F)),
+
+				% On verifie que la distance finale entre les deux avions est au moins aussi grande que la meilleur trouvée jusqu'ici
+				dist(7, 8, D),
+				bestDistOrD(BD),
+				BD =< D,
+				retract(bestDistOrD(BD)),
+				assert(bestDistOrD(D)).
+			
 % Is better if on the new position you can shoot on the other player.
 testFireOrD(I1, I2) :- canFire(I2, I1),
-					retract(actFireD(X)),
-					assert(actFireD(X+1)).
+					retract(actFireOrD(X)),
+					assert(actFireOrD(X+1)).
 
 testFireOrD(I1, I2) :- not(canFire(I2, I1)).
 								

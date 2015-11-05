@@ -29,9 +29,7 @@ aiOffensive(Idx):-
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
 
-listOfFirstElem(FirstList, Elem) :-
-                nth0(_,FirstList,SecondList),
-                nth0(0,SecondList, Elem).
+
 % Genere la prochaine liste de coups a jouer pour l'avion d'indice Idx
 % Utilise le meilleur coup generé
 aiOffensiveBest(Idx):-
@@ -47,20 +45,15 @@ aiOffensiveBest(Idx):-
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
 
-selectSol(AllSolutions, Rank, Sol):-
-                nth0(_, AllSolutions, Elem),
-                nth0(1, Elem, ElemRank),
-                ElemRank = Rank,
-                nth0(0,Elem,Sol).
 
 % Genere des listes de 3 coups qui suivent une heuristique offensive
 % La logique de cette IA est de se rapprocher le plus possible de sa cible tout en prenant les coups
 % qui lui permettent de tirer sur celle ci, elle ne prend pas en compte les degats qui lui sont fait
 playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
-                retractall(actualRank(_)),
-                assert(actualRank(0)),
-                retractall(bestRank(_)),
-                assert(bestRank(0)),
+				retractall(actualRank(_)),
+				assert(actualRank(0)),
+				retractall(bestRank(_)),
+				assert(bestRank(0)),
 				% Distance initiale entre les deux avions
 				dist(Idx, OtherIdx, Dinit),
 				retractall(bestDistO(_)),
@@ -120,7 +113,7 @@ playOffensive(Idx, Sol) :-otherPlayer(Idx, OtherIdx),
 				append([[A1, A2, A3],Rank], [], Sol).
 
 
-
+%actionRank permet d'affecter un rang à une liste d'action, le rang 1 est meilleur que le rang 0
 actionRank :-
 % On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
 				bestFireO(BF),
@@ -135,12 +128,12 @@ actionRank :-
 				D =< BD,
 				retract(bestDistO(BD)),
 				assert(bestDistO(D)),
-                bestRank(Rank),
-                NewRank is Rank+1,
-                retractall(actualRank(_)),
-                assert(actualRank(NewRank)),
-                retractall(bestRank(_)),
-                assert(bestRank(NewRank)).
+				bestRank(Rank),
+				NewRank is Rank+1,
+				retractall(actualRank(_)),
+				assert(actualRank(NewRank)),
+				retractall(bestRank(_)),
+				assert(bestRank(NewRank)).
 
 actionRank :-
 % On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
