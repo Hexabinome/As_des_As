@@ -149,8 +149,10 @@ function bindClick()
 	});
 
 	$("#Auto").bind('click', function() {
-		boolAuto = true;
-		nextProlog();
+		if (!booAUto){
+			boolAuto = true;
+			nextProlog();
+		}
 	});
 
 	$("#PlayAgain").bind('click', function() {
