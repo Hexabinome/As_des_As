@@ -1,5 +1,6 @@
 var Avion = function (nom, x, y, player, orientation) {
 	this.nom = nom;
+	this.player = player;
 	this.x = x;
 	this.y = y;
 	this.vie = 0;
@@ -24,7 +25,7 @@ Avion.prototype.debug_ihm = function() {
 
 
 	$("#debug_" + this.nom ).append(
-	 "<div class='col-xs-3' id='debug_" + this.nom+ "_nom' > Avion 1: </div>"
+	 "<div class='col-xs-3' id='debug_" + this.nom+ "_nom' > Avion " + this.player+ ": </div>"
 	+	"<div class='col-xs-2 ' id='debug_" + this.nom + "_x'> x : " + this.x + "</div>"
 	+ "<div class='col-xs-2 ' id='debug_" + this.nom + "_y'> y : " + this.y + "</div>"
 	+ "<div class='col-xs-5 ' id='debug_" + this.nom + "_orientation'> orientation : " + this.orientation + "</div>");
@@ -243,31 +244,33 @@ Avion.prototype.tentativeDeTir= function(avion)
 	switch(this.orientation){
 		case 'N':
 			distance = this.y - avion.y;
-			testEnLigne = this.x - avion.x;
+			testEnLigne = (this.x - avion.x === 0);
 			break;
 		case 'S':
 			distance = avion.y - this.y;
-			testEnLigne = this.x - avion.x;
+			testEnLigne = (this.x - avion.x === 0);
 			break;
 		case 'E':
 			distance = avion.x - this.x;
-			testEnLigne = avion.y - this.y;
+			testEnLigne = (avion.y - this.y === 0);
 			break;
 		case 'W':
 			distance = this.x - avion.x;
-			testEnLigne = avion.y - this.y;
+			testEnLigne = (avion.y - this.y === 0);
 			break;
 	}
 
-	if ( (distance < 5) && (distance > 0) && (testEnLigne === 0) )
+	if ( (distance < 5) && (distance >= 0) && testEnLigne)
 	{
 		avion.modifierVie(avion.vie-1);
 		this.tirer(distance).then(function() {
 			def.resolve();
 		});
 	}
-
-	def.resolve();
+	else
+	{
+		def.resolve();
+	}
 	return def.promise();
 };
 
@@ -277,40 +280,99 @@ Avion.prototype.tirer= function(distance)
 	var $this = this;
 	var def = $.Deferred();
 
+	var deplacement = Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance);
+
+	var x = this.x;
+	var y = this.y;
+	var i = 1;
+
 	$this.afficherTir();
 
 	switch(this.orientation){
 		case 'N':
-			$("#bullet").animate({ "top" : "-=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+			$("#bullet").animate({ "top" : "-=" +  deplacement}, "slow", function(){
 				$this.supprimerTir();
-				def.resolve();
+				y -= distance;
+
+				var inter = setInterval(function(){
+					$("#explotion").remove();
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+
+					if(++i === 6)
+					{
+						$("#explotion").remove();
+						clearInterval(inter);
+						def.resolve();
+					}
+				}, 50);
 			});
 			break;
 		case 'W':
-			$("#bullet").animate({ "right" : "+=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+			$("#bullet").animate({ "right" : "+=" + deplacement }, "slow", function(){
 				$this.supprimerTir();
-				def.resolve();
+				direction = "right : ";
+				x -= distance;
+
+				var inter = setInterval(function(){
+					$("#explotion").remove();
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+
+					if(++i === 6)
+					{
+						$("#explotion").remove();
+						clearInterval(inter);
+						def.resolve();
+					}
+				}, 50);
 			});
 			break;
 		case 'E':
-			$("#bullet").animate({ "right" : "-=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+			$("#bullet").animate({ "right" : "-=" + deplacement }, "slow", function(){
 				$this.supprimerTir();
-				def.resolve();
+				direction = "right : -";
+				x += distance;
+
+				var inter = setInterval(function(){
+					$("#explotion").remove();
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+
+					if(++i === 6)
+					{
+						$("#explotion").remove();
+						clearInterval(inter);
+						def.resolve();
+					}
+				}, 50);
 			});
 			break;
 		case 'S':
-			$("#bullet").animate({ "top" : "+=" + Math.round(($("div").find("[data-x='1'][data-y='1']").height()) * distance) }, "slow", function(){ 
+			$("#bullet").animate({ "top" : "+=" + deplacement }, "slow", function(){
 				$this.supprimerTir();
-				def.resolve();
+				direction = "top : ";
+				y += distance;
+
+				var inter = setInterval(function(){
+					$("#explotion").remove();
+					$("div").find("[data-x='" + x + "'][data-y='" + y + "']").append("<img id='explotion' src='boum" + i + ".png' class='explotion'/>");
+
+					if(++i === 6)
+					{
+						$("#explotion").remove();
+						clearInterval(inter);
+						def.resolve();
+					}
+				}, 50);
+
 			});
 			break;
 	}
+
 
 	return def.promise();
 };
 
 Avion.prototype.afficherTir = function() {
-	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='bullet.png' class='avion " + this.orientation + "'/>");;
+	$("div").find("[data-x='" + this.x + "'][data-y='" + this.y + "']").append("<img id='bullet' src='missile.png' class='missile " + this.orientation + "'/>");
 };
 
 Avion.prototype.supprimerTir= function()

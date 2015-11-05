@@ -15,6 +15,7 @@ server(Port) :-
 :- http_handler(root(initPlane), initPlane, []).
 :- http_handler(root(next), next, []).
 :- http_handler(root(nextPlayer), nextPlayer, []).
+:- http_handler(root(definePlayer), definePlayer, []).
 
 %todo
 homePage(Request) :- 
@@ -48,7 +49,8 @@ nextPlayer(Request) :-
 		[ act1(Act1, []),
 		  act2(Act2, []),
 		  act3(Act3, [])
-		]),
+		]
+	),
 	game:stepHttpPlayer([Act1, Act2, Act3]),
 	plane:plane(1, X1, Y1, V1, D1),
 	plane:plane(2, X2, Y2, V2, D2),
@@ -61,4 +63,10 @@ nextPlayer(Request) :-
 						move2 : "~w"} ~n)', 
 						[X1, Y1, V1, D1, X2, Y2, V2, D2, Action1, Action2] ).
 
-		
+definePlayer(Request) :-
+	http_parameters(Request, 
+		[	player(Pl, [integer]),
+			value(Val, [integer])
+	]),
+	selectPlayer(Pl, Val),
+	format('Content-type: text/jsonp~n~n').

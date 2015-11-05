@@ -24,43 +24,35 @@ function updatePlane(param)
 		var move2 = param.move2.substring(1, (param.move2.length -1)).split(',');
 
 		avion2.deplacer(move2[0]).then(function(){
-			/*finMove().then(function(res){
-				if(res)
-				{*/
-					avion1.deplacer(move1[0]).then(function(){
-						finMove().then(function(res){
-							if(res)
-							{
-								avion2.deplacer(move2[1]).then(function(){
-									/*finMove().then(function(res){
-										if(res)
-										{*/
-											avion1.deplacer(move1[1]).then(function(){
+			avion1.deplacer(move1[0]).then(function(){
+				finMove().then(function(res){
+					if(res)
+					{
+						avion2.deplacer(move2[1]).then(function(){
+							avion1.deplacer(move1[1]).then(function(){
+								finMove().then(function(res){
+									if(res)
+									{
+										avion2.deplacer(move2[2]).then(function(){
+											avion1.deplacer(move1[2]).then(function(){
 												finMove().then(function(res){
-													if(res)
+													if(res && testFinCrash() && testOutBoard() )
 													{
-														avion2.deplacer(move2[2]).then(function(){
-															/*finMove().then(function(res){
-																if(res)
-																{*/
-																	avion1.deplacer(move1[2]).then(function(){
-																		finMove();
-																		testFinCrash();
-																	});
-																/*}
-															});*/
-														});
+														if( (!boolPlayer) && (boolAuto) )
+														{
+															nextProlog();
+														}
 													}
-												});
+												})
 											});
-										/*}
-									});*/
+										});
+									}
 								});
-							}
+							});
 						});
-					});
-				/*}
-			});*/
+					}
+				});
+			});
 		});
 	}
 }
@@ -79,7 +71,7 @@ function finMove()
 
 function testFinVie()
 {
-	if(avion1.vie <= 0 || avion2.vie <= 0 )
+	if(avion1.vie <= 0 || avion2.vie <= 0)
 	{
 		score2 += (avion1.vie <= 0)?1:0;
 		score1 += (avion2.vie <= 0)?1:0;
@@ -98,6 +90,19 @@ function testFinVie()
 	}
 	return true;
 }
+
+function testOutBoard(){
+
+	if( (avion1.x > 16) || (avion1.x < 0) || (avion1.y > 16) || (avion1.y < 0) )
+	{
+		avion1.vie = 0;
+	}
+	if( (avion2.x > 16) || (avion2.x < 0) || (avion2.y > 16) || (avion2.y < 0) )
+	{
+		avion2.vie = 0;
+	}
+	return testFinVie();
+};
 
 function testFinCrash()
 {
@@ -165,6 +170,27 @@ function appelerPrologWithParam(tab)
 			//On passe bisarement dans erreur même quand on a un http 200
 			if(e.status != 200)
 				clearInterval(interval);
+		}
+	});
+}
+
+function definiJoueur(joueur, valeur) {
+	$.ajax({
+		url: "http://localhost:8000/definePlayer",
+		type: "POST",
+		dataType: "jsonp",
+		data: {player: joueur, value: valeur},
+		success: function(data) {
+			console.log("SUCCESS");
+			data;
+		},
+		error: function(e)
+		{
+			if(e.status !== 200)
+			{
+				console.log("ECHEC " + e.status);
+				console.log(e);
+			}
 		}
 	});
 }

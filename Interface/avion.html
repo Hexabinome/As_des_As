@@ -18,7 +18,7 @@
 </head>
 <body>
     <div class="imgMap">
-        <img src="map.png" />
+        <img src="stars.jpg" />
     </div>
 
 
@@ -29,8 +29,49 @@
         <div class="row">
             <div class="row center-block">
                 <div class="center-block col-md-12" style="float:none;">
-                    <button id="PlVsIa" type="button" class="btn btn-primary col-md-5">Player VS. IA</button>
-                    <button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-5">IA VS. IA</button>
+				<!-- TODO Comment faire pour ne pas afficher le glyphicon-remove -->
+					Player 1:
+					 <select id="player1Choice">
+					  <option value="-1">Human player</option>
+					  <option value="0">Random</option>
+					  <option value="1">Offensive</option>
+					  <option value="2">Defensive</option>
+                      <option value='3'>draw </option>
+                      <option value='4'>Offensive best </option>
+                      <option value='5'>Defensive best </option>
+                      <option value='6'>Draw best </option>
+                      <option value='7'>Probab 0.5 </option>
+                      <option value='8'>Orientation offensive </option>
+                      <option value='9'>Orientation defensive </option>
+                      <option value='10'>Orientation offensive best </option>
+                      <option value='11'>Orientation defensive best </option>
+                      <option value='12'>Hybride </option>
+                      <option value='13'>Hybride non deterministe </option>
+                      <option value='14'>Mechante </option>
+					</select><br/>
+					Player 2:
+					<select id="player2Choice">
+					  <!-- <option value="-1">Human player</option> -->
+                      <option value="0">Random</option>
+                      <option value="1">Offensive</option>
+                      <option value="2">Defensive</option>
+                      <option value='3'>draw </option>
+                      <option value='4'>Offensive best </option>
+                      <option value='5'>Defensive best </option>
+                      <option value='6'>Draw best </option>
+                      <option value='7'>Probab 0.5 </option>
+                      <option value='8'>Orientation offensive </option>
+                      <option value='9'>Orientation defensive </option>
+                      <option value='10'>Orientation offensive best </option>
+                      <option value='11'>Orientation defensive best </option>
+                      <option value='12'>Hybride </option>
+                      <option value='13'>Hybride non deterministe </option>
+                      <option value='14'>Mechante </option>
+					</select>
+					<br/>
+					<button id="startGame" type="button" class="btn btn-primary">Go !</button>
+                    <!--<button id="PlVsIa" type="button" class="btn btn-primary col-md-5">Player VS. IA</button>
+                    <button id="IaVsIa" type="button" class="btn btn-success col-md-offset-2 col-md-5">IA VS. IA</button>-->
 
                 </div>
             </div>
@@ -355,7 +396,7 @@
 
             <div class="col-lg-7 col-xs-4">
                 <div class="row debug">
-                    <div class=" col-lg-offset-3 col-lg-12 col-md-12 col-xs-12">
+                    <div class=" col-lg-offset-3 col-lg-16 col-md-16 col-xs-16">
                         <div class="row" id="debug_avion1">
                             <div class="col-xs-3" id="debug_avion1_nom" >
                                 Avion 1:
@@ -372,7 +413,7 @@
                         </div>
                         <div class="row" id="debug_avion2">
                             <div class="col-xs-3" id="debug_avion2_nom" >
-                                Avion 1:
+                                Avion 2:
                             </div>
                             <div class="col-xs-2 " id="debug_avion2_x">
                                 x:
@@ -389,9 +430,9 @@
             </div>
 			<div class="col-lg-7 col-xs-4">
 				<div class="row fixed-heigh">
-					<div class="score col-lg-offset-3 col-lg-12 col-md-12 col-xs-12">
+					<div class="score col-lg-offset-2 col-lg-12 col-md-12 col-xs-12">
 						<div class="row">
-                            <div class="col-xs-3">
+                            <div class="col-xs-3 col-xs-offset-3">
                                 Player 1 :
                             </div>
                             <div class="col-xs-3">
@@ -405,7 +446,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-xs-3">
+							<div class="col-xs-3 col-xs-offset-3">
                                 Player 2 :
                             </div>
                             <div class="col-xs-3">
@@ -424,7 +465,7 @@
 					<div class="row">
 						<div class="possibleAction">
 							<div class="row">
-								<span class="glyphicon glyphicon-arrow-up col-xs-offset-2 col-xs-2"></span>
+								<span class="glyphicon glyphicon-arrow-up col-xs-offset-5 col-xs-2"></span>
 								<span class="glyphicon glyphicon-arrow-down col-xs-2"></span>
 								<span class="glyphicon glyphicon-arrow-right col-xs-2"></span>
                                 <span class="glyphicon glyphicon-arrow-left col-xs-2"></span>
@@ -433,8 +474,8 @@
                                 </span>
 							</div>
 							<div class="row">
-								<span class="col-xs-2">Possible action : </span>
-								<span class="col-xs-2">Forward</span>
+								<span class="col-xs-4">Possible action : </span>
+								<span class="col-xs-2 col-xs-offset-1">Forward</span>
 								<span class="col-xs-2">Around</span>
 								<span class="col-xs-2">Go right</span>
                                 <span class="col-xs-2">Go left</span>
@@ -443,21 +484,24 @@
 						</div>
 						<div class="chosenAction">
 							<div class="row">
-								<span class="col-xs-2">Chosen action : </span>
-								<span id="action_0" class="col-xs-2"></span>
-								<span id="action_1" class="col-xs-2"></span>
-								<span id="action_2" class="col-xs-2"></span>
+								<span class="col-xs-4">Chosen action : </span>
+								<span id="action_0" class="col-xs-4"></span>
+								<span id="action_1" class="col-xs-4"></span>
+								<span id="action_2" class="col-xs-4"></span>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 					<div class="row center-block">
 							<div class="col-md-4">
-								<button id="Play" type="button" class="btn btn-primary popoverThis" disable="true">Play</button>
+								<button id="Play" type="button" class="btn btn-primary">Play</button>
 							</div>
 							<div class="col-md-4">
 								<button id="Reset" type="button" class="btn btn-danger">Reset</button>
 							</div>
+                            <div class="col-md-4">
+                                <button id="Auto" type="button" class="btn btn-success hide">Auto</button>
+                            </div>
 					</div>
 				</div>
 				</div>

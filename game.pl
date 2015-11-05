@@ -7,6 +7,7 @@
 							simulate/0,
 							incrementRoundCounter/0,
 							selectPlayers/2,
+							selectPlayer/2,
 							play/1,
 							endOfGame/1,
 							setEndOfGame/1,
@@ -152,6 +153,10 @@ selectPlayers(I1, I2) :-
 	assert(player(1,I1)),
 	assert(player(2,I2)).
 
+selectPlayer(Idx, Val) :-
+	retract(player(Idx, _)),
+	assert(player(Idx, Val)).
+	
 play(Idx) :-
 	player(Idx, Ia),
 	playIA(Idx, Ia).
