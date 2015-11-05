@@ -149,7 +149,7 @@ function bindClick()
 	});
 
 	$("#Auto").bind('click', function() {
-		if (!booAUto){
+		if (!boolAuto){
 			boolAuto = true;
 			nextProlog();
 		}
