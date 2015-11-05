@@ -38,9 +38,9 @@ aiOffensiveBest(Idx):-
 				setof(OneSol, playOffensive(Idx, OneSol), AllSolutions),
 				% Choisi la meilleure solution trouvée
 				last(AllSolutions, Sol),
-                last(Sol, Rank),
-                setof(ASol,selectSol(AllSolutions, Rank, ASol), GoodSolutions),
-                random_member(FinalSol, GoodSolutions),
+				last(Sol, Rank),
+				setof(ASol,selectSol(AllSolutions, Rank, ASol), GoodSolutions),
+				random_member(FinalSol, GoodSolutions),
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).

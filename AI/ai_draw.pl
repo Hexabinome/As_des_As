@@ -19,10 +19,9 @@ aiDraw(Idx):-
 				% Crée une liste à partir de toutes les solutions renvoyées par playDraw (sans doublon)
 				setof(OneSol, playDraw(Idx, OneSol), AllSolutions),
 				
-				%write(Idx), nl, write(AllSolutions), nl,
 				% Choisi une solution parmis les solutions selectionnées
-				random_member(FinalSol, AllSolutions),
-				
+                		setof(Sol, listOfFirstElem(AllSolutions, Sol), GoodSolutions),
+				random_member(FinalSol, GoodSolutions),
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
@@ -31,10 +30,11 @@ aiDraw(Idx):-
 aiDrawBest(Idx) :- 
 				% Crée une liste à partir de toutes les solutions renvoyées par playDraw (sans doublon)
 				setof(OneSol, playDraw(Idx, OneSol), AllSolutions),
-				
-				% Choisi la meilleure solution parmis les solutions selectionnées
-				last(AllSolutions, FinalSol),
-				
+				% Choisi la meilleure solution trouvée
+				last(AllSolutions, Sol),
+				last(Sol, Rank),
+				setof(ASol,selectSol(AllSolutions, Rank, ASol), GoodSolutions),
+				random_member(FinalSol, GoodSolutions),
 				% Crée le prochain coup à jouer
 				retract(actions(Idx, _)),
 				assert(actions(Idx, FinalSol)).
@@ -43,6 +43,10 @@ aiDrawBest(Idx) :-
 % La logique de cette IA est de rentrer en collision avec l'ennemi tout en prenant les coups
 % qui lui permettent de tirer et d'être tirer dessus simultanément (recherche d'égalité de points de vie)
 playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
+				retractall(actualRank(_)),
+				assert(actualRank(0)),
+				retractall(bestRank(_)),
+				assert(bestRank(0)),
 				% Distance initiale entre les deux avions
 				dist(Idx, OtherIdx, Dinit),
 				retractall(bestDistDraw(_)),
@@ -92,19 +96,6 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				testFireDraw(3,4),
 				testFireDraw(5,6),
 				testFireDraw(7,8),
-				actFire(F),
-				% On verifie que notre liste d'actions a pu tirer à égalité au moins autant de fois que la meilleure trouvée jusqu'ici
-				bestFireDraw(BF),
-				BF =< F,
-				retract(bestFireDraw(BF)),
-				assert(bestFireDraw(F)),
-				
-				% On verifie que la distance finale entre les deux avions est au plus aussi grande que la meilleur trouvée jusqu'ici
-				dist(7, 8, D),
-				bestDistDraw(BD),
-				D =< BD,
-				retract(bestDistDraw(BD)),
-				assert(bestDistDraw(D)),
 				
 				%write("---------------------------"),nl,
 				%write(A1),nl,write(A2),nl,write(A3),nl,write(D), nl,
@@ -115,10 +106,45 @@ playDraw(Idx, Sol) :- otherPlayer(Idx, OtherIdx),
 				append([A1, A2, A3], [], Sol).
 				
 				
-				
+%actionRank permet d'affecter un rang à une liste d'action, le rang 1 est meilleur que le rang 0
+actionRank :-
+% On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
+				bestFireDraw(BF),
+				actFireDraw(F),
+				BF < F,
+				retract(bestFireDraw(BF)),
+				assert(bestFireDraw(F)),
+
+				% On verifie que la distance finale entre les deux avions est au plus aussi grande que la meilleur trouvée jusqu'ici
+				dist(7, 8, D),
+				bestDistDraw(BD),
+				D =< BD,
+				retract(bestDistDraw(BD)),
+				assert(bestDistDraw(D)),
+				bestRank(Rank),
+				NewRank is Rank+1,
+				retractall(actualRank(_)),
+				assert(actualRank(NewRank)),
+				retractall(bestRank(_)),
+				assert(bestRank(NewRank)).
+
+actionRank :-
+% On verifie que notre liste d'actions a pu tirer au moins autant de foi que la meilleure trouvée jusqu'ici
+				bestFireDraw(BF),
+				actFireDraw(F),
+				BF = F,
+				retract(bestFireDraw(BF)),
+				assert(bestFireDraw(F)),
+
+				% On verifie que la distance finale entre les deux avions est au plus aussi grande que la meilleur trouvée jusqu'ici
+				dist(7, 8, D),
+				bestDistDraw(BD),
+				D =< BD,
+				retract(bestDistDraw(BD)),
+				assert(bestDistDraw(D)),!.	
 
 
-% Is better if on the new position you can shoot on the other player.
+% Is better if on the new position you can shoot on the other player and he can shoot you.
 testFireDraw(I1, I2) :- canFire(I1, I2),
 					canFire(I2, I1),
 					retract(actFire(X)),
