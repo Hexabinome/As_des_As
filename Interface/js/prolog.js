@@ -36,7 +36,7 @@ function updatePlane(param)
 										avion2.deplacer(move2[2]).then(function(){
 											avion1.deplacer(move1[2]).then(function(){
 												finMove().then(function(res){
-													if(res && testFinCrash())
+													if(res && testFinCrash() && testOutBoard() )
 													{
 														if( (!boolPlayer) && (boolAuto) )
 														{
@@ -90,6 +90,19 @@ function testFinVie()
 	}
 	return true;
 }
+
+function testOutBoard(){
+
+	if( (avion1.x > 16) || (avion1.x < 0) || (avion1.y > 16) || (avion1.y < 0) )
+	{
+		avion1.vie = 0;
+	}
+	if( (avion2.x > 16) || (avion2.x < 0) || (avion2.y > 16) || (avion2.y < 0) )
+	{
+		avion2.vie = 0;
+	}
+	return testFinVie();
+};
 
 function testFinCrash()
 {
