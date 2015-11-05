@@ -27,8 +27,8 @@ $(function() {
 function init()
 {
 	//TODO se metre d'accord sur les positions de base avec prolog
-	avion1 = new Avion('avion1', 3, 3, 1, 'sud');
-	avion2 = new Avion('avion2', 5, 5, 2, 'est');
+	avion1 = new Avion('avion1', 0, 0, 1, 'sud');
+	avion2 = new Avion('avion2', 15, 15, 2, 'nord');
 
 	initPlaneProlog();
 

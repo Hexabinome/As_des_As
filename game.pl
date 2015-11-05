@@ -71,16 +71,16 @@ endOfGame(-1). % -1 = not finished
 % 3 = collision
 % 4 = death at the same time
 % 5 = out of board draw
-	
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %				PREDICATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-game :- 
+game :-
 			playGame, % while not game finished
 			endOfGame(Winner),
 			displayEndOfGame(Winner), !.
-			
+
 gameNoDisplay :-
 			playGameNoDisplay, % while not game finished
 			endOfGame(Winner),
@@ -100,7 +100,7 @@ step :-
 	play(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	play(2), 
+	play(2),
 	actions(2, ActionsP2),
 	displayMoves(ActionsP1, ActionsP2), % Affichage des mouvements de chacun
 	updatePlanes(ActionsP1, ActionsP2), % Execution des coups de chaque avion
@@ -115,29 +115,29 @@ stepNoDisplay :-
 	play(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	play(2), 
+	play(2),
 	actions(2, ActionsP2),
 	updatePlanesNoDisplay(ActionsP1, ActionsP2), % Execution des coups de chaque avion
 	playGameNoDisplay.
-	
+
 % Increment the round counter
 incrementRoundCounter :-
-	retract(round(X)), 
-	Y is X+1, 
+	retract(round(X)),
+	Y is X+1,
 	assert(round(Y)).
 
 % If InIdx == 1, OutIdx == 2, else if InIdx == 2, OutIdx == 1
 %Depending on the index of the first player, this function return the index of the other one : OutIdx
 otherPlayer(InIdx, OutIdx) :- InIdx == 1, OutIdx is 2, !.
 otherPlayer(InIdx, OutIdx) :- InIdx == 2, OutIdx is 1, !.
-								
+
 pressToContinue :- 	write('** Write any character + "." to go to the next step. **'), nl,
 					read(_).
-		
+
 % Game reset
 reset :-
-	retract(plane(1, _, _, _, _)),
-	retract(plane(2, _, _, _, _)),
+	retractall(plane(1, _, _, _, _)),
+	retractall(plane(2, _, _, _, _)),
 	retractall(round(_)),
 	assert(plane(1, 0, 0, 3, 'S')),
 	assert(plane(2, 15, 15, 3, 'N')),
@@ -147,7 +147,7 @@ reset :-
 setEndOfGame(Number) :-
 	retractall(endOfGame(_)),
 	assert(endOfGame(Number)).
-	
+
 selectPlayers(I1, I2) :-
 	retractall(player(_,_)),
 	assert(player(1,I1)),
@@ -156,7 +156,7 @@ selectPlayers(I1, I2) :-
 selectPlayer(Idx, Val) :-
 	retract(player(Idx, _)),
 	assert(player(Idx, Val)).
-	
+
 play(Idx) :-
 	player(Idx, Ia),
 	playIA(Idx, Ia).
@@ -164,22 +164,22 @@ play(Idx) :-
 % Switch between kind of player
 playIA(Idx, -1) :-
 	humanPlayer(Idx).
-	
+
 playIA(Idx, 0) :-
 	aiRandom(Idx).
-	
+
 playIA(Idx, 1) :-
 	aiOffensive(Idx).
 
 playIA(Idx, 2) :-
 	aiDefensive(Idx).
-	
+
 playIA(Idx, 3) :-
 	aiDraw(Idx).
-	
+
 playIA(Idx, 4) :-
 	aiOffensiveBest(Idx).
-	
+
 playIA(Idx, 5) :-
 	aiDefensiveBest(Idx).
 
@@ -188,29 +188,29 @@ playIA(Idx, 6) :-
 
 playIA(Idx, 7) :-
 	aiProbab(Idx, 0.5).
-	
+
 playIA(Idx, 8) :-
 	aiOrOffensive(Idx).
-	
+
 playIA(Idx, 9) :-
 	aiOrDefensive(Idx).
-	
+
 playIA(Idx, 10) :-
 	aiOrOffensiveBest(Idx).
-	
+
 playIA(Idx, 11) :-
 	aiOrDefensiveBest(Idx).
-	
+
 playIA(Idx, 12) :-
 	aiHybrid(Idx).
 
 playIA(Idx, 13) :-
 	aiHybridNonDeterministic(Idx).
-	
+
 playIA(Idx, 14) :-
 	aiMechante(Idx).
-	
-% ----------------------------- Server exchange section 
+
+% ----------------------------- Server exchange section
 % Game loop
 
 stepHttp :-
@@ -219,14 +219,14 @@ stepHttp :-
 	play(1),
 	actions(1, ActionsP1),
 	% joueur 2:
-	play(2), 
+	play(2),
 	actions(2, ActionsP2),
-	
+
 	retractall(actionHttp(_, _)),
-	
+
 	assert(actionHttp(1, ActionsP1)),
 	assert(actionHttp(2, ActionsP2)),
-	
+
 	updatePlanesHttp(ActionsP1, ActionsP2).
 
 stepHttpPlayer(ListP):-
@@ -234,9 +234,9 @@ stepHttpPlayer(ListP):-
 	assert(actions(1, ListP)),
 	play(2),
 	actions(2, ActionsP2),
-	
+
 	retractall(actionHttp(_, _)),
-	
+
 	assert(actionHttp(1, ListP)),
 	assert(actionHttp(2, ActionsP2)),
 
