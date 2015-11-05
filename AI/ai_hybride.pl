@@ -21,7 +21,6 @@ meilleurGain(0).
 % Principe : A partir d'un état du jeu, on construit l'arbre de jeu c'est à dire tous les coups (triplets d'actions) possibles 
 % pour l'IA. On évalue ensuite les coups grâce à une heuristique pour faire remonter les min puis les max des ces mins.
 % L'arbre de recherche n'a pas une grande profondeur mais un nombre très important de noeuds dû aux coups possibles à chaque "step".
-% TODO : élagage alpha beta  
 
 % Choisi une solution au hasard parmi l'ensemble des solutions dont le gain est maximal.
 % Idx : indice du joueur en entrée
@@ -61,16 +60,6 @@ accCoupVautGain(Liste,Gain, [First|Map],AccL) :-   First = [_|G], G = [NewGain|_
 										  accCoupVautGain(Liste,Gain,Map,AccL).
 coupVautGain(Liste,Gain,Map) :- accCoupVautGain(Liste, Gain, Map,[]).				  
 
-% DEPRECATED
-playHybride(Idx,ProchainCoup) :-	otherPlayer(Idx, OtherIdx), 
-					    generate(Idx, CoupIA),
-					    generate(OtherIdx,CoupOther),
-					    h(Idx,OtherIdx,CoupIA,CoupOther,Gain),
-					    meilleurGain(AncienGain),
-					    Gain > AncienGain,
-					    retract(meilleurGain(_)),
-					    assert(meilleurGain(Gain)),
-					    ProchainCoup = CoupIA.
 
 
 % Donne le coup associé au gain Max dans la map. C'est à dire le coup qui permet de maximiser le gain.
@@ -95,7 +84,7 @@ maxMap(CoupMax,GainMax,Map) :-
 
 % Construis une sorte de map qui contient un coup et le gain minimum associé à ce coup sous la forme
 % [ [[Action,Action,Action],Gain], [[Action,Action,Action],Gain] ].
-% Exemple : [ [['FF','UT',RT'],2], [['FF','UT','RT'],-1]] => Si l'ia joue ['FF','UT',RT'] au pire il gagne 2 donc il aura 
+% Exemple : [ [['FF','UT',RT'],2], [['FF','UT','F'],-1]] => Si l'ia joue ['FF','UT',RT'] au pire il gagne 2 donc il aura 
 % intérêt à choisir ce coup dans notre exemple. 
 mapCoupGain(Idx,Map) :- findall([Coup,Min],setOfMin(Idx,Min,Coup),Map).
 
@@ -161,7 +150,7 @@ hr(Idx,OtherPlayer,TmpPlane1,TmpPlane2,[ActionIA|CoupIA],[ActionOther|CoupOther]
 							   			NewTmpPlane2 is TmpPlane2 + 2, % Passage au prochain avion temporaire
 							   			hr(TmpPlane1,TmpPlane2,NewTmpPlane1,NewTmpPlane2,CoupIA,CoupOther,NewPerte,Gain). % Appel récursif			   	
  
-% Met tous les triplets dans une liste (j'en aurai peut etre pas besoin)
+% Met tous les triplets dans une liste
 generateAll(Idx,Liste) :- setof([Action1,Action2,Action3],generate(Idx,[Action1,Action2,Action3]),Liste).
 
 % Genere tous les triplets d'actions possibles pour un avion à partir de sa position 
