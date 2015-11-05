@@ -33,10 +33,10 @@ Avion.prototype.debug_ihm = function() {
 
 Avion.prototype.testSortie = function()
 {
-	
-	if(this.x < 1 || this.x > 16 || this.y < 1 || this.x > 16)
-		return false;
-	return true;
+
+	if( (this.x < 1) || (this.x > 16) || (this.y < 1) || (this.y > 16) )
+		return true;
+	return false;
 };
 
 // ============================================================================================DEPLACEMENT
