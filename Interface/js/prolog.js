@@ -181,15 +181,12 @@ function definiJoueur(joueur, valeur) {
 		dataType: "jsonp",
 		data: {player: joueur, value: valeur},
 		success: function(data) {
-			console.log("SUCCESS");
-			data;
 		},
 		error: function(e)
 		{
 			if(e.status !== 200)
 			{
 				console.log("ECHEC " + e.status);
-				console.log(e);
 			}
 		}
 	});
