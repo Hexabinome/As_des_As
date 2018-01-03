@@ -39,23 +39,23 @@ selectPlayers(J1, J2)
 * 14->aiMechante
 
 ## WARNING ! FR DOCUMENTATION
-###TODO:translate :D
+### TODO:translate :D
 
-###Pour lancer le jeu en mode console:
+### Pour lancer le jeu en mode console:
 
 - lancer game.pl
 - "selectPlayer(X,Y)." avec X et Y les nombres correspondant aux types de joueur (voir description des IAs)
 - pour afficher la partie et jouer pas à pas lancer "game."
 - pour ne pas avoir d'affichage( seulement le vainceur à la fin) lancer "gameNoDisplay."
 
-###Pour lancer le jeu en mode graphique:
+### Pour lancer le jeu en mode graphique:
 
 - lancer server.pl
 - "server(8000)"
 - ouvrir la page avion.html contenu dans le dossier Interface
 - suivre les instructions de la page html
 
-###Pour ajouter une IA:
+### Pour ajouter une IA:
 
 - creer un module dans le dossier IA
 - l'IA doit être appelée selon ce format: 'monIA(Idx).' ou Idx est l'indice du joueur utilisant cette IA (1 ou 2)
@@ -64,28 +64,23 @@ selectPlayers(J1, J2)
 - ajouter dans game.pl un predicat 'playIA(Idx, NumeroIA)' qui appelle 'monIA(Idx)'
 - voila votre IA prète pour la bataille
 
-###Pour lancer les tests:
-
+### Pour lancer les tests:
 - lancer game.pl
 - "load_test_files(_)."
 - "run_tests".
 
-
-###DESCRIPTION DES IA
-
-####IA random
+### DESCRIPTION DES IA
+#### IA random
 - 0 : genere des listes de 3 coups aléatoirement.
 
-
-####IAs offensives:
+#### IAs offensives:
 La logique de cette IA est de se rapprocher le plus possible de sa cible tout en selectionnant les coups qui lui permettent de tirer sur celle ci, elle ne prend pas en compte les degats qui lui sont fait.
 - 1 :Cette IA selectionne aléatoirement un meilleur coup LOCAL (meilleur que ceux d'avant).
 - 4 :Cette IA selectionne aléatoirement un meilleur coup GLOBAL (meilleur que ceux d'avant et après).
 - 8 :En plus de l'heuristique générale cette IA finit toujours orientée vers la partie du plateau ou il y a le plus d'espace.Cette IA selectionne aléatoirement un meilleur coup LOCAL (meilleur que ceux d'avant).
 - 10 :En plus de l'heuristique générale cette IA finit toujours orientée vers la partie du plateau ou il y a le plus d'espace.Cette IA selectionne aléatoirement un meilleur coup GLOBAL (meilleur que ceux d'avant et après).
 
-
-####IAs defensives:
+#### IAs defensives:
 La logique de cette IA est de s eloigner le plus de son adversaire tout en prenant le moins de coups possible
 elle ne prend pas en compte les degats potentiels qu elle peut infliger
 - 2 :Cette IA selectionne aléatoirement un meilleur coup LOCAL (meilleur que ceux d'avant).
@@ -93,8 +88,7 @@ elle ne prend pas en compte les degats potentiels qu elle peut infliger
 - 9 :En plus de l'heuristique générale cette IA finit toujours orientée vers la partie du plateau ou il y a le plus d'espace.Cette IA selectionne aléatoirement un meilleur coup LOCAL (meilleur que ceux d'avant).
 - 11 :En plus de l'heuristique générale cette IA finit toujours orientée vers la partie du plateau ou il y a le plus d'espace.Cette IA selectionne aléatoirement un meilleur coup GLOBAL (meilleur que ceux d'avant et après).
 
-
-####IAs hybrides:
+#### IAs hybrides:
 Ces IAs combinent des comportements offensifs et defensifs.
 - 3 :Cette IA cherche l'égalité, par collision ou par tirs simultanés, selectionne aléatoirement un meilleur coup LOCAL (meilleur que ceux d'avant).
 - 6 :Cette IA cherche l'égalité, par collision ou par tirs simultanés, selectionne aléatoirement un meilleur coup GLOBAL (meilleur que ceux d'avant et après).
@@ -102,4 +96,3 @@ Ces IAs combinent des comportements offensifs et defensifs.
 - 12 :La logique de cette IA est de privilegier les actions lui permettant de tirer sur son adversaire sans se faire tirer dessus, elle prend la meilleure solution globale en premiere position.
 - 13 :La logique de cette IA est de privilegier les actions lui permettant de tirer sur son adversaire sans se faire tirer dessus, elle prend une des meilleures solutions globales de manière aléatoire.
 - 14 :La logique de cette IA est d'utiliser l'IA 7(probabiliste) en changeant les ratios d'offensivité/defensivité en fonction de sa situation actuelle(points de vie).
-
